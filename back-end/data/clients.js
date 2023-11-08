@@ -5,7 +5,6 @@ import {isAfter, isValid, parse, format} from 'date-fns';
 
 //need create client
 //need get client by id
-//need get all client
 //need create repair
 //need get repair by id
 //need get all repairs for the client
@@ -159,20 +158,6 @@ export const createRepair = async(clientId, deviceID, workOrder)=>
     if(typeof(workOrder) !== "object") throw "Work order must be an object";
     let workOrderKeys = Object.keys(workOrder); 
     if(Object.keys(workOrder).length === 0 ) throw "Work order cannot be empty";
-    //now check if all the keys are valid 
-
-    /*
-    clientPreferredEmail: string, // this is needed in case the customer has a different email that the want for this repair 
-	clientPreferredPhoneNumber: number, // this is needed in case the customer has a different number that the want for this repair 
-	repairOrderCreationDate: date,
-	issue: string,
-	issueOccuranceDate: date,
-	wasIssueVerified: Boolean,
-	stepsTakenToReplicateIssue: string,
-	workToBeDone:string,
-	conditionOfDevice: string,
-
-    */
     
     if(!workOrder.clientPreferredEmail) throw "You must provide a client preferred email";
     if(typeof(workOrder.clientPreferredEmail) !== "string") throw "Client preferred email must be a string";
@@ -190,12 +175,6 @@ export const createRepair = async(clientId, deviceID, workOrder)=>
     if(typeof(workOrder.issue) !== "string") throw "Issue must be a string";
     workOrder.issue = workOrder.issue.trim();
     if(workOrder.issue.length === 0) throw "Issue cannot be empty";
-
-    if(!workOrder.issueOccuranceDate) throw "You must provide an issue occurance date";
-    //need data validation to be checked
-    // if(!isValid(parse(workOrder.issueOccuranceDate, "MM-dd-yyyy", new Date()))) throw "Issue occurance date is not valid";
-    //now i will check if the date from the future
-    // if(isAfter(parse(workOrder.issueOccuranceDate), new Date())) throw "Issue occurance date cannot be in the future";
 
     if(!workOrder.wasIssueVerified) throw "You must provide a was issue verified";
     if(typeof(workOrder.wasIssueVerified) !== "boolean") throw "Was issue verified must be a boolean";
@@ -224,7 +203,6 @@ export const createRepair = async(clientId, deviceID, workOrder)=>
         clientPreferredPhoneNumber: workOrder.clientPreferredPhoneNumber,
         repairOrderCreationDate: new Date(),
         issue: workOrder.issue,
-        issueOccuranceDate: workOrder.issueOccuranceDate,
         wasIssueVerified: workOrder.wasIssueVerified,
         stepsTakenToReplicateIssue: workOrder.stepsTakenToReplicateIssue,
         workToBeDone: workOrder.workToBeDone,
@@ -242,7 +220,7 @@ export const createRepair = async(clientId, deviceID, workOrder)=>
 }
 
 
-export const getRepairById = async(repairId)=>
+export const getWorkorderById = async(repairId)=>
 {
     if(!repairId) throw "You must provide an id to search for";
     if(typeof(repairId) !== "string") throw "Id must be a string";
@@ -251,7 +229,6 @@ export const getRepairById = async(repairId)=>
     if(!ObjectId.isValid(repairId)) throw 'invalid object ID'
 
     let clientCollection = await clients();
-    //now we need to check all clients for the repair and match the id 
     let allClients = await clientCollection.find({}).toArray();
     let repair = undefined;
 
@@ -264,10 +241,7 @@ export const getRepairById = async(repairId)=>
     return repair;
 }
 
-// repairTechnicianNotes: string, //after repair
-//          wasTheRepairSuccessful: Boolean, // true false
-
-export const updateRepairAfterRepair = async(repairID, repiarNotes, wasTheRepairSuccessful)=>
+export const updateWorkorderAfterRepair = async(repairID, repiarNotes, wasTheRepairSuccessful)=>
 {
     if(!repairID) throw "You must provide an id to search for";
     if(typeof(repairID) !== "string") throw "Id must be a string";
@@ -283,25 +257,81 @@ export const updateRepairAfterRepair = async(repairID, repiarNotes, wasTheRepair
     if (!wasTheRepairSuccessful) throw "You must provide was the repair successful";
     if(typeof(wasTheRepairSuccessful) !== "boolean") throw "Was the repair successful must be a boolean";
 
-    let repair = await getRepairById(repairID);
-    repair.repairTechnicianNotes = repiarNotes;
-    repair.wasTheRepairSuccessful = wasTheRepairSuccessful;
-    repair.repairStatus = "ready to be picked up";
-    repair.isDevicePickedUpAlready= false;
-    repair.repairCompletionDate = new Date();
+
+    let repair = await getWorkorderById(repairID);
+    if(repair === null) throw "No repair with that id";
     
-    let clientCollection = await clients();
-    let client = await clientCollection.findOne({_id: new ObjectId(repair.clientID)});
-    if(client === null) throw "No client with that id";
-
-    //we already updated the repair now just need to update the client
-    console.log(repair);
-
-    const updatedInfo = await clientCollection.updateOne({_id: new ObjectId(repair.clientID)}, {$set: client});
-    if (!updatedInfo.acknowledged || updatedInfo.modifiedCount === 0)
+    const updateFilter = 
     {
-        throw 'Could not update client successfully';
+        _id: new ObjectId(repair.clientID),
+        "Repairs._id": new ObjectId(repairID)
+    };
+
+    const updateQuery = 
+    {
+        $set: 
+        {
+            "Repairs.$.repairTechnicianNotes": repiarNotes,
+            "Repairs.$.wasTheRepairSuccessful": wasTheRepairSuccessful,
+            "Repairs.$.repairStatus": "ready to be picked up",
+            "Repairs.$.isDevicePickedUpAlready": false,
+            "Repairs.$.repairCompletionDate": new Date()
+        }
+    };
+
+    let clientCollection = await clients();
+    const updatedInfo = await clientCollection.updateOne(updateFilter, updateQuery);
+
+    if (!updatedInfo.acknowledged || updatedInfo.modifiedCount === 0) {
+        throw 'Could not update the repair successfully';
     }
-    return repair
+    return await getWorkorderById(repairID);
 
 }
+
+export const updateWorkorderAfterPickup = async(repairID, pickupDemoDone,pickupNotes)=>
+{
+    if(!repairID) throw "You must provide an id to search for";
+    if(typeof(repairID) !== "string") throw "Id must be a string";
+    repairID = repairID.trim();
+    if(repairID.length === 0) throw "Id cannot be empty";
+    if(!ObjectId.isValid(repairID)) throw 'invalid object ID'
+
+    if (!pickupDemoDone) throw "You must provide pickup demo done";
+    if(typeof(pickupDemoDone) !== "boolean") throw "Pickup demo done must be a boolean";
+
+    if (!pickupNotes) throw "You must provide pickup notes";
+    if(typeof(pickupNotes) !== "string") throw "Pickup notes must be a string";
+    pickupNotes = pickupNotes.trim();
+    if(pickupNotes.length === 0) throw "Pickup notes cannot be empty";
+
+    let repair = await getWorkorderById(repairID);
+    if(repair === null) throw "No repair with that id";
+
+    const updateFilter = 
+    {
+        _id: new ObjectId(repair.clientID),
+        "Repairs._id": new ObjectId(repairID)
+    };
+
+    const updateQuery = 
+    {
+        $set: 
+        {
+            "Repairs.$.pickupDemoDone": pickupDemoDone,
+            "Repairs.$.pickupNotes": pickupNotes,
+            "Repairs.$.isDevicePickedUpAlready": true,
+            "Repairs.$.repairStatus": "completed",
+            "Repairs.$.pickupDate": new Date()
+        }
+    };
+
+    let clientCollection = await clients();
+    const updatedInfo = await clientCollection.updateOne(updateFilter, updateQuery);
+
+    if (!updatedInfo.acknowledged || updatedInfo.modifiedCount === 0) {
+        throw 'Could not update the repair successfully';
+    }
+    return await getWorkorderById(repairID);
+}
+

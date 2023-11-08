@@ -3,7 +3,11 @@ import {createClient} from "../data/clients.js"
 import {addDeviceToClient} from "../data/clients.js"
 import {getClientById} from "../data/clients.js"
 import {createRepair} from "../data/clients.js"
-import {updateRepairAfterRepair} from "../data/clients.js"
+import {updateWorkorderAfterRepair} from "../data/clients.js"
+import {getWorkorderById} from "../data/clients.js"
+import {updateWorkorderAfterPickup} from "../data/clients.js"
+import {getClientByPhoneNumber} from "../data/clients.js"
+
 
 
 
@@ -26,17 +30,19 @@ async function main()
     // {
     //     console.log(e);
     // }
-    // let device1 ;
-    // try
-    // {
-    //     //deviceType, manufacturer, modelName, modelNumber, serialNumber)=>
-    //     device1 = await addDeviceToClient(client1._id.toString(),"mobile", "Apple", "iPhone12", "A1234", "123456789");
-    //     // console.log(await getClientById(client1._id.toString()));
-    // }
-    // catch(e)
-    // {
-    //     console.log(e);
-    // }
+    let device1 ;
+    try
+    {
+        //deviceType, manufacturer, modelName, modelNumber, serialNumber)=>
+        // device1 = await addDeviceToClient("654bbd4b63ec4726bdd3adf1","mobile", "samsung", "S20 ultra", "A1234", "123456789");
+        // console.log(await getClientById(client1._id.toString()));
+        // console.log(await getWorkorderById("654bc02a553cb8ce55c497ce"));
+        // console.log(await getClientByPhoneNumber(1234567890));
+    }
+    catch(e)
+    {
+        console.log(e);
+    }
 
  /*
     clientPreferredEmail: string, // this is needed in case the customer has a different email that the want for this repair 
@@ -50,27 +56,45 @@ async function main()
 	conditionOfDevice: string, */
     try
     {
-        // let workOrder = {
-        //     clientPreferredEmail: "myemail@gmail.com",
-        //     clientPreferredPhoneNumber: 9088881234,
-        //     issue: "broken screen",
-        //     issueOccuranceDate: new Date(),
-        //     wasIssueVerified: true,
-        //     stepsTakenToReplicateIssue: "has visible crack",
-        //     workToBeDone: "replace screen",
-        //     conditionOfDevice: "device looks fine besides the broken screen"
-        // }
+        let workOrder = {
+            clientPreferredEmail: "myemail2@gmail.com",
+            clientPreferredPhoneNumber: 9088881234,
+            issue: "broken camera",
+            wasIssueVerified: true,
+            stepsTakenToReplicateIssue: "has visible cracks on the camera",
+            workToBeDone: "replace the camera, test it",
+            conditionOfDevice: "device looks fine besides the broken camera"
+        }
+        let workOrder2 = {
+            clientPreferredEmail: "myemail23333@gmail.com",
+            clientPreferredPhoneNumber: 9088881234,
+            issue: "broken camera",
+            wasIssueVerified: true,
+            stepsTakenToReplicateIssue: "has visible cracks on the camera",
+            workToBeDone: "replace the camera, test it",
+            conditionOfDevice: "device looks fine besides the broken camera"
+        }
         // // console.log("deviceID: " + device1.Devices[0]._id.toString());
         // let repair1 = await createRepair("654a933f439af6c8af252b98", "654a933f439af6c8af252b99", workOrder);
         // console.log(repair1);
 
-        await updateRepairAfterRepair("654a94f684cbf85558152030","fixed the screen", true)
+        // await updateWorkorderAfterRepair("654a94f684cbf85558152030","Replaced the screen, tested the new screen", true)
+
+    //    console.log( await updateWorkorderAfterPickup("654a94f684cbf85558152030", true, "customer was happy with the repair"));
+    // await createRepair("654bbd4b63ec4726bdd3adf1", "654bbdddfe23317aca8c71ae", workOrder2)
+    // await createRepair("654a933f439af6c8af252b98", "654a933f439af6c8af252b99", workOrder2)
+    // await updateWorkorderAfterRepair("654bc02a553cb8ce55c497ce", "replaced the camera, tested it, camera works", true)
+        // await updateWorkorderAfterPickup("654bc02a553cb8ce55c497ce", true, "customer was happy with the repair")
     }
     catch(e)
     {
         console.log(e);
     }
  
+    // try
+    // {
+    //     await updateWorkorderAfterRepair
+    // }
  
     console.log("Seed Done!");
    
