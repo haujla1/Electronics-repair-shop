@@ -3,7 +3,7 @@ import { Route, Link, Routes, Navigate} from 'react-router-dom';
 import { doCreateUserWithEmailAndPassword } from "../firebase/firebaseFunctions";
 import { AuthContext } from "../context/authContext";
 
-//import googleSignIn from "./googleSignIn"
+import GoogleSignIn from "./googleSignIn"
 
 
 
@@ -15,7 +15,7 @@ function SignUp(){
     const [error, setError] = useState("")
 
     useEffect(()=>{
-        console.log("US#R " +currentUser)
+        console.log("USER " +currentUser)
     },[currentUser])
 
 
@@ -23,7 +23,6 @@ function SignUp(){
     async function handleSignUp(e){
         e.preventDefault()
         const{name, email, password, repeatPassword} = e.target.elements
-        console.log(name.value, email.value, password.value, repeatPassword.value)
         if(password.value != repeatPassword.value){
             setError("Passwords do not match.")
             return false
@@ -42,11 +41,10 @@ function SignUp(){
         }
             
         setError("")
-        
+    }
 
-        if(currentUser){
-            return <Navigate to='/'/>
-        }
+    if(currentUser){
+      return <Navigate to='/'/>
     }
 
     
@@ -54,6 +52,7 @@ function SignUp(){
     return (
         <div className='card'>
           <h1>Sign up</h1>
+          <Link to="/login">Or Login</Link>
         
           <form onSubmit={handleSignUp}>
             <div className='form-group'>
@@ -122,6 +121,8 @@ function SignUp(){
             </button>
           </form>
           <br />
+
+          <GoogleSignIn />
           <div>
             {error}
           </div>

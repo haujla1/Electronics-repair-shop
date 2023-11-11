@@ -3,7 +3,6 @@ import {getAuth, onAuthStateChanged} from 'firebase/auth';
 export const AuthContext = React.createContext();
 
 export const AuthProvider = ({children}) => {
-    console.log(children)
   const [currentUser, setCurrentUser] = useState(null);
   const [loadingUser, setLoadingUser] = useState(true);
   const auth = getAuth();
