@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Login from './components/login'
 import SignUp from './components/signup'
 import Home from './components/home'
+import Admin from './components/admin'
 
 
 import { Route, Link, Routes} from 'react-router-dom';
@@ -26,6 +27,9 @@ function App() {
             <Route path='/signup' element ={<SignUp/>}/>
             <Route path='/' element={<PrivateRoute />}> //this is a private route for home
               <Route path='/' element={<Home />} />
+            </Route>
+            <Route path='/adminTools' element={<PrivateRoute />}> //this is a private route for a manager ... change the private route for manager route eventually
+              <Route path='/adminTools' element={<Admin />} />
             </Route>
           </Routes>
       </div>

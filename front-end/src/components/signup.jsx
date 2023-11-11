@@ -44,6 +44,7 @@ function SignUp(){
     }
 
     if(currentUser){
+      //check if they are nothing, manager, or regular
       return <Navigate to='/'/>
     }
 

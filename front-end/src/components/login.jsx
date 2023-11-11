@@ -36,7 +36,8 @@ function Login(){
     }
 
 
-    if(currentUser){
+    if(currentUser){ 
+        //check if they are nothing, manager, or regular
         return <Navigate to='/' replace={true} />
     }
 
