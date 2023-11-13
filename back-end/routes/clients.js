@@ -1,6 +1,10 @@
-import { clientRouter } from 'express';
-const clientRouter = clientRouter();
-import * as clients from '../data/clients.js';
+import { Router } from 'express';
+const clientRouter = Router();
+import {
+    createClient,
+    getClientById,
+    addDeviceToClient
+} from '../data/clients.js';
 
 /**
  * potential routes and HTTP actions:
@@ -14,7 +18,7 @@ import * as clients from '../data/clients.js';
 clientRouter.post('/', async (req, res) => {
     console.log(req.body);
     try {
-        const client = await clients.createClient(
+        const client = await createClient(
             req.body.name,
             req.body.phoneNumber
         );
@@ -26,7 +30,7 @@ clientRouter.post('/', async (req, res) => {
 
 clientRouter.get('/:id', async (req, res) => {
     try {
-        const client = await clients.getClientById(req.params.id);
+        const client = await getClientById(req.params.id);
         res.json(client);
     } catch (e) {
         res.status(400).json({error: e});
@@ -40,7 +44,7 @@ clientRouter.get('/:id/repairs', async (req, res) => {
 clientRouter.post('/:id/device', async (req, res) => {
     console.log(req.body);
     try {
-        const client = await clients.addDeviceToClient(
+        const client = await addDeviceToClient(
             req.body.id,
             req.body.deviceType,
             req.body.manufacturer,

@@ -1,5 +1,5 @@
 import clientRouter from "./clients.js";
-import repairRouter from './repairs';
+import repairRouter from './repairs.js';
 
 export const configRoutes = app => {
     app.use('/clients', clientRouter);

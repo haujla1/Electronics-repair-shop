@@ -1,6 +1,11 @@
 import { Router } from 'express';
 const router = Router();
-// import * as repairs from '../data/repairs';
+import {
+    createRepair,
+    getWorkorderById,
+    updateWorkorderAfterRepair,
+    updateWorkorderAfterPickup
+} from '../data/clients.js';
 
 /**
  * potential routes and HTTP actions:
@@ -14,7 +19,12 @@ const router = Router();
 router.post('/', async (req, res) => {
     console.log(req.body);
     try {
-        // use the createRepair function
+        const repair = await createRepair(
+            req.body.clientId,
+            req.body.deviceID,
+            req.body.workOrder
+        );
+        res.json(repair);
     } catch (e) {
         res.status(400).json({error: e});
     }
