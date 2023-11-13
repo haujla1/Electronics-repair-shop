@@ -32,25 +32,36 @@ router.post('/', async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        // use the getWorkorderById function
+        const repair = await getWorkorderById(req.params.id);
+        res.json(repair);
     } catch (e) {
         res.status(400).json({error: e});
     }
 });
 
-router.post('/afterRepair', async (req, res) => {
+router.put('/afterRepair', async (req, res) => {
     console.log(req.body);
     try {
-        // use the updateWorkorderAfterRepair function
+        const repair = await updateWorkorderAfterRepair(
+            req.body.repairID,
+            req.body.repiarNotes,
+            req.body.wasTheRepairSuccessful
+        );
+        res.json(repair);
     } catch (e) {
         res.status(400).json({error: e});
     }
 });
 
-router.post('/afterPickup', async (req, res) => {
+router.put('/afterPickup', async (req, res) => {
     console.log(req.body);
     try {
-        // use the updateWorkorderAfterPickup function
+        const repair = await updateWorkorderAfterPickup(
+            req.body.repairID,
+            req.body.pickupDemoDone,
+            req.body.pickupNotes
+        );
+        res.json(repair);
     } catch (e) {
         res.status(400).json({error: e});
     }
