@@ -8,8 +8,8 @@ app.use(express.urlencoded({extended: true}));
 app.use('*', (req, res, next) => {
     console.log(`${req.method} ${req.originalUrl}`)
 
-    console.log();
     next();
+    console.log();
 });
 
 configRoutes(app);

@@ -1,9 +1,9 @@
-import router from "./clients.js";
-// import * as repairs from '../routes/repairs';
+import clientRouter from "./clients.js";
+import repairRouter from './repairs';
 
 export const configRoutes = app => {
-    app.use('/clients', router);
-    // app.use('/repairs', repairs);
+    app.use('/clients', clientRouter);
+    app.use('/repairs', repairRouter);
     app.use('*', (req, res) => {
         res.status(404).json({error: 'Not found.'});
     });
