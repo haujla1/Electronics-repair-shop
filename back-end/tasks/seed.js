@@ -1,107 +1,125 @@
 import { dbConnection, closeConnection } from "../config/mongoConnection.js";
-import {createClient} from "../data/clients.js" 
-import {addDeviceToClient} from "../data/clients.js"
-import {getClientById} from "../data/clients.js"
-import {createRepair} from "../data/clients.js"
-import {updateWorkorderAfterRepair} from "../data/clients.js"
-import {getWorkorderById} from "../data/clients.js"
-import {updateWorkorderAfterPickup} from "../data/clients.js"
-import {getClientByPhoneNumber} from "../data/clients.js"
+import { createClient } from "../data/clients.js";
+import { addDeviceToClient } from "../data/clients.js";
+import { getClientById, getClientByPhoneNumber } from "../data/clients.js";
+import {
+  createRepair,
+  updateWorkorderAfterRepair,
+  updateWorkorderAfterPickup,
+  getWorkorderById,
+} from "../data/repairs.js";
 
+async function main() {
+  const db = await dbConnection();
+  // await db.dropDatabase();
+  let client1, client2, device1, device2;
+  try {
+    client1 = await createClient(
+      "John",
+      "Doe",
+      "9088881234",
+      "johndoe@example.com",
+      "123 Main St, Anytown, USA",
+      30
+    );
+    console.log(client1);
 
+    client2 = await createClient(
+      "Jane",
+      "Smith",
+      "1234567890",
+      "janesmith@example.com",
+      "456 Elm St, Othertown, USA",
+      25
+    );
+    console.log(client2);
 
+    device1 = await addDeviceToClient(
+      client1._id.toString(),
+      "mobile",
+      "Samsung",
+      "S20 Ultra",
+      "A1234",
+      "123456789"
+    );
+    console.log(device1);
 
+    device2 = await addDeviceToClient(
+      client2._id.toString(),
+      "tablet",
+      "Apple",
+      "iPad Pro",
+      "B5678",
+      "987654321"
+    );
+    console.log(device2);
+  } catch (e) {
+    console.log(e);
+  }
 
+  try {
+    let workOrder1 = {
+      clientPreferredEmail: "alternate1@example.com",
+      clientPreferredPhoneNumber: "1112223333",
+      issue: "broken screen",
+      wasIssueVerified: true,
+      stepsTakenToReplicateIssue: "visible cracks on screen",
+      workToBeDone: "screen replacement",
+      conditionOfDevice: "other than screen, device in good condition",
+    };
 
+    let workOrder2 = {
+      clientPreferredEmail: "alternate2@example.com",
+      clientPreferredPhoneNumber: "4445556666",
+      issue: "battery issue",
+      wasIssueVerified: true,
+      stepsTakenToReplicateIssue: "battery drains quickly",
+      workToBeDone: "battery replacement",
+      conditionOfDevice: "good condition except battery",
+    };
 
+    let repair1 = await createRepair(
+      client1._id.toString(),
+      device1._id.toString(),
+      workOrder1
+    );
+    console.log(repair1);
 
-async function main() 
-{
-    const db = await dbConnection();
-    // await db.dropDatabase();
+    let repair2 = await createRepair(
+      client2._id.toString(),
+      device2._id.toString(),
+      workOrder2
+    );
+    console.log(repair2);
 
-    // let client1 
-    // try
-    // {
-    //     client1 = await createClient("John Doe", 9088881234);
-    //     // console.log (client1)
-    // }
-    // catch(e)
-    // {
-    //     console.log(e);
-    // }
-    let device1 ;
-    try
-    {
-        //deviceType, manufacturer, modelName, modelNumber, serialNumber)=>
-        // device1 = await addDeviceToClient("654bbd4b63ec4726bdd3adf1","mobile", "samsung", "S20 ultra", "A1234", "123456789");
-        // console.log(await getClientById(client1._id.toString()));
-        // console.log(await getWorkorderById("654bc02a553cb8ce55c497ce"));
-        // console.log(await getClientByPhoneNumber(1234567890));
-    }
-    catch(e)
-    {
-        console.log(e);
-    }
+    await updateWorkorderAfterRepair(
+      repair1._id.toString(),
+      "Screen replaced and tested",
+      true
+    );
+    await updateWorkorderAfterPickup(
+      repair1._id.toString(),
+      true,
+      "Customer satisfied with repair"
+    );
 
- /*
-    clientPreferredEmail: string, // this is needed in case the customer has a different email that the want for this repair 
-	clientPreferredPhoneNumber: number, // this is needed in case the customer has a different number that the want for this repair 
-	repairOrderCreationDate: date,
-	issue: string,
-	issueOccuranceDate: date,
-	wasIssueVerified: Boolean,
-	stepsTakenToReplicateIssue: string,
-	workToBeDone:string,
-	conditionOfDevice: string, */
-    try
-    {
-        let workOrder = {
-            clientPreferredEmail: "myemail2@gmail.com",
-            clientPreferredPhoneNumber: 9088881234,
-            issue: "broken camera",
-            wasIssueVerified: true,
-            stepsTakenToReplicateIssue: "has visible cracks on the camera",
-            workToBeDone: "replace the camera, test it",
-            conditionOfDevice: "device looks fine besides the broken camera"
-        }
-        let workOrder2 = {
-            clientPreferredEmail: "myemail23333@gmail.com",
-            clientPreferredPhoneNumber: 9088881234,
-            issue: "broken camera",
-            wasIssueVerified: true,
-            stepsTakenToReplicateIssue: "has visible cracks on the camera",
-            workToBeDone: "replace the camera, test it",
-            conditionOfDevice: "device looks fine besides the broken camera"
-        }
-        // // console.log("deviceID: " + device1.Devices[0]._id.toString());
-        // let repair1 = await createRepair("654a933f439af6c8af252b98", "654a933f439af6c8af252b99", workOrder);
-        // console.log(repair1);
+    await updateWorkorderAfterRepair(
+      repair2._id.toString(),
+      "Battery replaced and tested",
+      true
+    );
+    await updateWorkorderAfterPickup(
+      repair2._id.toString(),
+      true,
+      "Customer satisfied with repair"
+    );
+  } catch (e) {
+    console.log(e);
+  }
 
-        // await updateWorkorderAfterRepair("654a94f684cbf85558152030","Replaced the screen, tested the new screen", true)
+  console.log("Seed Done!");
 
-    //    console.log( await updateWorkorderAfterPickup("654a94f684cbf85558152030", true, "customer was happy with the repair"));
-    // await createRepair("654bbd4b63ec4726bdd3adf1", "654bbdddfe23317aca8c71ae", workOrder2)
-    // await createRepair("654a933f439af6c8af252b98", "654a933f439af6c8af252b99", workOrder2)
-    // await updateWorkorderAfterRepair("654bc02a553cb8ce55c497ce", "replaced the camera, tested it, camera works", true)
-        // await updateWorkorderAfterPickup("654bc02a553cb8ce55c497ce", true, "customer was happy with the repair")
-    }
-    catch(e)
-    {
-        console.log(e);
-    }
- 
-    // try
-    // {
-    //     await updateWorkorderAfterRepair
-    // }
- 
-    console.log("Seed Done!");
-   
-    await closeConnection();
-    
-
-
+  await closeConnection();
 }
 
 main();
