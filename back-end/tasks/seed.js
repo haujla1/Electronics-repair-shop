@@ -22,7 +22,7 @@ async function main() {
       "123 Main St, Anytown, USA",
       30
     );
-    console.log(client1);
+    //console.log(client1);
 
     client2 = await createClient(
       "Jane",
@@ -32,7 +32,7 @@ async function main() {
       "456 Elm St, Othertown, USA",
       25
     );
-    console.log(client2);
+    //console.log(client2);
 
     device1 = await addDeviceToClient(
       client1._id.toString(),
@@ -42,7 +42,7 @@ async function main() {
       "A1234",
       "123456789"
     );
-    console.log(device1);
+    //console.log(device1);
 
     device2 = await addDeviceToClient(
       client2._id.toString(),
@@ -52,7 +52,7 @@ async function main() {
       "B5678",
       "987654321"
     );
-    console.log(device2);
+    //console.log(device2);
   } catch (e) {
     console.log(e);
   }
@@ -83,14 +83,16 @@ async function main() {
       device1._id.toString(),
       workOrder1
     );
-    console.log(repair1);
+    // console.log(repair1);
+    // console.log(client1);
 
     let repair2 = await createRepair(
       client2._id.toString(),
       device2._id.toString(),
       workOrder2
     );
-    console.log(repair2);
+    // console.log(repair2);
+    // console.log(client2);
 
     await updateWorkorderAfterRepair(
       repair1._id.toString(),
@@ -113,6 +115,14 @@ async function main() {
       true,
       "Customer satisfied with repair"
     );
+    // console.log(typeof client1._id);
+    // console.log(client2._id);
+    // console.log(repair1._id);
+    // console.log(repair2._id);
+    // console.log(typeof device1._id);
+    // console.log(device2._id);
+    const a = await getClientById(client1._id);
+    console.log(a);
   } catch (e) {
     console.log(e);
   }
