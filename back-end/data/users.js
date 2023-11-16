@@ -156,6 +156,21 @@ export const getAllAuthorizedUsers = async (adminFirebaseId) => {
 }
 
 
+export const getAllPendingUsers = async (adminFirebaseId) => {
+    let userCollection = await users()
+
+    let admin = await getUser(adminFirebaseId)
+
+    if(admin.status != "Approved" || admin.role != "Admin"){
+        throw "Not Authorized User"
+    }
+
+    let allUsers = (await userCollection.find({status: "Pending"})).toArray()
+
+    return allUsers
+}
+
+
 //console.log(await createUser("Kyle Admin", "kwboberg2@gmail.com", "123123", "Admin", "123"))
 //console.log(await createRequest("Kyle Request", "kwboberg3@gmail.com", "456456", "456"))
 //console.log(await approveUser("123", "456"))
