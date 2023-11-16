@@ -79,17 +79,18 @@ export const createUser = async (name, email, employeeId, role, firebaseId) => {
 
 
 
-export const getUser = async (firebaseId) => { 
+export const getUser = async (email, firebaseId) => { 
 
     let userCollection = await users()
 
-    let user = await userCollection.findOne({ firebaseId: firebaseId })
+    console.log(email, firebaseId)
+    let user = await userCollection.findOne( { firebaseId: firebaseId, email:email} )
 
     if (user) {
         user._id = user._id.toString();
         return user;
     } else {
-        if (user === null) throw "No user with that id";
+        if (user === null) throw "No matching user";
     }
 
     return user

@@ -9,17 +9,19 @@ import {
     getAllPendingUsers
 } from '../data/users.js';
 
-import { ObjectId } from 'mongodb';
-import emailValidator from 'email-validator';
 import xss from 'xss';
+import {
+    validateString,
+    validateEmail,
+} from "../util/validationUtil.js";
 
 
 router.post('/request', async (req, res) => {
     console.log(req.body);
-    let name = req.body.name //validate these
-    let email = req.body.email
-    let employeeId = req.body.employeeId
-    let firebaseId = req.body.firebaseId
+    let name = validateString(xss(req.body.name), "Name") 
+    let email =  validateEmail(xss(req.body.email))
+    let employeeId = validateString(xss(req.body.employeeId), "Employee ID")
+    let firebaseId = xss(req.body.firebaseId) //validate firebase ID
 
 
     try{
@@ -31,11 +33,12 @@ router.post('/request', async (req, res) => {
 })
 
 
-router.get('/:firebaseId', async (req, res) => {
-    let firebaseId = req.params.firebaseId //validate
+router.get('/:firebaseId/:email', async (req, res) => {
+    let firebaseId = xss(req.params.firebaseId) //validate firebase ID
+    let email = validateEmail(xss(req.params.email))
 
     try{
-        let data = await getUser(firebaseId)
+        let data = await getUser(email, firebaseId)
         res.json(data)
     }catch(e){
         res.status(404).json({error: e})
@@ -44,8 +47,8 @@ router.get('/:firebaseId', async (req, res) => {
 
 
 router.patch('/approve', async (req, res) => {
-    let adminFirebaseId = req.body.adminFirebaseId //validate these
-    let userFirebaseId = req.body.userFirebaseId
+    let adminFirebaseId = xss(req.body.adminFirebaseId) //validate firebase ID
+    let userFirebaseId = xss(req.body.userFirebaseId)//validate firebase ID
 
     try{
         let data = await approveUser(adminFirebaseId, userFirebaseId)
@@ -57,8 +60,8 @@ router.patch('/approve', async (req, res) => {
 
 
 router.delete('/remove', async (req, res) => {
-    let adminFirebaseId = req.body.adminFirebaseId //validate these
-    let userFirebaseId = req.body.userFirebaseId
+    let adminFirebaseId = xss(req.body.adminFirebaseId) //validate firebase ID
+    let userFirebaseId = xss(req.body.userFirebaseId)//validate firebase ID
 
     try{
         let data = await deleteUser(adminFirebaseId, userFirebaseId)
@@ -69,9 +72,9 @@ router.delete('/remove', async (req, res) => {
 })
 
 
-router.get('/authorized-users/:adminFirebaseId', async (req, res) => {
+router.get('/authorized/:adminFirebaseId', async (req, res) => {
 
-    let adminFirebaseId = req.params.adminFirebaseId
+    let adminFirebaseId = xss(req.params.adminFirebaseId)//validate firebase ID
 
     try{
         let data = await getAllAuthorizedUsers(adminFirebaseId)
@@ -81,9 +84,9 @@ router.get('/authorized-users/:adminFirebaseId', async (req, res) => {
     }
 })
 
-router.get('/pending-users/:adminFirebaseId', async (req, res) => {
+router.get('/pending/:adminFirebaseId', async (req, res) => {
 
-    let adminFirebaseId = req.params.adminFirebaseId
+    let adminFirebaseId = xss(req.params.adminFirebaseId)//validate firebase ID
 
     try{
         let data = await getAllPendingUsers(adminFirebaseId)
