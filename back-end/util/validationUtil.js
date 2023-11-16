@@ -87,7 +87,7 @@ export const validateObjectId = (id, fieldName) => {
 export const validateAge = (age, fieldName) => {
   if (age < constants.min_age || age > constants.max_age) {
     throw new Error(
-      `${fieldName} must be between ${min_age} and ${max_age} years old`
+      `${fieldName} must be between ${constants.min_age} and ${constants.max_age} years old`
     );
   }
   return age;
