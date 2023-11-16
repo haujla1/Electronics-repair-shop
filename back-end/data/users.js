@@ -172,6 +172,6 @@ export const getAllPendingUsers = async (adminFirebaseId) => {
 
 
 //console.log(await createUser("Kyle Admin", "kwboberg2@gmail.com", "123123", "Admin", "123"))
-//console.log(await createRequest("Kyle Request", "kwboberg3@gmail.com", "456456", "456"))
-//console.log(await approveUser("123", "456"))
+// console.log(await createRequest("Kyle Request", "kwboberg4@gmail.com", "456456", "456"))
+// console.log(await getAllPendingUsers("123"))
 //console.log(await deleteUser("123", "456"))
