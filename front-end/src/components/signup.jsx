@@ -11,11 +11,12 @@ import GoogleSignIn from "./googleSignIn"
 
 function SignUp(){
 
-    const {currentUser} = useContext(AuthContext)
+    const {currentUser, role} = useContext(AuthContext)
+
     const [error, setError] = useState("")
 
     useEffect(()=>{
-        console.log("USER " +currentUser)
+        console.log(currentUser)
     },[currentUser])
 
 
@@ -43,9 +44,14 @@ function SignUp(){
         setError("")
     }
 
-    if(currentUser){
+    if(currentUser && role){
       //check if they are nothing, manager, or regular
-      return <Navigate to='/'/>
+      console.log("ROle" + role)
+      if(role == "Admin" || role == "Technician"){
+        return <Navigate to='/'/>
+      }else{
+        return <Navigate to='/no-access'/>
+      }
     }
 
     

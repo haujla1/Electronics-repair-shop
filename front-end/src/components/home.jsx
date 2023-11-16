@@ -7,12 +7,12 @@ import SignOut from "./signOut"
 
 
 function Home(){
-    const {currentUser} = useContext(AuthContext)
+    const {currentUser, role} = useContext(AuthContext)
     
     //only if the current user is the admin
     return (
         <>
-            <h1>{"Hello " + currentUser.displayName}</h1>
+            <h1>{"Hello " + currentUser.displayName + " (" + role + ")"}</h1>
             <SignOut />
             <Link to='/adminTools'>Admin Tools</Link> 
         </>

@@ -6,7 +6,7 @@ import GoogleSignIn from "./googleSignIn";
 
 
 function Login(){
-    const {currentUser} = useContext(AuthContext)
+    const {currentUser, role} = useContext(AuthContext)
     let [display, setDisplay] = useState("")
 
     const handleLogin = async(e)=>{
@@ -35,11 +35,17 @@ function Login(){
         }
     }
 
-
-    if(currentUser){ 
-        //check if they are nothing, manager, or regular
-        return <Navigate to='/' replace={true} />
+    
+    if(currentUser && role){
+      //check if they are nothing, manager, or regular
+      console.log("ROle" + role)
+      if(role == "Admin" || role == "Technician"){
+        return <Navigate to='/'/>
+      }else{
+        return <Navigate to='/no-access'/>
+      }
     }
+  
 
 
     return (
