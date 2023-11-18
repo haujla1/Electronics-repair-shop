@@ -2,6 +2,7 @@ import { dbConnection, closeConnection } from "../config/mongoConnection.js";
 import { createClient } from "../data/clients.js";
 import { addDeviceToClient } from "../data/clients.js";
 import { getClientById, getClientByPhoneNumber } from "../data/clients.js";
+import { createUser } from "../data/users.js";
 import {
   createRepair,
   updateWorkorderAfterRepair,
@@ -123,6 +124,20 @@ async function main() {
     // console.log(device2._id);
     const a = await getClientById(client1._id);
     console.log(a);
+  } catch (e) {
+    console.log(e);
+  }
+
+  let admin, user1, user2, pending;
+  try {
+    admin = await createUser("Mr.Admin", "admin@gmail.com", "123123", "Approved", "Admin", "dI1ek0bE7MdzXRE3VxNwG8Amzhj1") //password: test123
+
+    user1 = await createUser("Tech1", "tech@gmail.com", "123123", "Approved", "Technician", "8WIjdBNWd3QyvmaKjvYhKQ0ME4I2") //password: test123
+
+    user2 = await createUser("Tech2", "tech2@gmail.com", "123123", "Approved", "Technician", "uBaG1LK71aPgvURqYBws0cgb0sG2") //password: test123
+
+    pending = await createUser("Random Guy", "random@gmail.com", "123123", "Pending", "Technician", "mQkXg5hn6Odga5zZOHWAFPqrvN42") //password: test123
+    //console.log(device2);
   } catch (e) {
     console.log(e);
   }

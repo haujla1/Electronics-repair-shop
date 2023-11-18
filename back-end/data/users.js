@@ -22,7 +22,7 @@ export const createRequest = async (name, email, employeeId, firebaseId) => { //
     let prev = await userCollection.findOne({email: email})
 
     if(prev){
-        throw "Email already exists"
+        throw "You already have requested access"
     }
 
     let newUser = {
@@ -34,10 +34,14 @@ export const createRequest = async (name, email, employeeId, firebaseId) => { //
     }
 
     const insertInfo = await userCollection.insertOne(newUser);
-    const user = getUser(firebaseId);
-    if (!insertInfo.acknowledged || !insertInfo.insertedId) {
+    const user = await getUser(email, firebaseId);
+
+
+    if (!user) {
         throw "Was not able to add user.";
     }
+
+    
         
     return user;
     
@@ -45,30 +49,45 @@ export const createRequest = async (name, email, employeeId, firebaseId) => { //
 
 
 
-export const createUser = async (name, email, employeeId, role, firebaseId) => { //for seed file only
+export const createUser = async (name, email, employeeId, status, role, firebaseId) => { //for seed file only
     name = validateString(name, "Name")
     email = validateEmail(email)
     employeeId = validateString(employeeId, "employeeId")
     firebaseId = validateString(firebaseId, "firebaseId")
     
-    if(role !== "Admin" && role !== "Technician"){
+    if(role !== "Admin" && role !== "Technician" && role!== "None"){
+        throw "Invalid Role"
+    }
+    if(status !== "Pending" && status !== "Approved"){
         throw "Invalid Role"
     }
 
 
     let userCollection = await users()
 
-    let newUser = {
-        name: name,
-        email: email,
-        employeeId: employeeId,
-        status: "Approved",
-        role:role,
-        firebaseId: firebaseId
+    let newUser
+
+    if(role == "None"){
+        newUser = {
+            name: name,
+            email: email,
+            employeeId: employeeId,
+            status: status,
+            firebaseId: firebaseId
+        }
+    }else{
+        newUser = {
+            name: name,
+            email: email,
+            employeeId: employeeId,
+            status: status,
+            role:role,
+            firebaseId: firebaseId
+        } 
     }
 
     const insertInfo = await userCollection.insertOne(newUser);
-    const user = getUser(firebaseId);
+    const user = await getUser(email, firebaseId);
     if (!insertInfo.acknowledged || !insertInfo.insertedId) {
         throw "Was not able to add user.";
     }
@@ -84,7 +103,26 @@ export const getUser = async (email, firebaseId) => {
     let userCollection = await users()
 
     console.log(email, firebaseId)
+
+
     let user = await userCollection.findOne( { firebaseId: firebaseId, email:email} )
+
+    if (user) {
+        user._id = user._id.toString();
+        return user;
+    } else {
+        if (user === null) throw "No matching user";
+    }
+
+    return user
+}
+
+
+export const getUserById = async (firebaseId) => { 
+
+    let userCollection = await users()
+
+    let user = await userCollection.findOne( { firebaseId: firebaseId} )
 
     if (user) {
         user._id = user._id.toString();
@@ -100,8 +138,9 @@ export const getUser = async (email, firebaseId) => {
 export const approveUser = async (adminFirebaseId, userFirebaseId) => {
     let userCollection = await users()
 
-    let user = await getUser(userFirebaseId)
-    let admin = await getUser(adminFirebaseId)
+
+    let user = await getUserById(userFirebaseId)
+    let admin = await getUserById(adminFirebaseId)
 
     if(admin.status != "Approved" || admin.role != "Admin"){
         throw "Not Authorized User"
@@ -125,11 +164,17 @@ export const approveUser = async (adminFirebaseId, userFirebaseId) => {
 export const deleteUser = async (adminFirebaseId, userFirebaseId) => {
     let userCollection = await users()
 
-    let user = await getUser(userFirebaseId)
-    let admin = await getUser(adminFirebaseId)
+    console.log(userFirebaseId, adminFirebaseId)
+
+    let user = await getUserById(userFirebaseId)
+    let admin = await getUserById(adminFirebaseId)
 
     if(admin.status != "Approved" || admin.role != "Admin"){
         throw "Not Authorized User"
+    }
+
+    if(user.role == "Admin"){
+        throw "Cannot delete Admin"
     }
 
     await userCollection.findOneAndDelete({ firebaseId: user.firebaseId })
@@ -140,8 +185,8 @@ export const deleteUser = async (adminFirebaseId, userFirebaseId) => {
 
 export const getAllAuthorizedUsers = async (adminFirebaseId) => {
     let userCollection = await users()
-
-    let admin = await getUser(adminFirebaseId)
+    
+    let admin = await getUserById(adminFirebaseId)
 
     if(admin.status != "Approved" || admin.role != "Admin"){
         throw "Not Authorized User"
@@ -160,7 +205,7 @@ export const getAllAuthorizedUsers = async (adminFirebaseId) => {
 export const getAllPendingUsers = async (adminFirebaseId) => {
     let userCollection = await users()
 
-    let admin = await getUser(adminFirebaseId)
+    let admin = await getUserById(adminFirebaseId)
 
     if(admin.status != "Approved" || admin.role != "Admin"){
         throw "Not Authorized User"
