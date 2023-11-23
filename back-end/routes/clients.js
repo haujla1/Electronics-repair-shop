@@ -3,7 +3,8 @@ const clientRouter = Router();
 import {
     createClient,
     getClientById,
-    addDeviceToClient
+    addDeviceToClient,
+    getClientByPhoneNumber
 } from '../data/clients.js';
 import {
     validateString,
@@ -85,6 +86,24 @@ clientRouter.get('/:id', async (req, res) => {
 
     try {
         const client = await getClientById(req.params.id);
+        res.json(client);
+    } catch (e) {
+        res.status(400).json({error: e});
+    }
+});
+
+clientRouter.get('/phoneNumber/:phoneNumber', async (req, res) => {
+    try {
+        if (typeof req.params.phoneNumber === 'undefined') throw 'You must provide a phone number';
+        req.params.phoneNumber = validatePhoneNumber(req.params.phoneNumber);
+        req.params.phoneNumber = xss(req.params.phoneNumber);
+    } catch (e) {
+        res.status(400).json({error: e});
+        return;
+    }
+
+    try {
+        const client = await getClientByPhoneNumber(req.params.phoneNumber);
         res.json(client);
     } catch (e) {
         res.status(400).json({error: e});
