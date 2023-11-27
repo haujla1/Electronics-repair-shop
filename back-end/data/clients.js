@@ -5,6 +5,7 @@ import {
   validatePhoneNumber,
   validateEmail,
   validateAge,
+  validateObjectId,
 } from "../util/validationUtil.js";
 
 export const createClient = async (
@@ -17,7 +18,7 @@ export const createClient = async (
 ) => {
   firstName = validateString(firstName, "First Name");
   lastName = validateString(lastName, "Last Name");
-  validatePhoneNumber(phoneNumber);
+  phoneNumber = validatePhoneNumber(phoneNumber);
   email = validateEmail(email, "Email");
   address = validateString(address, "Address");
   age = validateAge(age, "Age");
@@ -44,11 +45,7 @@ export const createClient = async (
 };
 
 export const getClientById = async (id) => {
-  if (!id) throw "You must provide an id to search for";
-  if (typeof id !== "string") throw "Id must be a string";
-  id = id.trim();
-  if (id.length === 0) throw "Id cannot be empty";
-  if (!ObjectId.isValid(id)) throw "invalid object ID";
+  id = validateObjectId(id, "Client ID");
 
   let clientCollection = await clients();
   let client = await clientCollection.findOne({ _id: new ObjectId(id) });
@@ -61,7 +58,7 @@ export const getClientById = async (id) => {
 };
 
 export const getClientByPhoneNumber = async (phoneNumber) => {
-  validatePhoneNumber(phoneNumber);
+  phoneNumber = validatePhoneNumber(phoneNumber);
 
   let clientCollection = await clients();
   let client = await clientCollection.findOne({
@@ -93,14 +90,14 @@ export const addDeviceToClient = async (
   if (client === null) throw "No client with that id";
 
   let newDevice = {
-    _id: new ObjectId().toString(),
+    _id: new ObjectId(),
     deviceType: validatedDeviceType,
     manufacturer: validatedManufacturer,
     modelName: validatedModelName,
     modelNumber: validatedModelNumber,
     serialNumber: validatedSerialNumber,
   };
-
+  newDevice._id = newDevice._id.toString();
   client.Devices.push(newDevice);
   const updatedInfo = await clientCollection.updateOne(
     { _id: new ObjectId(clientId) },
@@ -111,5 +108,5 @@ export const addDeviceToClient = async (
     throw "Could not update client successfully";
   }
 
-  return await getClientById(clientId);
+  return newDevice;
 };
