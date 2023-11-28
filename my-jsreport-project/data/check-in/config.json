@@ -1,0 +1,20 @@
+{
+    "name": "check-in",
+    "engine": "jsrender",
+    "recipe": "chrome-pdf",
+    "data": {
+        "shortid": "Lfb2d1o8M"
+    },
+    "shortid": "QomZjPCwrq",
+    "chrome": {
+        "printBackground": true
+    },
+    "creationDate": {
+        "$$date": 1701198982564
+    },
+    "modificationDate": {
+        "$$date": 1701199141973
+    },
+    "_id": "9VbWjMrxzeux6ELG",
+    "$entitySet": "templates"
+}

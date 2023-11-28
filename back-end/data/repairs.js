@@ -129,12 +129,16 @@ export const createRepair = async (clientId, deviceID, workOrder) => {
           data: reportData,
         },
         {
-          responseType: "blob",
+          //responseType: "blob",
+          responseType: "arraybuffer", // Changed from 'blob' to 'arraybuffer'
+
         }
       );
 
       const pdfFilename = `repair-report-${newRepair._id}.pdf`;
-      fs.writeFileSync(pdfFilename, response.data);
+      fs.writeFileSync(pdfFilename, Buffer.from(response.data, 'binary'));
+
+//       fs.writeFileSync(pdfFilename, response.data);
 
       return pdfFilename;
     } catch (error) {
@@ -143,6 +147,8 @@ export const createRepair = async (clientId, deviceID, workOrder) => {
     }
   }
 };
+
+
 
 export const getWorkorderById = async (repairId) => {
   validateString(repairId, "Repair ID");

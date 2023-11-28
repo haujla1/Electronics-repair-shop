@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Repair Order Report</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .header {
+            background-color: #4CAF50;
+            color: white;
+            text-align: center;
+            padding: 10px;
+        }
+        .section {
+            margin: 20px;
+        }
+        .section h2 {
+            color: #4CAF50;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .data-table td, .data-table th {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+        .data-table th {
+            padding-top: 12px;
+            padding-bottom: 12px;
+            text-align: left;
+            background-color: #f2f2f2;
+            color: #333;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.8em;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Repair Order Report</h1>
+    </div>
+
+    <div class="section">
+        <h2>Client Information</h2>
+        <table class="data-table">
+            <tr><th>Name</th><td>{{:clientName}}</td></tr>
+            <tr><th>Email</th><td>{{:clientEmail}}</td></tr>
+            <tr><th>Phone</th><td>{{:clientPhone}}</td></tr>
+            <tr><th>Address</th><td>{{:clientAddress}}</td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Device Information</h2>
+        <table class="data-table">
+            <tr><th>Type</th><td>{{:deviceType}}</td></tr>
+            <tr><th>Manufacturer</th><td>{{:manufacturer}}</td></tr>
+            <tr><th>Model Name</th><td>{{:modelName}}</td></tr>
+            <tr><th>Model Number</th><td>{{:modelNumber}}</td></tr>
+            <tr><th>Serial Number</th><td>{{:serialNumber}}</td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Repair Order Details</h2>
+        <table class="data-table">
+            <tr><th>Order ID</th><td>{{:_id}}</td></tr>
+            <tr><th>Device ID</th><td>{{:deviceID}}</td></tr>
+            <tr><th>Creation Date</th><td>{{:repairOrderCreationDate}}</td></tr>
+            <tr><th>Issue Reported</th><td>{{:issue}}</td></tr>
+            <tr><th>Issue Verified</th><td>{{:wasIssueVerified}}</td></tr>
+            <tr><th>Steps to Replicate Issue</th><td>{{:stepsTakenToReplicateIssue}}</td></tr>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>Work and Condition</h2>
+        <table class="data-table">
+            <tr><th>Work to be Done</th><td>{{:workToBeDone}}</td></tr>
+            <tr><th>Condition of Device</th><td>{{:conditionOfDevice}}</td></tr>
+        </table>
+    </div>
+
+</body>
+</html>
