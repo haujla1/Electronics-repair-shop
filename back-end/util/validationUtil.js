@@ -1,6 +1,6 @@
 import emailValidator from "email-validator";
 import { ObjectId } from "mongodb";
-import constants from "../../appConstants.js";
+import constants from "../appConstants.js";
 export const validateString = (value, fieldName) => {
   if (!value) throw `You must provide a ${fieldName}`;
   if (typeof value !== "string") throw `${fieldName} must be a string`;
