@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState} from "react";
 import { Route, Link, Routes} from 'react-router-dom';
 import { AuthContext } from "../context/authContext";
 import axios from 'axios'
+import Nav from "./navBar";
 
 
 
@@ -92,7 +93,7 @@ const adminTools = () =>{
 
     return(
         <>
-            <h1>Admin</h1>
+            <Nav pagename="Admin Tools"/>
             <Link to="/">Home</Link>
             <br />
             <br />
