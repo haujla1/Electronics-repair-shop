@@ -7,13 +7,16 @@ function Nav({pagename}){
     const {currentUser, role} = useContext(AuthContext)
 
     return (
-        <nav>
+        <header>
             <h1 style={{display : 'inline-block'}}>{pagename}</h1>
             <h2 style={{display : 'inline-block'}}>Company Name</h2>
             <h2 style={{display : 'inline-block'}}>{currentUser.displayName}</h2>
-            {role == "Admin"?<Link to='/adminTools' style={{display : 'inline-block'}}>Admin Tools</Link>:<></>}
-            <SignOut />
-        </nav>
+            <nav>
+                {role == "Admin"?<Link to='/adminTools' style={{display : 'inline-block'}}>Admin Tools</Link>:<></>}
+                <Link to="/">Home</Link>
+                <SignOut />
+            </nav>
+        </header>
     )
 }
 

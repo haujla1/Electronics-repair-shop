@@ -94,7 +94,7 @@ const adminTools = () =>{
     return(
         <>
             <Nav pagename="Admin Tools"/>
-            <Link to="/">Home</Link>
+            
             <br />
             <br />
             <div>
