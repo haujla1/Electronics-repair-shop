@@ -38,7 +38,6 @@ function Login(){
     
     if(currentUser && role){
       //check if they are nothing, manager, or regular
-      console.log("ROle" + role)
       if(role == "Admin" || role == "Technician"){
         return <Navigate to='/'/>
       }else{

@@ -20,7 +20,7 @@ function Home(){
         <Nav pagename="Home"/>
         <SearchBar />
         <ActiveWorkorders />
-            <Link to='/repair/789789'>Example Repair Info Link</Link>
+            <Link to='/repair/655823ffd08fbef35544267f'>Example Repair Info Link</Link>
         <ReadyForPickup />
         </>
         
