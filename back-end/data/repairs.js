@@ -135,7 +135,7 @@ export const createRepair = async (clientId, deviceID, workOrder) => {
         }
       );
 
-      const pdfFilename = `repair-report-${newRepair._id}.pdf`;
+      const pdfFilename = `Checkin-report-${newRepair._id}.pdf`;
       fs.writeFileSync(pdfFilename, Buffer.from(response.data, 'binary'));
 
 //       fs.writeFileSync(pdfFilename, response.data);
@@ -252,5 +252,9 @@ export const updateWorkorderAfterPickup = async (
   if (!updatedInfo.acknowledged || updatedInfo.modifiedCount === 0) {
     throw "Could not update the repair successfully";
   }
+
+  let finalRepair = await getWorkorderById(repairID);
+  
+
   return await getWorkorderById(repairID);
 };
