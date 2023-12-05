@@ -63,9 +63,9 @@ async function main() {
       clientPreferredPhoneNumber: "1112223333",
       issue: "broken screen",
       wasIssueVerified: true,
-      stepsTakenToReplicateIssue: "visible cracks on screen",
-      workToBeDone: "screen replacement",
-      conditionOfDevice: "other than screen, device in good condition",
+      stepsTakenToReplicateIssue: "visible cracks on screen dhdeudheudheudheudheudhd heudhuehdeudhuehdeuhd ehduehduehduehduehdeuhdeudh hedudheudheudh ",
+      workToBeDone: "screen replacement uehduehduedh hdeudheudhe uhduehded uehdeuhdeudheud uedjeudjeudh udjeudjeudheuuhdeudhue udeujdeuhdeudhh ",
+      conditionOfDevice: "other than screen, device in good condition eegdegduegd iegedueghdudehd ueuhduieuhdue deheduehdeu dehduehdeudh hduedhe ",
     };
 
     let workOrder2 = {

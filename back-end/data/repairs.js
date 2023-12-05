@@ -140,7 +140,7 @@ export const createRepair = async (clientId, deviceID, workOrder) => {
 
 //       fs.writeFileSync(pdfFilename, response.data);
 
-      return pdfFilename;
+      return newRepair;
     } catch (error) {
       console.error("Error generating report:", error);
       throw error;
@@ -254,7 +254,46 @@ export const updateWorkorderAfterPickup = async (
   }
 
   let finalRepair = await getWorkorderById(repairID);
-  
+  let client = await getClientById(finalRepair.clientID);
+  let device = client.Devices.find(
+    (device) => device._id.toString() === finalRepair.deviceID
+  );
+
+  let reportData = finalRepair;
+  reportData.clientName = client.name;
+  reportData.clientEmail = client.email;
+  reportData.clientPhone = client.phoneNumber;
+  reportData.clientAddress = client.address;
+
+  reportData.deviceType = device.deviceType;
+  reportData.manufacturer = device.manufacturer;
+  reportData.modelName = device.modelName;
+  reportData.modelNumber = device.modelNumber;
+  reportData.serialNumber = device.serialNumber;
+
+  try {
+    const response = await axios.post(
+      "http://localhost:5488/api/report",
+      {
+        template: { name: "Pick-up" },
+        data: reportData,
+      },
+      {
+        //responseType: "blob",
+        responseType: "arraybuffer", // Changed from 'blob' to 'arraybuffer'
+
+      }
+    );
+    const pdfFilename = `Pickup-report-${finalRepair._id}.pdf`;
+    fs.writeFileSync(pdfFilename, Buffer.from(response.data, 'binary'));
+  }
+    catch (error) {
+      console.error("Error generating report:", error);
+      throw error;
+    }
+
+    
+
 
   return await getWorkorderById(repairID);
 };
