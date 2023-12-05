@@ -38,13 +38,16 @@
 
         .section {
             margin: 20px;
+            margin-bottom: 40px; /* Increase bottom margin for adequate spacing */
+            page-break-inside: avoid; /* Avoid page breaks inside sections */
         }
         .section h2 {
             color: #4CAF50;
         }
-        .data-table {
+       .data-table {
             width: 100%;
             border-collapse: collapse;
+            page-break-after: auto; /* Allow the page to break after the table if necessary */
         }
         .data-table td, .data-table th {
             border: 1px solid #ddd;
@@ -108,9 +111,9 @@
     <div class="section">
         <h2>Results</h2>
         <table class="data-table">
-            <tr><th>Repair Completion Date</th><td>{{:repairCompletionDat}}</td></tr>
+            <tr><th>Repair Completion Date</th><td>{{:repairCompletionDate}}</td></tr>
             <tr><th>Was the Repair Successful</th><td>{{:wasTheRepairSuccessful}}</td></tr>
-            <tr><th>Repair Agent Notes</th><td>{{:repairNotes}}</td></tr>
+            <tr><th>Repair Agent Notes</th><td>{{:repairTechnicianNotes}}</td></tr>
         </table>
     </div>
 
