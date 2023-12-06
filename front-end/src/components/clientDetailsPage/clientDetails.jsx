@@ -48,6 +48,18 @@ function ClientDetails(){
             <dl>
                 <dt>Name</dt>
                 <dd>{client.name}</dd>
+
+                <dt>Phone Number</dt>
+                <dd>{client.phoneNumber}</dd>
+
+                <dt>Email</dt>
+                <dd>{client.email}</dd>
+
+                <dt>Address</dt>
+                <dd>{client.address}</dd>
+
+                <dt>Age</dt>
+                <dd>{client.age}</dd>
             </dl>
             
 
