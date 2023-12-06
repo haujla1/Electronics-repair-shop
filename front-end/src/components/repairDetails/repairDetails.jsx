@@ -3,6 +3,9 @@ import {Link, useParams} from 'react-router-dom';
 import Nav from "../navBar";
 import axios from "axios"
 
+import Edit from "./editModal.jsx";
+import Complete from './completeModal.jsx'
+import PickUp from './pickupModal.jsx'
 
 
 
@@ -10,12 +13,40 @@ function RepairDetails(){
     let {repairId} = useParams()
     let [repair, setRepair] = useState(null)
     let [loading, setLoading] = useState(true)
+    let [showEdit, setShowEdit] = useState(false)
+    let [showComplete, setShowComplete] = useState(false)
+    let [showPickup, setShowPickup] = useState(false)
+
+    function openEdit(){
+        setShowEdit(true)
+    }
+
+    function closeEdit(){
+        setShowEdit(false)
+    }
+
+    function openComplete(){
+        setShowComplete(true)
+    }
+
+    function closeComplete(){
+        setShowComplete(false)
+    }
+
+    function openPickup(){
+        setShowPickup(true)
+    }
+
+    function closePickup(){
+        setShowPickup(false)
+    }
 
     useEffect(()=>{
         async function getRepair() {
             try{
                 let data = (await axios("http://localhost:3000/repairs/"+repairId)).data
                 setRepair(data)
+                console.log(data)
             }catch(e){
                 console.log(e)
             }
@@ -50,12 +81,27 @@ function RepairDetails(){
         return
     }
 
+
     return (
         <>
             <Nav pagename="Repair Info"/>
+            <br />
+            {repair["repairCompletionDate"] ? <button style={{backgroundColor: 'rgb(34, 191, 40)'}} onClick={openComplete}>Complete Repair</button>: <></>}
+            {showComplete && <>
+            <Complete isOpen={showComplete} repair={repair} handleClose={closeComplete} />
+            </>}
+
+            {repair["isDevicePickedUpAlready"] ? <button onClick={openPickup}>Picked Up</button>: <></>}
+            {showPickup && <>
+            <PickUp isOpen={showPickup} repair={repair} handleClose={closePickup} />
+            </>}
+
             <h3>Repair Info</h3>
+            <button onClick={openEdit}>Edit</button>
+            {showEdit && <Edit isOpen={showEdit} handleClose={closeEdit} repair={repair}/>}
 
             <dl>
+                <h3>General Info</h3>
                 <dt>Repair ID:</dt> <dd>{repair["_id"]}</dd>
                 <dt>Device ID:</dt><dd> {repair["deviceID"]}</dd>
                 <dt>Client:</dt><dd> <Link to={'/clientDetails/' + repair["clientID"]}>{repair["clientID"]}</Link></dd>
@@ -69,6 +115,7 @@ function RepairDetails(){
                 <dt>Repair Status:</dt> <dd> {repair["repairStatus"]}</dd>
                 
                 {repair["repairCompletionDate"]?<>
+                <h3>Repair Completed</h3>
                 <dt>Repairs Completed:</dt> <dd> {new Date(repair["repairCompletionDate"]).toLocaleString()}</dd>
                 <dt>Repair Notes:</dt> <dd> {repair["repairTechnicianNotes"]}</dd>
                 <dt>Repair Success:</dt> <dd> {String(repair["wasTheRepairSuccessful"])}</dd>
@@ -76,6 +123,7 @@ function RepairDetails(){
 
 
                 {repair["isDevicePickedUpAlready"]?<>
+                <h3>Pick Up</h3>
                 <dt>Picked Up:</dt> <dd> {new Date(repair["pickupDate"]).toLocaleString()}</dd>
                 <dt>Pick Up Notes:</dt> <dd> {repair["pickupNotes"]}</dd>
                 <dt>Pick Up Demo:</dt> <dd> {String(repair["pickupDemoDone"])}</dd>
@@ -84,87 +132,9 @@ function RepairDetails(){
                 
             </dl>
 
-            {repair["repairCompletionDate"]?
-            <form className='form' onSubmit={repairComplete}>
-                <div>
-                    <label>
-                      Repair Completed:
-                      <input 
-                        name='repairCompleted'
-                        id='repairCompleted'
-                        type='datetime-local'
-                        defaultValue = {new Date().toISOString().slice(0, -1)}
-                      />
-                    </label>
-                    <br />
-                    <label>
-                      Notes:
-                      <textarea 
-                        name='TechNotes'
-                        id='TechNotes'
-                        placeholder = "Repair Notes"
-                      />
-                    </label>
-                    <br />
-                    <label>
-                      Repair Successful:
-                      <input 
-                        name='repairSuccess'
-                        id='repairSuccess'
-                        type='checkbox'
-                      />
-                    </label>
-                    <br />
-
-                    
-                  </div>
-                  <button type='submit'>
-                    Complete Repair
-                  </button>
-            </form>
-            :<></>}
 
 
-
-            {!repair["isDevicePickedUpAlready"]?
-                        <form className='form' onSubmit={pickUpComplete}>
-                            <div>
-                                <label>
-                                Picked Up:
-                                <input 
-                                    name='pickupCompleted'
-                                    id='pickupCompleted'
-                                    type='datetime-local'
-                                    defaultValue = {new Date().toISOString().slice(0, -1)}
-                                />
-                                </label>
-                                <br />
-                                <label>
-                                Notes:
-                                <textarea 
-                                    name='pickupNotes'
-                                    id='pickupNotes'
-                                    placeholder = "Pick Up Notes"
-                                />
-                                </label>
-                                <br />
-                                <label>
-                                Pick Up Demo:
-                                <input 
-                                    name='pickupDemo'
-                                    id='pickupDemo'
-                                    type='checkbox'
-                                />
-                                </label>
-                                <br />
-
-                                
-                            </div>
-                            <button type='submit'>
-                                Picked Up
-                            </button>
-                        </form>
-                        :<></>}
+            
 
             
 

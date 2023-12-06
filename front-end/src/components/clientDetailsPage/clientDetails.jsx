@@ -45,10 +45,10 @@ function ClientDetails(){
         <>
             <Nav pagename="Client Info"/>
             <h3>Client Info</h3>
-            <dt>
-                <dl>Name</dl>
+            <dl>
+                <dt>Name</dt>
                 <dd>{client.name}</dd>
-            </dt>
+            </dl>
             
 
             <Devices clientId={clientId} />

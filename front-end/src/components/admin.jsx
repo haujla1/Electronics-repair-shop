@@ -94,20 +94,17 @@ const adminTools = () =>{
     return(
         <>
             <Nav pagename="Admin Tools"/>
-            
-            <br />
-            <br />
             <div>
                 <h2>Accepted Users</h2>
                 <ul>
-                    {users.map(x=><li key={x.name}>{x.name}-{x.email}-{x.employeeId}  <button value={x.email} onClick={(y) => removeUser(y)}>Remove</button></li>)}
+                    {users.map(x=><li key={x.name}>{x.name}-{x.email}-{x.employeeId}  <button style={{backgroundColor: 'rgb(191, 34, 34)', color: "rgb(255, 255, 255)"}} value={x.email} onClick={(y) => removeUser(y)}>Remove</button></li>)}
                 </ul>
             </div>
             <br />
             <div>
                 <h2>Pending Users</h2>
                 <ul>
-                    {pendingUsers.map(x=><li key={x.name}>{x.name}-{x.email}-{x.employeeId} <button value={x.email} onClick={(y) => removeUser(y)}>Remove</button> <button value={x.email} onClick={(y) => allowUser(y)}>Accept</button></li>)}
+                    {pendingUsers.map(x=><li key={x.name}>{x.name}-{x.email}-{x.employeeId} <button style={{backgroundColor: 'rgb(191, 34, 34)', color: "rgb(255, 255, 255)"}} value={x.email} onClick={(y) => removeUser(y)}>Remove</button> <button style={{backgroundColor: 'rgb(10, 209, 97)'}} value={x.email} onClick={(y) => allowUser(y)}>Accept</button></li>)}
                 </ul>
             </div>
 
