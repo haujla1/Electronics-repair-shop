@@ -4,7 +4,9 @@ import {
     createRepair,
     getWorkorderById,
     updateWorkorderAfterRepair,
-    updateWorkorderAfterPickup
+    updateWorkorderAfterPickup,
+    getActiveRepairs,
+    getReadyForPickupRepairs
 } from '../data/repairs.js';
 import { 
     validateString,
@@ -22,6 +24,95 @@ import xss from 'xss';
  * PUT /afterRepair (update repair after repair)
  * PUT /afterPickup (update repair after pickup)
  */
+
+
+repairRouter.put('/afterRepair', async (req, res) => {
+    console.log(req.body);
+    try {
+        if (typeof req.body.repairID === 'undefined') throw "You must provide a Repair ID";
+        req.body.repairID = validateObjectId(req.body.repairID, "Repair ID");
+        req.body.repairID = validateString(req.body.repairID, "Repair ID");
+        req.body.repairID = xss(req.body.repairID);
+    
+        if (typeof req.body.repairNotes === 'undefined') throw "You must provide Repair Notes";
+        req.body.repairNotes = validateString(req.body.repairNotes, "Repair Notes");
+        req.body.repairNotes = xss(req.body.repairNotes);
+    
+        if (typeof req.body.wasTheRepairSuccessful === 'undefined') throw "You must provide Was the Repair Successful";
+        if (typeof req.body.wasTheRepairSuccessful !== 'boolean') throw "Was the Repair Successful must be a boolean";
+    } catch (e) {
+        res.status(400).json({error: e});
+        return;
+    }
+
+    try {
+        const repair = await updateWorkorderAfterRepair(
+            req.body.repairID,
+            req.body.repairNotes,
+            req.body.wasTheRepairSuccessful
+        );
+        res.json(repair);
+    } catch (e) {
+        res.status(400).json({error: e});
+    }
+});
+
+repairRouter.put('/afterPickup', async (req, res) => {
+    console.log(req.body);
+    try {
+        if (typeof req.body.repairID === 'undefined') throw "You must provide a Repair ID";
+        req.body.repairID = validateObjectId(req.body.repairID, "Repair ID");
+        req.body.repairID = validateString(req.body.repairID, "Repair ID");
+        req.body.repairID = xss(req.body.repairID);
+    
+        if (typeof req.body.pickupDemoDone === 'undefined') throw "You must provide Pickup Demo Done";
+        if (typeof req.body.pickupDemoDone !== "boolean") throw "Pickup Demo Done must be a boolean";
+    
+        if (typeof req.body.pickupNotes === 'undefined') throw "You must provide Pickup Notes";
+        req.body.pickupNotes = validateString(req.body.pickupNotes, "Pickup Notes");
+        req.body.pickupNotes = xss(req.body.pickupNotes);
+    } catch (e) {
+        res.status(400).json({error: e});
+        return;
+    }
+
+    try {
+        const repair = await updateWorkorderAfterPickup(
+            req.body.repairID,
+            req.body.pickupDemoDone,
+            req.body.pickupNotes
+        );
+        res.json(repair);
+    } catch (e) {
+        res.status(400).json({error: e});
+    }
+});
+
+repairRouter.get('/activeRepairs', async (req, res) =>
+{
+    try 
+    {
+        const repairs = await getActiveRepairs();
+        res.json(repairs);
+    } 
+    catch (e) {
+
+        res.status(400).json({error: e});
+    }
+});
+
+repairRouter.get('/readyForPickupRepairs', async (req, res) =>
+{
+    try 
+    {
+        const repairs = await getReadyForPickupRepairs();
+        res.json(repairs);
+    } 
+    catch (e) {
+
+        res.status(400).json({error: e});
+    }
+});
 
 repairRouter.post('/', async (req, res) => {
     console.log(req.body);
@@ -97,68 +188,6 @@ repairRouter.get('/:id', async (req, res) => {
 
     try {
         const repair = await getWorkorderById(req.params.id);
-        res.json(repair);
-    } catch (e) {
-        res.status(400).json({error: e});
-    }
-});
-
-repairRouter.put('/afterRepair', async (req, res) => {
-    console.log(req.body);
-    try {
-        if (typeof req.body.repairID === 'undefined') throw "You must provide a Repair ID";
-        req.body.repairID = validateObjectId(req.body.repairID, "Repair ID");
-        req.body.repairID = validateString(req.body.repairID, "Repair ID");
-        req.body.repairID = xss(req.body.repairID);
-    
-        if (typeof req.body.repairNotes === 'undefined') throw "You must provide Repair Notes";
-        req.body.repairNotes = validateString(req.body.repairNotes, "Repair Notes");
-        req.body.repairNotes = xss(req.body.repairNotes);
-    
-        if (typeof req.body.wasTheRepairSuccessful === 'undefined') throw "You must provide Was the Repair Successful";
-        if (typeof req.body.wasTheRepairSuccessful !== 'boolean') throw "Was the Repair Successful must be a boolean";
-    } catch (e) {
-        res.status(400).json({error: e});
-        return;
-    }
-
-    try {
-        const repair = await updateWorkorderAfterRepair(
-            req.body.repairID,
-            req.body.repairNotes,
-            req.body.wasTheRepairSuccessful
-        );
-        res.json(repair);
-    } catch (e) {
-        res.status(400).json({error: e});
-    }
-});
-
-repairRouter.put('/afterPickup', async (req, res) => {
-    console.log(req.body);
-    try {
-        if (typeof req.body.repairID === 'undefined') throw "You must provide a Repair ID";
-        req.body.repairID = validateObjectId(req.body.repairID, "Repair ID");
-        req.body.repairID = validateString(req.body.repairID, "Repair ID");
-        req.body.repairID = xss(req.body.repairID);
-    
-        if (typeof req.body.pickupDemoDone === 'undefined') throw "You must provide Pickup Demo Done";
-        if (typeof req.body.pickupDemoDone !== "boolean") throw "Pickup Demo Done must be a boolean";
-    
-        if (typeof req.body.pickupNotes === 'undefined') throw "You must provide Pickup Notes";
-        req.body.pickupNotes = validateString(req.body.pickupNotes, "Pickup Notes");
-        req.body.pickupNotes = xss(req.body.pickupNotes);
-    } catch (e) {
-        res.status(400).json({error: e});
-        return;
-    }
-
-    try {
-        const repair = await updateWorkorderAfterPickup(
-            req.body.repairID,
-            req.body.pickupDemoDone,
-            req.body.pickupNotes
-        );
         res.json(repair);
     } catch (e) {
         res.status(400).json({error: e});

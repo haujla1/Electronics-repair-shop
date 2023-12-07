@@ -91,6 +91,35 @@ async function main() {
       device2._id.toString(),
       workOrder2
     );
+    let repair3 = await createRepair(
+      client2._id.toString(),
+      device2._id.toString(),
+      workOrder2
+    );
+
+    let repair4 = await createRepair(
+      client2._id.toString(),
+      device2._id.toString(),
+      workOrder2
+    );
+
+    let repair5 = await createRepair(
+      client2._id.toString(),
+      device2._id.toString(),
+      workOrder2
+    );
+
+    for (let i = 0; i < 10; i++) {
+      let repair = await createRepair(
+        client2._id.toString(),
+        device2._id.toString(),
+        workOrder2
+      );
+    }
+
+
+
+
     // console.log(repair2);
     // console.log(client2);
 
@@ -110,6 +139,26 @@ async function main() {
       "Battery replaced and tested",
       true
     );
+
+    await updateWorkorderAfterRepair(
+      repair3._id.toString(),
+      "Battery replaced and tested",
+      true
+    );
+
+    await updateWorkorderAfterRepair(
+      repair4._id.toString(),
+      "Battery replaced and tested",
+      true
+    );
+
+    await updateWorkorderAfterRepair(
+      repair5._id.toString(),
+      "Battery replaced and tested",
+      true
+    );
+
+
     await updateWorkorderAfterPickup(
       repair2._id.toString(),
       true,

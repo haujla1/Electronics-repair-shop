@@ -193,8 +193,7 @@ export const updateWorkorderAfterRepair = async (
     $set: {
       "Repairs.$.repairTechnicianNotes": repairNotes,
       "Repairs.$.wasTheRepairSuccessful": wasTheRepairSuccessful,
-      "Repairs.$.repairStatus": "Ready to be Picked Up",
-      "Repairs.$.isDevicePickedUpAlready": false,
+      "Repairs.$.repairStatus": constants.repairStatus[1],
       "Repairs.$.repairCompletionDate": new Date(),
     },
   };
@@ -237,8 +236,8 @@ export const updateWorkorderAfterPickup = async (
     $set: {
       "Repairs.$.pickupDemoDone": pickupDemoDone,
       "Repairs.$.pickupNotes": pickupNotes,
-      "Repairs.$.isDevicePickedUpAlready": true,
-      "Repairs.$.repairStatus": "completed",
+      // "Repairs.$.isDevicePickedUpAlready": true,
+      "Repairs.$.repairStatus": constants.repairStatus[2],
       "Repairs.$.pickupDate": new Date(),
     },
   };
@@ -297,3 +296,37 @@ export const updateWorkorderAfterPickup = async (
 
   return await getWorkorderById(repairID);
 };
+
+// will find all the work orders with status constants.repairStatus[0] (in progress)
+export const getActiveRepairs = async () => 
+{
+  let clientCollection = await clients();
+  let activeRepairs = await clientCollection
+    .aggregate([
+      { $unwind: "$Repairs" },
+      { $match: {"Repairs.repairStatus": constants.repairStatus[0]}},
+      { $replaceRoot:{newRoot: "$Repairs"}},
+    ])
+    .toArray();
+
+    if(activeRepairs.length === 0) throw "No active repairs";
+
+  return activeRepairs;
+}
+
+export const getReadyForPickupRepairs = async () =>
+{
+  let clientCollection = await clients();
+  let readyForPickupRepairs = await clientCollection
+    .aggregate([
+      { $unwind: "$Repairs" },
+      { $match: {"Repairs.repairStatus": constants.repairStatus[1]}},
+      { $replaceRoot: {newRoot: "$Repairs"}},
+    ])
+    .toArray();
+
+    if(readyForPickupRepairs.length === 0) throw "No repairs ready for pickup";
+
+  return readyForPickupRepairs;
+}
+
