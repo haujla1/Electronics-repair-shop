@@ -97,7 +97,7 @@ repairRouter.get('/activeRepairs', async (req, res) =>
     } 
     catch (e) {
 
-        res.status(400).json({error: e});
+        res.status(404).json({error: e});
     }
 });
 
@@ -110,7 +110,7 @@ repairRouter.get('/readyForPickupRepairs', async (req, res) =>
     } 
     catch (e) {
 
-        res.status(400).json({error: e});
+        res.status(404).json({error: e});
     }
 });
 
