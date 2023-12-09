@@ -1,0 +1,18 @@
+{
+    "name": "Pick-up",
+    "engine": "jsrender",
+    "recipe": "chrome-pdf",
+    "data": null,
+    "shortid": "h6ea1sw2R",
+    "chrome": {
+        "printBackground": true
+    },
+    "creationDate": {
+        "$$date": 1701802164880
+    },
+    "modificationDate": {
+        "$$date": 1701819341316
+    },
+    "_id": "mvrtmiZVjkGNqHdF",
+    "$entitySet": "templates"
+}

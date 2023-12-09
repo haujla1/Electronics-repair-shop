@@ -2,9 +2,11 @@ import React, {useContext, useEffect, useState} from "react";
 import {Link} from 'react-router-dom';
 import Nav from "../navBar";
 import axios from "axios";
-import constants from "../../../../appConstants.js";
+import constants from "../../../../back-end/appConstants.js"; 
 // For some reason, this import below causes the entire website to crash. Not sure why...
 // import * as validation from "../../../../back-end/util/validationUtil.js"
+
+//note from kyle -- the import was wrong: forgot to go into back-end
 
 function NewClient(){
     const [formData, setFormData] = useState({

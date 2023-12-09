@@ -1,13 +1,33 @@
 import { ObjectId } from "mongodb";
 import { clients } from "../config/mongoCollections.js";
 import emailValidator from "email-validator";
+import { getClientById } from "./clients.js";
+import axios from "axios";
+import fs from "fs";
 import {
   validateString,
   validatePhoneNumber,
   validateObjectId,
   validateEmail,
 } from "../util/validationUtil.js";
-import constants from "../../appConstants.js";
+import constants from "../appConstants.js";
+
+export const getDeviceById = async (clientId, deviceId) => {
+  validateString(deviceId, "Device ID");
+  validateString(clientId, "Client ID");
+
+  if (!ObjectId.isValid(deviceId)) throw "Invalid Device ID format";
+  if (!ObjectId.isValid(clientId)) throw "Invalid Client ID format";
+
+  let client = await getClientById(clientId);
+
+  if (!client) throw "No client with that ID";
+
+  let device = client.Devices.find(
+    (device) => device._id.toString() === deviceId
+  );
+  return device;
+};
 
 export const createRepair = async (clientId, deviceID, workOrder) => {
   clientId = validateObjectId(clientId, "Client ID");
@@ -83,8 +103,52 @@ export const createRepair = async (clientId, deviceID, workOrder) => {
   if (!updatedInfo.acknowledged || updatedInfo.modifiedCount === 0) {
     throw "Could not update client successfully";
   }
-  return newRepair;
+  if (newRepair) {
+    let client = await getClientById(clientId);
+    let device = client.Devices.find(
+      (device) => device._id.toString() === deviceID
+    );
+
+    let reportData = newRepair;
+    reportData.clientName = client.name;
+    reportData.clientEmail = client.email;
+    reportData.clientPhone = client.phoneNumber;
+    reportData.clientAddress = client.address;
+
+    reportData.deviceType = device.deviceType;
+    reportData.manufacturer = device.manufacturer;
+    reportData.modelName = device.modelName;
+    reportData.modelNumber = device.modelNumber;
+    reportData.serialNumber = device.serialNumber;
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5488/api/report",
+        {
+          template: { name: "check-in" },
+          data: reportData,
+        },
+        {
+          //responseType: "blob",
+          responseType: "arraybuffer", // Changed from 'blob' to 'arraybuffer'
+
+        }
+      );
+
+      const pdfFilename = `Checkin-report-${newRepair._id}.pdf`;
+      fs.writeFileSync(pdfFilename, Buffer.from(response.data, 'binary'));
+
+//       fs.writeFileSync(pdfFilename, response.data);
+
+      return newRepair;
+    } catch (error) {
+      console.error("Error generating report:", error);
+      throw error;
+    }
+  }
 };
+
+
 
 export const getWorkorderById = async (repairId) => {
   validateString(repairId, "Repair ID");
@@ -129,8 +193,7 @@ export const updateWorkorderAfterRepair = async (
     $set: {
       "Repairs.$.repairTechnicianNotes": repairNotes,
       "Repairs.$.wasTheRepairSuccessful": wasTheRepairSuccessful,
-      "Repairs.$.repairStatus": "Ready to be Picked Up",
-      "Repairs.$.isDevicePickedUpAlready": false,
+      "Repairs.$.repairStatus": constants.repairStatus[1],
       "Repairs.$.repairCompletionDate": new Date(),
     },
   };
@@ -173,8 +236,8 @@ export const updateWorkorderAfterPickup = async (
     $set: {
       "Repairs.$.pickupDemoDone": pickupDemoDone,
       "Repairs.$.pickupNotes": pickupNotes,
-      "Repairs.$.isDevicePickedUpAlready": true,
-      "Repairs.$.repairStatus": "completed",
+      // "Repairs.$.isDevicePickedUpAlready": true,
+      "Repairs.$.repairStatus": constants.repairStatus[2],
       "Repairs.$.pickupDate": new Date(),
     },
   };
@@ -188,5 +251,82 @@ export const updateWorkorderAfterPickup = async (
   if (!updatedInfo.acknowledged || updatedInfo.modifiedCount === 0) {
     throw "Could not update the repair successfully";
   }
+
+  let finalRepair = await getWorkorderById(repairID);
+  let client = await getClientById(finalRepair.clientID);
+  let device = client.Devices.find(
+    (device) => device._id.toString() === finalRepair.deviceID
+  );
+
+  let reportData = finalRepair;
+  reportData.clientName = client.name;
+  reportData.clientEmail = client.email;
+  reportData.clientPhone = client.phoneNumber;
+  reportData.clientAddress = client.address;
+
+  reportData.deviceType = device.deviceType;
+  reportData.manufacturer = device.manufacturer;
+  reportData.modelName = device.modelName;
+  reportData.modelNumber = device.modelNumber;
+  reportData.serialNumber = device.serialNumber;
+
+  try {
+    const response = await axios.post(
+      "http://localhost:5488/api/report",
+      {
+        template: { name: "Pick-up" },
+        data: reportData,
+      },
+      {
+        //responseType: "blob",
+        responseType: "arraybuffer", // Changed from 'blob' to 'arraybuffer'
+
+      }
+    );
+    const pdfFilename = `Pickup-report-${finalRepair._id}.pdf`;
+    fs.writeFileSync(pdfFilename, Buffer.from(response.data, 'binary'));
+  }
+    catch (error) {
+      console.error("Error generating report:", error);
+      throw error;
+    }
+
+    
+
+
   return await getWorkorderById(repairID);
 };
+
+// will find all the work orders with status constants.repairStatus[0] (in progress)
+export const getActiveRepairs = async () => 
+{
+  let clientCollection = await clients();
+  let activeRepairs = await clientCollection
+    .aggregate([
+      { $unwind: "$Repairs" },
+      { $match: {"Repairs.repairStatus": constants.repairStatus[0]}},
+      { $replaceRoot:{newRoot: "$Repairs"}},
+    ])
+    .toArray();
+
+    if(activeRepairs.length === 0) throw "No active repairs";
+
+  return activeRepairs;
+}
+
+export const getReadyForPickupRepairs = async () =>
+{
+  let clientCollection = await clients();
+  let readyForPickupRepairs = await clientCollection
+    .aggregate([
+      { $unwind: "$Repairs" },
+      { $match: {"Repairs.repairStatus": constants.repairStatus[1]}},
+      { $replaceRoot: {newRoot: "$Repairs"}},
+    ])
+    .toArray();
+
+    if(readyForPickupRepairs.length === 0) throw "No repairs ready for pickup";
+
+  return readyForPickupRepairs;
+}
+
