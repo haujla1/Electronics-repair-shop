@@ -9,7 +9,7 @@ import axios from "axios";
 
 ReactModal.setAppElement('#root')
 
-const PickUp = ({repair, isOpen, handleClose}) => {
+const PickUp = ({repair, isOpen, handleClose, update}) => {
     let [showAddModal, setShowAddModal] = useState(isOpen)
     const [error, setError] = useState("")
 
@@ -18,13 +18,27 @@ const PickUp = ({repair, isOpen, handleClose}) => {
         e.preventDefault()
         setError("")
         try{
+            
+            let pickupNotes = e.target.pickupNotes.value
+            let pickupDemoDone = e.target.pickupDemoDone.value
 
+            if(typeof pickupNotes != "string" || pickupNotes.trim().length < 1){
+                setError("Must add Pick Up Notes.")
+                return
+            }
+            if(pickupDemoDone != "on" && pickupDemoDone != "off"){
+                setError("Error: pickup type must be boolean")
+                return
+            }
             //make the axios
-    
-        
+            let rep = await axios.put("http://localhost:3000/repairs/afterPickup", {repairID: repair._id, pickupDemoDone: pickupDemoDone=="on", pickupNotes:pickupNotes})
+            update(rep.data)
+
+            setError("")
             handleClose()
         }catch(e){
-            setError(String(e))
+            console.log(e)
+            setError(String(e.response.data.error))
         }
 
         return
