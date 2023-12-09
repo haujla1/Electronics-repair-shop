@@ -81,7 +81,7 @@ function RepairDetails(){
             <Complete isOpen={showComplete} repair={repair} handleClose={closeComplete} update={setRepair}/>
             </>}
 
-            {!repair["isDevicePickedUpAlready"] ? <button onClick={openPickup}>Picked Up</button>: <></>}
+            {repair["repairCompletionDate"] ? <button onClick={openPickup}>Picked Up</button>: <></>}
             {showPickup && <>
             <PickUp isOpen={showPickup} repair={repair} handleClose={closePickup} update={setRepair}/>
             </>}
