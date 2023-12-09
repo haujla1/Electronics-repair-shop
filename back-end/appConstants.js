@@ -19,7 +19,7 @@ const constants = {
     workToBeDone: 200,
     conditionOfDevice: 200,
   },
-  repairStatus: ["Not Started", "In Progress", "Completed"],
+  repairStatus: ["In progress", "Completed", "Picked-up"],
 };
 
 export default constants;

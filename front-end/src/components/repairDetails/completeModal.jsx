@@ -9,7 +9,7 @@ import axios from "axios";
 
 ReactModal.setAppElement('#root')
 
-const Edit = ({repair, isOpen, handleClose}) => {
+const Edit = ({repair, isOpen, handleClose, update}) => {
     let [showAddModal, setShowAddModal] = useState(isOpen)
     const [error, setError] = useState("")
 
@@ -18,13 +18,27 @@ const Edit = ({repair, isOpen, handleClose}) => {
         e.preventDefault()
         setError("")
         try{
+            
+            let repairTechnicianNotes = e.target.repairTechnicianNotes.value
+            let wasTheRepairSuccessful = e.target.wasTheRepairSuccessful.value
 
+            if(typeof repairTechnicianNotes != "string" || repairTechnicianNotes.trim().length < 1){
+                setError("Must add Pick Up Notes.")
+                return
+            }
+            if(wasTheRepairSuccessful != "on" && wasTheRepairSuccessful != "off"){
+                setError("Error: pickup type must be boolean")
+                return
+            }
             //make the axios
-    
-        
+            let rep = await axios.put("http://localhost:3000/repairs/afterRepair", {repairID: repair._id, wasTheRepairSuccessful: wasTheRepairSuccessful=="on", repairNotes:repairTechnicianNotes})
+            update(rep.data)
+
+            setError("")
             handleClose()
         }catch(e){
-            setError(String(e))
+            console.log(e)
+            setError(String(e.response.data.error))
         }
 
         return

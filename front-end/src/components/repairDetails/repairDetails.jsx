@@ -71,34 +71,24 @@ function RepairDetails(){
         </>)
     }
 
-    async function repairComplete(e){
-        e.preventDefault()
-        return
-    }
-
-    async function pickUpComplete(e){
-        e.preventDefault()
-        return
-    }
-
 
     return (
         <>
             <Nav pagename="Repair Info"/>
             <br />
-            {repair["repairCompletionDate"] ? <button style={{backgroundColor: 'rgb(34, 191, 40)'}} onClick={openComplete}>Complete Repair</button>: <></>}
+            {!repair["repairCompletionDate"] ? <button style={{backgroundColor: 'rgb(34, 191, 40)'}} onClick={openComplete}>Complete Repair</button>: <></>}
             {showComplete && <>
-            <Complete isOpen={showComplete} repair={repair} handleClose={closeComplete} />
+            <Complete isOpen={showComplete} repair={repair} handleClose={closeComplete} update={setRepair}/>
             </>}
 
-            {repair["isDevicePickedUpAlready"] ? <button onClick={openPickup}>Picked Up</button>: <></>}
+            {!repair["isDevicePickedUpAlready"] ? <button onClick={openPickup}>Picked Up</button>: <></>}
             {showPickup && <>
-            <PickUp isOpen={showPickup} repair={repair} handleClose={closePickup} />
+            <PickUp isOpen={showPickup} repair={repair} handleClose={closePickup} update={setRepair}/>
             </>}
 
             <h3>Repair Info</h3>
-            <button onClick={openEdit}>Edit</button>
-            {showEdit && <Edit isOpen={showEdit} handleClose={closeEdit} repair={repair}/>}
+            {/* <button onClick={openEdit}>Edit</button> */}
+            {/* {showEdit && <Edit isOpen={showEdit} handleClose={closeEdit} repair={repair}/>} */}
 
             <dl>
                 <h3>General Info</h3>
@@ -131,12 +121,6 @@ function RepairDetails(){
 
                 
             </dl>
-
-
-
-            
-
-            
 
         </>
         
