@@ -22,6 +22,7 @@
     "mongodb": "^6.2.0",
     "nodemailer": "^6.9.7",
     "transporter": "^0.0.1",
+    "redis": "^4.6.11",
     "xss": "^1.0.14"
   }
 }

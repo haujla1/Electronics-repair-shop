@@ -12,6 +12,8 @@ import {
 } from "../util/validationUtil.js";
 import constants from "../appConstants.js";
 import { sendEmail } from "../nodemailer/sendMailService.js";
+import { redisClient } from "../redis.js";
+
 
 export const getDeviceById = async (clientId, deviceId) => {
   validateString(deviceId, "Device ID");
@@ -155,7 +157,16 @@ export const getWorkorderById = async (repairId) => {
   validateString(repairId, "Repair ID");
 
   if (!ObjectId.isValid(repairId)) throw "Invalid Repair ID format";
+  const cacheKey = `repair:${repairId}`;
 
+  try {
+    const cachedRepair = await redisClient.get(cacheKey);
+    if (cachedRepair) {
+      return JSON.parse(cachedRepair);
+    }
+  } catch (error) {
+    throw ("Redis get error:", error.message);
+  }
   let clientCollection = await clients();
   let repair = await clientCollection
     .aggregate([
@@ -166,6 +177,12 @@ export const getWorkorderById = async (repairId) => {
     .toArray();
 
   if (!repair.length) throw "No repair found with the provided ID";
+  try {
+    await redisClient.set(cacheKey, JSON.stringify(repair[0]));
+    await redisClient.expire(cacheKey, 3600);
+  } catch (error) {
+    console.error("Redis set error:", error);
+  }
   return repair[0];
 };
 
@@ -181,6 +198,8 @@ export const updateWorkorderAfterRepair = async (
     throw "Was the repair successful must be a boolean";
 
   if (!ObjectId.isValid(repairID)) throw "Invalid object ID";
+
+  const cacheKey = `repair:${repairID}`;
 
   let repair = await getWorkorderById(repairID);
   if (repair === null) throw "No repair with that id";
@@ -227,6 +246,17 @@ export const updateWorkorderAfterRepair = async (
     }
   }
 
+  try {
+    await redisClient.del(cacheKey);
+  } catch (error) {
+    throw ("Redis delete error:", error.nessage);
+  }
+  // try {
+  //   await redisClient.set(cacheKey, JSON.stringify(repair));
+  //   await redisClient.expire(cacheKey, 3600);
+  // } catch (error) {
+  //   throw ("Redis set error:", error.message);
+  // }
   return await getWorkorderById(repairID);
 };
 
@@ -243,6 +273,8 @@ export const updateWorkorderAfterPickup = async (
     throw "Pickup demo done must be a boolean";
 
   validateString(pickupNotes, "pickup notes");
+
+  const cacheKey = `repair:${repairID}`;
 
   let repair = await getWorkorderById(repairID);
   if (repair === null) throw "No repair with that id";
@@ -313,6 +345,18 @@ export const updateWorkorderAfterPickup = async (
 
     
 
+  try {
+    await redisClient.del(cacheKey);
+  } catch (error) {
+    throw ("Redis delete error:", error.nessage);
+  }
+
+  // try {
+  //   await redisClient.set(cacheKey, JSON.stringify(repair));
+  //   await redisClient.expire(cacheKey, 3600);
+  // } catch (error) {
+  //   throw ("Redis set error:", error.message);
+  // }
 
   return await getWorkorderById(repairID);
 };

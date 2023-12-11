@@ -7,6 +7,7 @@ import {
   validateAge,
   validateObjectId,
 } from "../util/validationUtil.js";
+import { redisClient } from "../redis.js";
 
 export const createClient = async (
   firstName,
@@ -46,11 +47,26 @@ export const createClient = async (
 
 export const getClientById = async (id) => {
   id = validateObjectId(id, "Client ID");
-
+  try {
+    const cacheKey = `client:${id}`;
+    const cachedClient = await redisClient.get(cacheKey);
+    if (cachedClient) {
+      return JSON.parse(cachedClient);
+    }
+  } catch (error) {
+    console.error("Redis get error:", error);
+  }
   let clientCollection = await clients();
   let client = await clientCollection.findOne({ _id: new ObjectId(id) });
   if (client) {
     client._id = client._id.toString();
+    try {
+      const cacheKey = `client:${id}`;
+      await redisClient.set(cacheKey, JSON.stringify(client));
+      await redisClient.expire(cacheKey, 3600);
+    } catch (error) {
+      throw ("Redis set error:", error.message);
+    }
     return client;
   } else {
     if (client === null) throw "No client with that id";
@@ -59,13 +75,31 @@ export const getClientById = async (id) => {
 
 export const getClientByPhoneNumber = async (phoneNumber) => {
   phoneNumber = validatePhoneNumber(phoneNumber);
+  const cacheKey = `client:phone:${phoneNumber.trim()}`;
+  try {
+    const cachedClient = await redisClient.get(cacheKey);
+    if (cachedClient) {
+      return JSON.parse(cachedClient);
+    }
+  } catch (error) {
+    console.error("Redis get error:", error);
+  }
 
   let clientCollection = await clients();
   let client = await clientCollection.findOne({
     phoneNumber: phoneNumber.trim(),
   });
-  if (client === null) throw "No client found with the provided phone number";
-  return client;
+  if (client) {
+    try {
+      await redisClient.set(cacheKey, JSON.stringify(client));
+      await redisClient.expire(cacheKey, 3600);
+    } catch (error) {
+      throw ("Redis set error:", error.message);
+    }
+    return client;
+  } else {
+    throw "No client found with the provided phone number";
+  }
 };
 
 export const addDeviceToClient = async (
