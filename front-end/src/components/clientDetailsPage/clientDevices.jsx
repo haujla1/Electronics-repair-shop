@@ -58,7 +58,10 @@ function Devices({clientId}){
 
                                             <dt>Serial Number:</dt>
                                             <dd>{device.serialNumber}</dd>
+
                                         </dl>
+
+                                        <Link to={`/newRepair/${clientId}/${device._id}`}>New Repair</Link>
                                     </div>
                                 );
                             })
