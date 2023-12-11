@@ -11,6 +11,7 @@ import {
   validateEmail,
 } from "../util/validationUtil.js";
 import constants from "../appConstants.js";
+import { sendEmail } from "../nodemailer/sendMailService.js";
 
 export const getDeviceById = async (clientId, deviceId) => {
   validateString(deviceId, "Device ID");
@@ -183,6 +184,7 @@ export const updateWorkorderAfterRepair = async (
 
   let repair = await getWorkorderById(repairID);
   if (repair === null) throw "No repair with that id";
+  const repairStatus = wasTheRepairSuccessful ? "Completed" : "In Progress";
 
   const updateFilter = {
     _id: new ObjectId(repair.clientID),
@@ -207,6 +209,24 @@ export const updateWorkorderAfterRepair = async (
   if (!updatedInfo.acknowledged || updatedInfo.modifiedCount === 0) {
     throw "Could not update the repair successfully";
   }
+  const updatedRepair = await getWorkorderById(repairID);
+
+  if (wasTheRepairSuccessful) {
+    try {
+      const client = await getClientById(updatedRepair.clientID);
+      if (!client) throw "No client with that ID";
+
+      await sendEmail(
+        client.email,
+        "Repair Order Completed",
+        `Your repair with ID: ${repairID} is completed.`,
+        `<p>Your repair with ID: ${repairID} is completed.</p>`
+      );
+    } catch (error) {
+      console.error("Failed to send email:", error);
+    }
+  }
+
   return await getWorkorderById(repairID);
 };
 
