@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState} from "react";
 import {Link, useParams} from 'react-router-dom';
 import Nav from "../navBar";
 import Devices from "./clientDevices";
+import Repairs from "./clientRepairs";
 import axios from "axios";
 
 
@@ -64,6 +65,7 @@ function ClientDetails(){
             
 
             <Devices clientId={clientId} />
+            <Repairs clientId={clientId} />
         </>
         
     )
