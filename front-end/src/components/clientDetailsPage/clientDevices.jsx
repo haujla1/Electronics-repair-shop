@@ -3,11 +3,13 @@ import {Link} from 'react-router-dom';
 import axios from "axios";
 import stockAndroidImg from '../../assets/stock-android-image.webp';
 import stockIphoneImg from '../../assets/stock-iphone-image.jpeg';
+import AddDevice from './addDevice.jsx'
 
 
 function Devices({clientId}){
     let [devices, setDevices] = useState([]);
     let [loading, setLoading] = useState(true);
+    let [showAddDevice, setShowAddDevice] = useState(false)
 
     useEffect(() => {
         async function getDevices(clientId) {
@@ -23,6 +25,20 @@ function Devices({clientId}){
 
         getDevices(clientId);
     }, []);
+
+    function openAddDevice(){
+        setShowAddDevice(true)
+    }
+
+    function closeAddDevice(){
+        setShowAddDevice(false)
+    }
+
+    function updateDevices(newDevice){
+        let newList = [...devices]
+        newList.push(newDevice)
+        setDevices(newList)
+    }
 
     return (
         <>
@@ -69,11 +85,10 @@ function Devices({clientId}){
                 }
             </div>
 
-            <p>For now use this to get to new repair</p>
-            <Link to={`/newRepair/${clientId}/456456`}>New Repair</Link>
             <br/>
 
-            <button>Add Device Modal</button>
+            <button onClick={openAddDevice}>Add Device</button>
+            {showAddDevice && <AddDevice clientId={clientId} isOpen={showAddDevice} handleClose={closeAddDevice} updateDevices={updateDevices}/>}
 
         </>
     )
