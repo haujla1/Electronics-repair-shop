@@ -141,6 +141,12 @@ export const addDeviceToClient = async (
   if (!updatedInfo.acknowledged || updatedInfo.modifiedCount === 0) {
     throw "Could not update client successfully";
   }
-
+  const cacheKey = `client:${clientId}`;
+  try {
+    await redisClient.set(cacheKey, JSON.stringify(client));
+    await redisClient.expire(cacheKey, 3600);
+  } catch (error) {
+    console.error("Redis set error:", error);
+  }
   return newDevice;
 };

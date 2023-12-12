@@ -14,7 +14,6 @@ import constants from "../appConstants.js";
 import { sendEmail } from "../nodemailer/sendMailService.js";
 import { redisClient } from "../redis.js";
 
-
 export const getDeviceById = async (clientId, deviceId) => {
   validateString(deviceId, "Device ID");
   validateString(clientId, "Client ID");
@@ -81,6 +80,7 @@ export const createRepair = async (clientId, deviceID, workOrder) => {
     workOrder.conditionOfDevice,
     "Condition Of Device"
   );
+  const cacheKey = `client:${clientId}`;
 
   let newRepair = {
     _id: new ObjectId(),
@@ -106,6 +106,12 @@ export const createRepair = async (clientId, deviceID, workOrder) => {
   if (!updatedInfo.acknowledged || updatedInfo.modifiedCount === 0) {
     throw "Could not update client successfully";
   }
+  try {
+    await redisClient.del(cacheKey);
+  } catch (error) {
+    throw ("Redis delete error:", error.nessage);
+  }
+
   if (newRepair) {
     let client = await getClientById(clientId);
     let device = client.Devices.find(
@@ -134,14 +140,13 @@ export const createRepair = async (clientId, deviceID, workOrder) => {
         {
           //responseType: "blob",
           responseType: "arraybuffer", // Changed from 'blob' to 'arraybuffer'
-
         }
       );
 
       const pdfFilename = `Checkin-report-${newRepair._id}.pdf`;
-      fs.writeFileSync(pdfFilename, Buffer.from(response.data, 'binary'));
+      fs.writeFileSync(pdfFilename, Buffer.from(response.data, "binary"));
 
-//       fs.writeFileSync(pdfFilename, response.data);
+      //       fs.writeFileSync(pdfFilename, response.data);
 
       return newRepair;
     } catch (error) {
@@ -150,8 +155,6 @@ export const createRepair = async (clientId, deviceID, workOrder) => {
     }
   }
 };
-
-
 
 export const getWorkorderById = async (repairId) => {
   validateString(repairId, "Repair ID");
@@ -332,18 +335,14 @@ export const updateWorkorderAfterPickup = async (
       {
         //responseType: "blob",
         responseType: "arraybuffer", // Changed from 'blob' to 'arraybuffer'
-
       }
     );
     const pdfFilename = `Pickup-report-${finalRepair._id}.pdf`;
-    fs.writeFileSync(pdfFilename, Buffer.from(response.data, 'binary'));
+    fs.writeFileSync(pdfFilename, Buffer.from(response.data, "binary"));
+  } catch (error) {
+    console.error("Error generating report:", error);
+    throw error;
   }
-    catch (error) {
-      console.error("Error generating report:", error);
-      throw error;
-    }
-
-    
 
   try {
     await redisClient.del(cacheKey);
@@ -362,35 +361,32 @@ export const updateWorkorderAfterPickup = async (
 };
 
 // will find all the work orders with status constants.repairStatus[0] (in progress)
-export const getActiveRepairs = async () => 
-{
+export const getActiveRepairs = async () => {
   let clientCollection = await clients();
   let activeRepairs = await clientCollection
     .aggregate([
       { $unwind: "$Repairs" },
-      { $match: {"Repairs.repairStatus": constants.repairStatus[0]}},
-      { $replaceRoot:{newRoot: "$Repairs"}},
+      { $match: { "Repairs.repairStatus": constants.repairStatus[0] } },
+      { $replaceRoot: { newRoot: "$Repairs" } },
     ])
     .toArray();
 
-    if(activeRepairs.length === 0) throw "No active repairs";
+  if (activeRepairs.length === 0) throw "No active repairs";
 
   return activeRepairs;
-}
+};
 
-export const getReadyForPickupRepairs = async () =>
-{
+export const getReadyForPickupRepairs = async () => {
   let clientCollection = await clients();
   let readyForPickupRepairs = await clientCollection
     .aggregate([
       { $unwind: "$Repairs" },
-      { $match: {"Repairs.repairStatus": constants.repairStatus[1]}},
-      { $replaceRoot: {newRoot: "$Repairs"}},
+      { $match: { "Repairs.repairStatus": constants.repairStatus[1] } },
+      { $replaceRoot: { newRoot: "$Repairs" } },
     ])
     .toArray();
 
-    if(readyForPickupRepairs.length === 0) throw "No repairs ready for pickup";
+  if (readyForPickupRepairs.length === 0) throw "No repairs ready for pickup";
 
   return readyForPickupRepairs;
-}
-
+};
