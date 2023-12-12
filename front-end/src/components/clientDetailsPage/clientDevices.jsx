@@ -1,8 +1,16 @@
 import React, {useContext, useEffect, useState} from "react";
 import {Link} from 'react-router-dom';
 import axios from "axios";
-import stockAndroidImg from '../../assets/stock-android-image.webp';
-import stockIphoneImg from '../../assets/stock-iphone-image.jpeg';
+import stockPhoneWhiteIcon from '../../assets/android/android-phone-white.svg';
+import stockPhoneBlackIcon from '../../assets/android/android-phone-black.svg';
+import stockTabletWhiteIcon from '../../assets/android/android-tablet-white.svg';
+import stockTabletBlackIcon from '../../assets/android/android-tablet-black.svg';
+import iphoneWhiteIcon from '../../assets/apple/iphone-white.svg';
+import iphoneBlackIcon from '../../assets/apple/iphone-black.svg';
+import ipadWhiteIcon from '../../assets/apple/ipad-white.svg';
+import ipadBlackIcon from '../../assets/apple/ipad-black.svg';
+import macbookWhiteIcon from '../../assets/apple/macbook-white.svg';
+import macbookBlackIcon from '../../assets/apple/macbook-black.svg';
 import AddDevice from './addDevice.jsx'
 
 
@@ -55,32 +63,49 @@ function Devices({clientId}){
                             </div>
                         )
                         : (
-                            devices.map(device => {
-                                return (
-                                    <div className="card" key={device._id}>
-                                        <h5>{device.manufacturer} {device.modelName}</h5>
-                                        {
-                                            device.manufacturer === 'Samsung'
-                                                ? (
-                                                    <img src={stockAndroidImg} alt="Samsung Phone" width="50%"/>
-                                                )
-                                                : (
-                                                    <img src={stockIphoneImg} alt="iPhone" width="50%"/>
-                                                )
-                                        }
-                                        <dl>
-                                            <dt>Model Number:</dt>
-                                            <dd>{device.modelNumber}</dd>
+                            devices.length > 0
+                                ?
+                                    devices.map(device => {
+                                        return (
+                                            <div className="card" key={device._id}>
+                                                <h5>{device.manufacturer} {device.modelName}</h5>
+                                                {
+                                                    device.manufacturer.toLowerCase() === 'apple'
+                                                        ? 
+                                                            (
+                                                                device.deviceType === 'mobile'
+                                                                    ?
+                                                                        <img src={iphoneWhiteIcon} alt="iPhone" width="50%"/>
+                                                                    :
+                                                                        <img src={ipadWhiteIcon} alt="iPad" width="50%" />
+                                                            )
+                                                        : (
+                                                            device.deviceType === 'mobile'
+                                                                ?
+                                                                    <img src={stockPhoneWhiteIcon} alt={`${device.manufacturer} Phone`} width="50%"/>
+                                                                :
+                                                                    <img src={stockTabletWhiteIcon} alt={`${device.manufacturer} Tablet`} width="50%"/>
+                                                        )
+                                                }
+                                                <dl>
+                                                    <dt>Model Number:</dt>
+                                                    <dd>{device.modelNumber}</dd>
 
-                                            <dt>Serial Number:</dt>
-                                            <dd>{device.serialNumber}</dd>
+                                                    <dt>Serial Number:</dt>
+                                                    <dd>{device.serialNumber}</dd>
 
-                                        </dl>
+                                                </dl>
 
-                                        <Link to={`/newRepair/${clientId}/${device._id}`}>New Repair</Link>
-                                    </div>
-                                );
-                            })
+                                                <Link to={`/newRepair/${clientId}/${device._id}`}>New Repair</Link>
+                                            </div>
+                                        );
+                                    })
+                                :
+                                    (
+                                        <>
+                                            <h3>No Devices Found</h3>
+                                        </>
+                                    )
                         )
                 }
             </div>

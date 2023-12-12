@@ -9,7 +9,7 @@ import axios from "axios";
 
 ReactModal.setAppElement('#root')
 
-const AddDevice = ({clientId, isOpen, handleClose, updateDevices}) => {
+const AddRepair = ({repairId, isOpen, handleClose, updateRepairs}) => {
     let [showAddModal, setShowAddModal] = useState(isOpen)
     const [error, setError] = useState("")
 
@@ -19,18 +19,17 @@ const AddDevice = ({clientId, isOpen, handleClose, updateDevices}) => {
         setError("")
         try{
             //make the axios
-            let req = {clientId: clientId}
+            let req = {repairId: repairId}
 
-            req.deviceType = e.target.deviceType.value
+            req.repairType = e.target.repairType.value
             req.manufacturer = e.target.manufacturer.value
             req.modelName = e.target.modelName.value
             req.modelNumber = e.target.modelNumber.value
             req.serialNumber = e.target.serialNumber.value
 
-            let data = (await axios.post("http://localhost:3000/clients/"+clientId+"/device", req)).data
+            let data = (await axios.post("http://localhost:3000/repairs/"+repairId, req)).data
 
-            updateDevices(data)
-            console.log(data)
+            updateRepairs(data)
         
             handleClose()
         }catch(e){
@@ -51,17 +50,18 @@ const AddDevice = ({clientId, isOpen, handleClose, updateDevices}) => {
           transform: 'translate(-50%, -50%)',
           width: '50%',
           border: '1px solid #28547a',
-          borderRadius: '4px'
+          borderRadius: '4px',
+          color: 'black'
         }
       };
 
     return (
         <ReactModal name='editRepair' isOpen={showAddModal} contentLabel="Edit" style={customStyles}>
             <form onSubmit={handleSubmit}>
-                <h3>New Device Info</h3>
+                <h3>New Repair Info</h3>
                 <label>
-                    Device Type:
-                    <input required type='text' name='deviceType' />
+                    Repair Type:
+                    <input required type='text' name='repairType' />
                 </label>
                 <br />
                 <label>
@@ -87,7 +87,7 @@ const AddDevice = ({clientId, isOpen, handleClose, updateDevices}) => {
 
 
                 <button onClick={handleClose}>Cancel</button>
-                <button type='submit'>Add Device</button>
+                <button type='submit'>Add Repair</button>
             </form>
 
             <p>{error}</p>
@@ -96,4 +96,4 @@ const AddDevice = ({clientId, isOpen, handleClose, updateDevices}) => {
     )
 }
 
-export default AddDevice
+export default AddRepair

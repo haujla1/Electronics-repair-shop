@@ -54,7 +54,7 @@ function ClientDetails(){
                 <dd>{client.phoneNumber}</dd>
 
                 <dt>Email</dt>
-                <dd>{client.email}</dd>
+                <dd><a href={"mailto:" + client.email}>{client.email}</a></dd>
 
                 <dt>Address</dt>
                 <dd>{client.address}</dd>

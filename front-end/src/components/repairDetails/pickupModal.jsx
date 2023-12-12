@@ -55,7 +55,8 @@ const PickUp = ({repair, isOpen, handleClose, update}) => {
           transform: 'translate(-50%, -50%)',
           width: '50%',
           border: '1px solid #28547a',
-          borderRadius: '4px'
+          borderRadius: '4px',
+          color: 'black'
         }
       };
 

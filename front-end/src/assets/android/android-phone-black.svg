@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   data-name="Layer 1"
+   viewBox="0 0 28.000402 50.000046"
+   x="0px"
+   y="0px"
+   version="1.1"
+   id="svg2"
+   sodipodi:docname="android-black.svg"
+   width="28.000402"
+   height="50.000046"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="namedview2"
+     pagecolor="#505050"
+     bordercolor="#eeeeee"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#505050"
+     inkscape:zoom="10.2125"
+     inkscape:cx="14.002448"
+     inkscape:cy="26.976744"
+     inkscape:window-width="1920"
+     inkscape:window-height="1094"
+     inkscape:window-x="-11"
+     inkscape:window-y="-11"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg2" />
+  <title
+     id="title1">Untitled-1</title>
+  <path
+     d="M 25.750201,2.3228859e-5 H 2.2502012 A 2.24,2.24 0 0 0 2.0121312e-4,2.2700232 V 47.730023 a 2.24,2.24 0 0 0 2.24999998688,2.27 H 25.750201 a 2.24,2.24 0 0 0 2.25,-2.27 V 2.2700232 a 2.24,2.24 0 0 0 -2.25,-2.269999971141 z m -9,47.389999771141 a 1,1 0 0 1 -1,1 h -3.5 a 1,1 0 0 1 -1,-1 v -0.39 a 1,1 0 0 1 1,-1 h 3.5 a 1,1 0 0 1 1,1 z m 9.34,-2.75 H 1.9402012 V 5.3200232 H 26.060201 Z"
+     id="path1" />
+</svg>
