@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cors": "^2.8.5",
     "axios": "^1.6.2",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",

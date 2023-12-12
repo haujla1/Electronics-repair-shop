@@ -13,6 +13,5 @@ const getCollectionFn = (collection) => {
   };
 };
 
-export const technicians = getCollectionFn("technicians");
-export const admins = getCollectionFn("admins");
+export const users = getCollectionFn("users");
 export const clients = getCollectionFn("clients");

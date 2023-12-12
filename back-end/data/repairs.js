@@ -371,7 +371,7 @@ export const getActiveRepairs = async () => {
     ])
     .toArray();
 
-  if (activeRepairs.length === 0) throw "No active repairs";
+  //if(activeRepairs.length === 0) throw "No active repairs";
 
   return activeRepairs;
 };
@@ -386,7 +386,7 @@ export const getReadyForPickupRepairs = async () => {
     ])
     .toArray();
 
-  if (readyForPickupRepairs.length === 0) throw "No repairs ready for pickup";
+  //if(readyForPickupRepairs.length === 0) throw "No repairs ready for pickup";
 
   return readyForPickupRepairs;
 };
