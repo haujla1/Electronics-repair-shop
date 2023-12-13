@@ -6,6 +6,7 @@ import {
     updateWorkorderAfterRepair,
     updateWorkorderAfterPickup,
     getActiveRepairs,
+    makeCheckInReport,
     getReadyForPickupRepairs
 } from '../data/repairs.js';
 import { 
@@ -100,6 +101,28 @@ repairRouter.get('/activeRepairs', async (req, res) =>
     catch (e) {
 
         res.status(404).json({error: e});
+    }
+});
+
+repairRouter.post('/checkInReport', async (req, res) => 
+{
+    if (typeof req.body.reportData === 'undefined') throw "You must provide report data";
+    let data = req.body.reportData;
+    //reportData is a JSON object
+
+    try {
+        const pdfData = await makeCheckInReport(data);
+
+        // Set headers for PDF response
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', 'attachment; filename=Checkin-report.pdf'); // Or 'inline' to display in the browser
+
+        // Send the PDF data as the response
+        res.send(pdfData);
+    }
+    catch (e)
+    {
+        res.status(400).json({error: e});
     }
 });
 

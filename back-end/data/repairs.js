@@ -130,31 +130,74 @@ export const createRepair = async (clientId, deviceID, workOrder) => {
     reportData.modelNumber = device.modelNumber;
     reportData.serialNumber = device.serialNumber;
 
-    try {
-      const response = await axios.post(
-        "http://localhost:5488/api/report",
-        {
-          template: { name: "check-in" },
-          data: reportData,
-        },
-        {
-          //responseType: "blob",
-          responseType: "arraybuffer", // Changed from 'blob' to 'arraybuffer'
-        }
-      );
+    // try {
+    //   const response = await axios.post(
+    //     "http://localhost:5488/api/report",
+    //     {
+    //       template: { name: "check-in" },
+    //       data: reportData,
+    //     },
+    //     {
+    //       //responseType: "blob",
+    //       responseType: "arraybuffer", // Changed from 'blob' to 'arraybuffer'
+    //     }
+    //   );
 
-      const pdfFilename = `Checkin-report-${newRepair._id}.pdf`;
-      fs.writeFileSync(pdfFilename, Buffer.from(response.data, "binary"));
+    //   const pdfFilename = `Checkin-report-${newRepair._id}.pdf`;
+    //   fs.writeFileSync(pdfFilename, Buffer.from(response.data, "binary"));
 
       //       fs.writeFileSync(pdfFilename, response.data);
 
-      return newRepair;
-    } catch (error) {
+      return reportData;
+    // } catch (error) {
+    //   console.error("Error generating report:", error);
+    //   throw error;
+    // }
+  }
+};
+
+export const makeCheckInReport = async (reportData) => 
+{
+
+    if (!reportData) throw "You must provide report data";
+    if (typeof reportData !== "object" || Object.keys(reportData).length === 0)
+      throw "Report data must be a non-empty object";
+
+   // will do the validations later 
+
+   try
+   {
+    const response = await axios.post(
+          "http://localhost:5488/api/report",
+          {
+            template: { name: "check-in" },
+            data: reportData,
+          },
+          {
+            //responseType: "blob",
+            responseType: "arraybuffer", // Changed from 'blob' to 'arraybuffer'
+          }
+        );
+  
+        // const pdfFilename = `Checkin-report-${reportData._id}.pdf`;
+        // fs.writeFileSync(pdfFilename, Buffer.from(response.data, "binary"));
+  
+        //       fs.writeFileSync(pdfFilename, response.data);
+        //       return;
+        return response.data;
+
+   }
+   catch (error) 
+   {
       console.error("Error generating report:", error);
       throw error;
     }
-  }
-};
+
+
+
+
+}
+
 
 export const getWorkorderById = async (repairId) => {
   validateString(repairId, "Repair ID");
