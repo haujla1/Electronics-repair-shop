@@ -86,13 +86,13 @@ function NewRepair(){
 
             <form onSubmit={handleSubmit}>
                 <label>
-                    Preffered Email:
+                    Preferred Email:
                     <br />
                     <input type='text' name='clientPreferredEmail' defaultValue={client.email} /> 
                 </label>
                 <br />
                 <label>
-                    Preffered Phone:
+                    Preferred Phone:
                     <br />
                     <input type='text' name='clientPreferredPhoneNumber' defaultValue={client.phoneNumber} /> 
                 </label>

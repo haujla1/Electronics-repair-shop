@@ -20,18 +20,18 @@ const Edit = ({repair, isOpen, handleClose, update}) => {
         try{
             
             let repairTechnicianNotes = e.target.repairTechnicianNotes.value
-            let wasTheRepairSuccessful = e.target.wasTheRepairSuccessful.value
+            let wasTheRepairSuccessful = e.target.wasTheRepairSuccessful.checked
 
             if(typeof repairTechnicianNotes != "string" || repairTechnicianNotes.trim().length < 1){
                 setError("Must add Pick Up Notes.")
                 return
             }
-            if(wasTheRepairSuccessful != "on" && wasTheRepairSuccessful != "off"){
+            if(typeof wasTheRepairSuccessful != "boolean" || e.target.wasTheRepairSuccessful.value != "on"){
                 setError("Error: pickup type must be boolean")
                 return
             }
             //make the axios
-            let rep = await axios.put("http://localhost:3000/repairs/afterRepair", {repairID: repair._id, wasTheRepairSuccessful: wasTheRepairSuccessful=="on", repairNotes:repairTechnicianNotes})
+            let rep = await axios.put("http://localhost:3000/repairs/afterRepair", {repairID: repair._id, wasTheRepairSuccessful: wasTheRepairSuccessful, repairNotes:repairTechnicianNotes})
             update(rep.data)
 
             setError("")
@@ -55,7 +55,8 @@ const Edit = ({repair, isOpen, handleClose, update}) => {
           transform: 'translate(-50%, -50%)',
           width: '50%',
           border: '1px solid #28547a',
-          borderRadius: '4px'
+          borderRadius: '4px',
+          color: 'black'
         }
       };
 

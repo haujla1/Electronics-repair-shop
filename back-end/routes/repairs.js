@@ -21,6 +21,8 @@ import xss from 'xss';
  * /repairs
  * POST / (create repair)
  * GET /:id (get repair by ID)
+ * GET /activeRepairs (get all active repairs)
+ * GET /readyForPickupRepairs (get all repairs ready for pickup)
  * PUT /afterRepair (update repair after repair)
  * PUT /afterPickup (update repair after pickup)
  */

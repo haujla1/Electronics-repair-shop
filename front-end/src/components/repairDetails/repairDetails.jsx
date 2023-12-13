@@ -45,8 +45,17 @@ function RepairDetails(){
         async function getRepair() {
             try{
                 let data = (await axios("http://localhost:3000/repairs/"+repairId)).data
-                setRepair(data)
+                
+                
+                //get the client for the name and for the device name
+                let client = (await axios.get("http://localhost:3000/clients/" + data.clientID)).data
+                data["clientName"] = client.name
+                let device = client.Devices.filter(x=>x._id == data.deviceID)[0]
+                data["deviceName"] = device.manufacturer + " " + device.modelName
+
                 console.log(data)
+                setRepair(data)
+
             }catch(e){
                 console.log(e)
             }
@@ -81,7 +90,7 @@ function RepairDetails(){
             <Complete isOpen={showComplete} repair={repair} handleClose={closeComplete} update={setRepair}/>
             </>}
 
-            {repair["repairCompletionDate"] ? <button onClick={openPickup}>Picked Up</button>: <></>}
+            {repair["repairCompletionDate"] && !repair["pickupDemoDone"] ? <button onClick={openPickup}>Picked Up</button>: <></>}
             {showPickup && <>
             <PickUp isOpen={showPickup} repair={repair} handleClose={closePickup} update={setRepair}/>
             </>}
@@ -94,7 +103,8 @@ function RepairDetails(){
                 <h3>General Info</h3>
                 <dt>Repair ID:</dt> <dd>{repair["_id"]}</dd>
                 <dt>Device ID:</dt><dd> {repair["deviceID"]}</dd>
-                <dt>Client:</dt><dd> <Link to={'/clientDetails/' + repair["clientID"]}>{repair["clientID"]}</Link></dd>
+                <dt>Device Name:</dt><dd> {repair["deviceName"]}</dd>
+                <dt>Client:</dt><dd> <Link to={'/clientDetails/' + repair["clientID"]}>{repair["clientName"]}</Link></dd>
                 <dt>Client Email:</dt><dd> <a href={"mailto:" + repair["clientPreferredEmail"]}>{repair["clientPreferredEmail"]}</a></dd>
                 <dt>Work Order Opened:</dt> <dd>{new Date(repair["repairOrderCreationDate"]).toLocaleString()}</dd>
                 <dt>Issue:</dt> <dd> {repair["issue"]}</dd>
@@ -112,7 +122,7 @@ function RepairDetails(){
                 </>:<></>}
 
 
-                {repair["isDevicePickedUpAlready"]?<>
+                {repair["pickupDate"]?<>
                 <h3>Pick Up</h3>
                 <dt>Picked Up:</dt> <dd> {new Date(repair["pickupDate"]).toLocaleString()}</dd>
                 <dt>Pick Up Notes:</dt> <dd> {repair["pickupNotes"]}</dd>
