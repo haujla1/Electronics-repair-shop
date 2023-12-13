@@ -20,18 +20,18 @@ const PickUp = ({repair, isOpen, handleClose, update}) => {
         try{
             
             let pickupNotes = e.target.pickupNotes.value
-            let pickupDemoDone = e.target.pickupDemoDone.value
+            let pickupDemoDone = e.target.pickupDemoDone.checked
 
             if(typeof pickupNotes != "string" || pickupNotes.trim().length < 1){
                 setError("Must add Pick Up Notes.")
                 return
             }
-            if(pickupDemoDone != "on" && pickupDemoDone != "off"){
+            if(typeof pickupDemoDone != "boolean" || e.target.pickupDemoDone.value != "on"){
                 setError("Error: pickup type must be boolean")
                 return
             }
             //make the axios
-            let rep = await axios.put("http://localhost:3000/repairs/afterPickup", {repairID: repair._id, pickupDemoDone: pickupDemoDone=="on", pickupNotes:pickupNotes})
+            let rep = await axios.put("http://localhost:3000/repairs/afterPickup", {repairID: repair._id, pickupDemoDone: pickupDemoDone, pickupNotes:pickupNotes})
             update(rep.data)
 
             setError("")
@@ -71,7 +71,7 @@ const PickUp = ({repair, isOpen, handleClose, update}) => {
                     </label>
                     <br />
                     <label>
-                        Repair Success:
+                        Pick Up Demo Done:
                         <input type='checkbox' name='pickupDemoDone'  />
                     </label>
                     <br />
