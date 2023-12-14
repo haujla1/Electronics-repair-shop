@@ -10,6 +10,7 @@ function NewRepair(){
     let {clientId, deviceId} = useParams()
     let [client, setClient] = useState(null)
     let [loading, setLoading] = useState(true)
+    let [pdf, setPdf] = useState(null)
 
     const [error, setError] = useState("")
 
@@ -43,10 +44,21 @@ function NewRepair(){
             workOrder.workToBeDone = e.target.workToBeDone.value
             workOrder.conditionOfDevice = e.target.conditionOfDevice.value
 
-            await axios.post("http://localhost:3000/repairs/", {clientId: clientId, deviceID: deviceId, workOrder: workOrder})
+           let reportData =  await axios.post("http://localhost:3000/repairs/", {clientId: clientId, deviceID: deviceId, workOrder: workOrder})
     
-        
+           let reportRes =  await axios.post("http://localhost:3000/repairs/checkInReport", {reportData:reportData.data},
+            { responseType: 'arraybuffer' });
+            const pdfBlob = new Blob([reportRes.data], { type: 'application/pdf' });
+
+            console.log(reportRes.data.byteLength); // This should not be 0
+
+            const url = URL.createObjectURL(pdfBlob);
+           
+            window.open(url, '_blank');
+
+            // setPdf(url);
             //redirect???
+            // make a new call to localhost:3000/repiars/checkInReport and give it the data from the above axios call
         }catch(e){
             console.log(e)
             setError(String(e.response.data.error))
@@ -76,6 +88,16 @@ function NewRepair(){
         return <h3>Loading</h3>
     }
 
+    // if (pdf)
+    // {
+    //     console.log(pdf)
+    //     return (
+    //         <div>
+    //             {pdf && <iframe src={pdf} width="100%" height="600px" />}
+    //         </div>
+    //     );
+    //     }
+
     return (
         <>
             <Nav pagename="New Repair"/>
@@ -86,13 +108,13 @@ function NewRepair(){
 
             <form onSubmit={handleSubmit}>
                 <label>
-                    Preffered Email:
+                    Preferred Email:
                     <br />
                     <input type='text' name='clientPreferredEmail' defaultValue={client.email} /> 
                 </label>
                 <br />
                 <label>
-                    Preffered Phone:
+                    Preferred Phone:
                     <br />
                     <input type='text' name='clientPreferredPhoneNumber' defaultValue={client.phoneNumber} /> 
                 </label>

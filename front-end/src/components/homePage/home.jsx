@@ -22,11 +22,35 @@ function Home(){
 
     useEffect(()=>{
         async function getWOs(){
+            setError("")
             try{
-                let actives = (await axios.get("http://localhost:3000/repairs/activeRepairs")).data
-                setActive(actives)
-                let pickups = (await axios.get("http://localhost:3000/repairs/readyForPickupRepairs")).data
-                setPickUp(pickups)
+                let actives = await(await axios.get("http://localhost:3000/repairs/activeRepairs")).data
+                let pickups = await(await axios.get("http://localhost:3000/repairs/readyForPickupRepairs")).data
+
+                //get device client name and device name for each
+                if(actives){
+                    for (let i = 0; i<actives.length; i++){
+                        if(!actives[i]){
+                            continue
+                        }
+                        let client = (await axios.get("http://localhost:3000/clients/" + actives[i].clientID)).data
+                        actives[i]["clientName"] = client.name
+                        let device = client.Devices.filter(x=>x._id == actives[i].deviceID)[0]
+                        actives[i]["deviceName"] = device.manufacturer + " " + device.modelName
+                    }
+                    setActive(actives)
+                }
+
+                if(pickups){
+                    for (let i = 0; i<pickups.length; i++){
+                        let client = (await axios.get("http://localhost:3000/clients/" + pickups[i].clientID)).data
+                        pickups[i]["clientName"] = client.name
+                        let device = client.Devices.filter(x=>x._id == pickups[i].deviceID)[0]
+                        pickups[i]["deviceName"] = device.manufacturer + " " + device.modelName
+                    }
+                    setPickUp(pickups)
+                }
+
                 setLoading(false)
             }catch(e){
                 setLoading(false)
@@ -48,13 +72,13 @@ function Home(){
             <div className="activeWorkorders">
                 <h3>Active Workorders</h3>
                 <ul>
-                    {active.map(wo => <li key={wo._id}><Link to={'/repair/'+wo._id}>{wo._id}</Link></li>)}
+                    {active.map(wo => <li key={wo._id}><Link to={'/repair/'+wo._id}>{wo.clientName + "'s " + wo.deviceName}</Link></li>)}
                 </ul>
             </div>
             <div className="readyForPickupWorkorders">
                 <h3>Ready for Pickup</h3>
                 <ul>
-                    {pickUp.map(wo => <li key={wo._id}><Link to={'/repair/'+wo._id}>{wo._id}</Link></li>)}
+                    {pickUp.map(wo => <li key={wo._id}><Link to={'/repair/'+wo._id}>{wo.clientName + "'s " + wo.deviceName}</Link></li>)}
                 </ul>
             </div>
         </>

@@ -48,7 +48,7 @@ function SearchBar(){
                   </button>
             </form>
 
-            <p>{error}</p>
+            {error ? (<p>{error}. {error === 'Client could not be found' ? <>Would you like to <Link to="/newClient">create a new client</Link>? </>: <></>}</p>) : (<></>)}
 
             {client? <Link to={"/clientDetails/" + client._id}>{client.name}</Link>: <></>}
             <br />

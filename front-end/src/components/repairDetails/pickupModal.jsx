@@ -20,19 +20,27 @@ const PickUp = ({repair, isOpen, handleClose, update}) => {
         try{
             
             let pickupNotes = e.target.pickupNotes.value
-            let pickupDemoDone = e.target.pickupDemoDone.value
+            let pickupDemoDone = e.target.pickupDemoDone.checked
 
             if(typeof pickupNotes != "string" || pickupNotes.trim().length < 1){
                 setError("Must add Pick Up Notes.")
                 return
             }
-            if(pickupDemoDone != "on" && pickupDemoDone != "off"){
+            if(typeof pickupDemoDone != "boolean" || e.target.pickupDemoDone.value != "on"){
                 setError("Error: pickup type must be boolean")
                 return
             }
             //make the axios
-            let rep = await axios.put("http://localhost:3000/repairs/afterPickup", {repairID: repair._id, pickupDemoDone: pickupDemoDone=="on", pickupNotes:pickupNotes})
-            update(rep.data)
+            let rep = await axios.put("http://localhost:3000/repairs/afterPickup", {repairID: repair._id, pickupDemoDone: pickupDemoDone, pickupNotes:pickupNotes})
+            // update(rep.data)
+          
+
+            let reportRes =  await axios.post("http://localhost:3000/repairs/pickupReport", {reportData:rep.data},
+            { responseType: 'arraybuffer' });
+            const pdfBlob = new Blob([reportRes.data], { type: 'application/pdf' });
+            const url = URL.createObjectURL(pdfBlob);
+
+            window.open(url, '_blank');
 
             setError("")
             handleClose()
@@ -55,7 +63,8 @@ const PickUp = ({repair, isOpen, handleClose, update}) => {
           transform: 'translate(-50%, -50%)',
           width: '50%',
           border: '1px solid #28547a',
-          borderRadius: '4px'
+          borderRadius: '4px',
+          color: 'black'
         }
       };
 
@@ -70,7 +79,7 @@ const PickUp = ({repair, isOpen, handleClose, update}) => {
                     </label>
                     <br />
                     <label>
-                        Repair Success:
+                        Pick Up Demo Done:
                         <input type='checkbox' name='pickupDemoDone'  />
                     </label>
                     <br />

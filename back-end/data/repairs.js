@@ -14,6 +14,18 @@ import constants from "../appConstants.js";
 import { sendEmail } from "../nodemailer/sendMailService.js";
 import { redisClient } from "../redis.js";
 
+
+function formatDate(date) 
+{
+  const options = 
+  {
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit'
+  };
+  return date.toLocaleDateString('en-US', options);
+}
+
 export const getDeviceById = async (clientId, deviceId) => {
   validateString(deviceId, "Device ID");
   validateString(clientId, "Client ID");
@@ -81,6 +93,8 @@ export const createRepair = async (clientId, deviceID, workOrder) => {
     "Condition Of Device"
   );
   const cacheKey = `client:${clientId}`;
+  const now = new Date();
+  const formattedDate = formatDate(now);
 
   let newRepair = {
     _id: new ObjectId(),
@@ -88,7 +102,7 @@ export const createRepair = async (clientId, deviceID, workOrder) => {
     deviceID: deviceID,
     clientPreferredEmail: workOrder.clientPreferredEmail,
     clientPreferredPhoneNumber: workOrder.clientPreferredPhoneNumber,
-    repairOrderCreationDate: new Date(),
+    repairOrderCreationDate: formattedDate,
     issue: workOrder.issue,
     wasIssueVerified: workOrder.wasIssueVerified,
     stepsTakenToReplicateIssue: workOrder.stepsTakenToReplicateIssue,
@@ -130,31 +144,41 @@ export const createRepair = async (clientId, deviceID, workOrder) => {
     reportData.modelNumber = device.modelNumber;
     reportData.serialNumber = device.serialNumber;
 
-    try {
-      const response = await axios.post(
-        "http://localhost:5488/api/report",
-        {
-          template: { name: "check-in" },
-          data: reportData,
-        },
-        {
-          //responseType: "blob",
-          responseType: "arraybuffer", // Changed from 'blob' to 'arraybuffer'
-        }
-      );
-
-      const pdfFilename = `Checkin-report-${newRepair._id}.pdf`;
-      fs.writeFileSync(pdfFilename, Buffer.from(response.data, "binary"));
-
-      //       fs.writeFileSync(pdfFilename, response.data);
-
-      return newRepair;
-    } catch (error) {
-      console.error("Error generating report:", error);
-      throw error;
-    }
+      return reportData;
+  
   }
 };
+
+export const makeCheckInReport = async (reportData) => 
+{
+
+    if (!reportData) throw "You must provide report data";
+    if (typeof reportData !== "object" || Object.keys(reportData).length === 0)
+      throw "Report data must be a non-empty object";
+
+   // will do the validations later 
+
+   try
+   {
+    const response = await axios.post(
+          "http://localhost:5488/api/report",
+          {
+            template: { name: "check-in" },
+            data: reportData,
+          },
+          {
+            responseType: "arraybuffer", 
+          }
+        );      
+        return response.data;
+   }
+   catch (error) 
+   {
+      console.error("Error generating check-in report:", error);
+      throw error;
+    }
+};
+
 
 export const getWorkorderById = async (repairId) => {
   validateString(repairId, "Repair ID");
@@ -213,12 +237,15 @@ export const updateWorkorderAfterRepair = async (
     "Repairs._id": new ObjectId(repairID),
   };
 
+  const now = new Date();
+  const formattedDate = formatDate(now);
+
   const updateQuery = {
     $set: {
       "Repairs.$.repairTechnicianNotes": repairNotes,
       "Repairs.$.wasTheRepairSuccessful": wasTheRepairSuccessful,
       "Repairs.$.repairStatus": constants.repairStatus[1],
-      "Repairs.$.repairCompletionDate": new Date(),
+      "Repairs.$.repairCompletionDate": formattedDate,
     },
   };
 
@@ -233,13 +260,14 @@ export const updateWorkorderAfterRepair = async (
   }
   const updatedRepair = await getWorkorderById(repairID);
 
-  if (wasTheRepairSuccessful) {
+  // if (wasTheRepairSuccessful) 
+  // {
     try {
       const client = await getClientById(updatedRepair.clientID);
       if (!client) throw "No client with that ID";
 
       await sendEmail(
-        client.email,
+        repair.clientPreferredEmail,
         "Repair Order Completed",
         `Your repair with ID: ${repairID} is completed.`,
         `<p>Your repair with ID: ${repairID} is completed.</p>`
@@ -247,7 +275,7 @@ export const updateWorkorderAfterRepair = async (
     } catch (error) {
       console.error("Failed to send email:", error);
     }
-  }
+  // }
 
   try {
     await redisClient.del(cacheKey);
@@ -287,13 +315,15 @@ export const updateWorkorderAfterPickup = async (
     "Repairs._id": new ObjectId(repairID),
   };
 
+  const now = new Date();
+  const formattedDate = formatDate(now);
   const updateQuery = {
     $set: {
       "Repairs.$.pickupDemoDone": pickupDemoDone,
       "Repairs.$.pickupNotes": pickupNotes,
       // "Repairs.$.isDevicePickedUpAlready": true,
       "Repairs.$.repairStatus": constants.repairStatus[2],
-      "Repairs.$.pickupDate": new Date(),
+      "Repairs.$.pickupDate": formattedDate,
     },
   };
 
@@ -305,6 +335,11 @@ export const updateWorkorderAfterPickup = async (
 
   if (!updatedInfo.acknowledged || updatedInfo.modifiedCount === 0) {
     throw "Could not update the repair successfully";
+  }
+  try {
+    await redisClient.del(cacheKey);
+  } catch (error) {
+    throw ("Redis delete error:", error.nessage);
   }
 
   let finalRepair = await getWorkorderById(repairID);
@@ -325,7 +360,22 @@ export const updateWorkorderAfterPickup = async (
   reportData.modelNumber = device.modelNumber;
   reportData.serialNumber = device.serialNumber;
 
-  try {
+  
+
+  // return await getWorkorderById(repairID);
+  return reportData;
+};
+
+export const makePickupReport = async (reportData) => 
+{
+  if (!reportData) throw "You must provide report data";
+    if (typeof reportData !== "object" || Object.keys(reportData).length === 0)
+      throw "Report data must be a non-empty object";
+
+   // will do the validations later 
+
+   try
+   {
     const response = await axios.post(
       "http://localhost:5488/api/report",
       {
@@ -333,34 +383,19 @@ export const updateWorkorderAfterPickup = async (
         data: reportData,
       },
       {
-        //responseType: "blob",
-        responseType: "arraybuffer", // Changed from 'blob' to 'arraybuffer'
+        responseType: "arraybuffer", 
       }
     );
-    const pdfFilename = `Pickup-report-${finalRepair._id}.pdf`;
-    fs.writeFileSync(pdfFilename, Buffer.from(response.data, "binary"));
-  } catch (error) {
-    console.error("Error generating report:", error);
-    throw error;
-  }
-
-  try {
-    await redisClient.del(cacheKey);
-  } catch (error) {
-    throw ("Redis delete error:", error.nessage);
-  }
-
-  // try {
-  //   await redisClient.set(cacheKey, JSON.stringify(repair));
-  //   await redisClient.expire(cacheKey, 3600);
-  // } catch (error) {
-  //   throw ("Redis set error:", error.message);
-  // }
-
-  return await getWorkorderById(repairID);
+    return response.data;
+   }
+   catch (error) 
+    {
+      console.error("Error generating pickup report:", error);
+      throw error;
+    }
 };
 
-// will find all the work orders with status constants.repairStatus[0] (in progress)
+
 export const getActiveRepairs = async () => {
   let clientCollection = await clients();
   let activeRepairs = await clientCollection
