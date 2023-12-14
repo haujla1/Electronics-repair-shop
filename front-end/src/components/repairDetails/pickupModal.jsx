@@ -32,7 +32,15 @@ const PickUp = ({repair, isOpen, handleClose, update}) => {
             }
             //make the axios
             let rep = await axios.put("http://localhost:3000/repairs/afterPickup", {repairID: repair._id, pickupDemoDone: pickupDemoDone, pickupNotes:pickupNotes})
-            update(rep.data)
+            // update(rep.data)
+          
+
+            let reportRes =  await axios.post("http://localhost:3000/repairs/pickupReport", {reportData:rep.data},
+            { responseType: 'arraybuffer' });
+            const pdfBlob = new Blob([reportRes.data], { type: 'application/pdf' });
+            const url = URL.createObjectURL(pdfBlob);
+
+            window.open(url, '_blank');
 
             setError("")
             handleClose()

@@ -130,29 +130,8 @@ export const createRepair = async (clientId, deviceID, workOrder) => {
     reportData.modelNumber = device.modelNumber;
     reportData.serialNumber = device.serialNumber;
 
-    // try {
-    //   const response = await axios.post(
-    //     "http://localhost:5488/api/report",
-    //     {
-    //       template: { name: "check-in" },
-    //       data: reportData,
-    //     },
-    //     {
-    //       //responseType: "blob",
-    //       responseType: "arraybuffer", // Changed from 'blob' to 'arraybuffer'
-    //     }
-    //   );
-
-    //   const pdfFilename = `Checkin-report-${newRepair._id}.pdf`;
-    //   fs.writeFileSync(pdfFilename, Buffer.from(response.data, "binary"));
-
-      //       fs.writeFileSync(pdfFilename, response.data);
-
       return reportData;
-    // } catch (error) {
-    //   console.error("Error generating report:", error);
-    //   throw error;
-    // }
+  
   }
 };
 
@@ -174,29 +153,17 @@ export const makeCheckInReport = async (reportData) =>
             data: reportData,
           },
           {
-            //responseType: "blob",
-            responseType: "arraybuffer", // Changed from 'blob' to 'arraybuffer'
+            responseType: "arraybuffer", 
           }
-        );
-  
-        // const pdfFilename = `Checkin-report-${reportData._id}.pdf`;
-        // fs.writeFileSync(pdfFilename, Buffer.from(response.data, "binary"));
-  
-        //       fs.writeFileSync(pdfFilename, response.data);
-        //       return;
+        );      
         return response.data;
-
    }
    catch (error) 
    {
-      console.error("Error generating report:", error);
+      console.error("Error generating check-in report:", error);
       throw error;
     }
-
-
-
-
-}
+};
 
 
 export const getWorkorderById = async (repairId) => {
@@ -276,7 +243,8 @@ export const updateWorkorderAfterRepair = async (
   }
   const updatedRepair = await getWorkorderById(repairID);
 
-  if (wasTheRepairSuccessful) {
+  // if (wasTheRepairSuccessful) 
+  // {
     try {
       const client = await getClientById(updatedRepair.clientID);
       if (!client) throw "No client with that ID";
@@ -290,7 +258,7 @@ export const updateWorkorderAfterRepair = async (
     } catch (error) {
       console.error("Failed to send email:", error);
     }
-  }
+  // }
 
   try {
     await redisClient.del(cacheKey);
@@ -349,6 +317,11 @@ export const updateWorkorderAfterPickup = async (
   if (!updatedInfo.acknowledged || updatedInfo.modifiedCount === 0) {
     throw "Could not update the repair successfully";
   }
+  try {
+    await redisClient.del(cacheKey);
+  } catch (error) {
+    throw ("Redis delete error:", error.nessage);
+  }
 
   let finalRepair = await getWorkorderById(repairID);
   let client = await getClientById(finalRepair.clientID);
@@ -368,7 +341,22 @@ export const updateWorkorderAfterPickup = async (
   reportData.modelNumber = device.modelNumber;
   reportData.serialNumber = device.serialNumber;
 
-  try {
+  
+
+  // return await getWorkorderById(repairID);
+  return reportData;
+};
+
+export const makePickupReport = async (reportData) => 
+{
+  if (!reportData) throw "You must provide report data";
+    if (typeof reportData !== "object" || Object.keys(reportData).length === 0)
+      throw "Report data must be a non-empty object";
+
+   // will do the validations later 
+
+   try
+   {
     const response = await axios.post(
       "http://localhost:5488/api/report",
       {
@@ -376,34 +364,19 @@ export const updateWorkorderAfterPickup = async (
         data: reportData,
       },
       {
-        //responseType: "blob",
-        responseType: "arraybuffer", // Changed from 'blob' to 'arraybuffer'
+        responseType: "arraybuffer", 
       }
     );
-    const pdfFilename = `Pickup-report-${finalRepair._id}.pdf`;
-    fs.writeFileSync(pdfFilename, Buffer.from(response.data, "binary"));
-  } catch (error) {
-    console.error("Error generating report:", error);
-    throw error;
-  }
-
-  try {
-    await redisClient.del(cacheKey);
-  } catch (error) {
-    throw ("Redis delete error:", error.nessage);
-  }
-
-  // try {
-  //   await redisClient.set(cacheKey, JSON.stringify(repair));
-  //   await redisClient.expire(cacheKey, 3600);
-  // } catch (error) {
-  //   throw ("Redis set error:", error.message);
-  // }
-
-  return await getWorkorderById(repairID);
+    return response.data;
+   }
+   catch (error) 
+    {
+      console.error("Error generating pickup report:", error);
+      throw error;
+    }
 };
 
-// will find all the work orders with status constants.repairStatus[0] (in progress)
+
 export const getActiveRepairs = async () => {
   let clientCollection = await clients();
   let activeRepairs = await clientCollection

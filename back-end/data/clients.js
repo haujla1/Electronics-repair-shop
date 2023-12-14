@@ -24,6 +24,12 @@ export const createClient = async (
   address = validateString(address, "Address");
   age = validateAge(age, "Age");
 
+  let already = await getClientByPhoneNumber(phoneNumber);
+  // console.log(already);
+  if (typeof already != 'string') throw "Client with that phone number already exists";
+
+
+
   let clientCollection = await clients();
   let newClient = {
     _id: new ObjectId(),
