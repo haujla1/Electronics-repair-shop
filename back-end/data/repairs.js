@@ -14,6 +14,18 @@ import constants from "../appConstants.js";
 import { sendEmail } from "../nodemailer/sendMailService.js";
 import { redisClient } from "../redis.js";
 
+
+function formatDate(date) 
+{
+  const options = 
+  {
+      year: 'numeric', 
+      month: '2-digit', 
+      day: '2-digit'
+  };
+  return date.toLocaleDateString('en-US', options);
+}
+
 export const getDeviceById = async (clientId, deviceId) => {
   validateString(deviceId, "Device ID");
   validateString(clientId, "Client ID");
@@ -81,6 +93,8 @@ export const createRepair = async (clientId, deviceID, workOrder) => {
     "Condition Of Device"
   );
   const cacheKey = `client:${clientId}`;
+  const now = new Date();
+  const formattedDate = formatDate(now);
 
   let newRepair = {
     _id: new ObjectId(),
@@ -88,7 +102,7 @@ export const createRepair = async (clientId, deviceID, workOrder) => {
     deviceID: deviceID,
     clientPreferredEmail: workOrder.clientPreferredEmail,
     clientPreferredPhoneNumber: workOrder.clientPreferredPhoneNumber,
-    repairOrderCreationDate: new Date(),
+    repairOrderCreationDate: formattedDate,
     issue: workOrder.issue,
     wasIssueVerified: workOrder.wasIssueVerified,
     stepsTakenToReplicateIssue: workOrder.stepsTakenToReplicateIssue,
@@ -223,12 +237,15 @@ export const updateWorkorderAfterRepair = async (
     "Repairs._id": new ObjectId(repairID),
   };
 
+  const now = new Date();
+  const formattedDate = formatDate(now);
+
   const updateQuery = {
     $set: {
       "Repairs.$.repairTechnicianNotes": repairNotes,
       "Repairs.$.wasTheRepairSuccessful": wasTheRepairSuccessful,
       "Repairs.$.repairStatus": constants.repairStatus[1],
-      "Repairs.$.repairCompletionDate": new Date(),
+      "Repairs.$.repairCompletionDate": formattedDate,
     },
   };
 
@@ -250,7 +267,7 @@ export const updateWorkorderAfterRepair = async (
       if (!client) throw "No client with that ID";
 
       await sendEmail(
-        client.email,
+        repair.clientPreferredEmail,
         "Repair Order Completed",
         `Your repair with ID: ${repairID} is completed.`,
         `<p>Your repair with ID: ${repairID} is completed.</p>`
@@ -298,13 +315,15 @@ export const updateWorkorderAfterPickup = async (
     "Repairs._id": new ObjectId(repairID),
   };
 
+  const now = new Date();
+  const formattedDate = formatDate(now);
   const updateQuery = {
     $set: {
       "Repairs.$.pickupDemoDone": pickupDemoDone,
       "Repairs.$.pickupNotes": pickupNotes,
       // "Repairs.$.isDevicePickedUpAlready": true,
       "Repairs.$.repairStatus": constants.repairStatus[2],
-      "Repairs.$.pickupDate": new Date(),
+      "Repairs.$.pickupDate": formattedDate,
     },
   };
 
