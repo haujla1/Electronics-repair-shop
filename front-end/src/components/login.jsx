@@ -12,6 +12,10 @@ function Login(){
     const handleLogin = async(e)=>{
         e.preventDefault()
         let {email, password} = e.target.elements
+        if(email.getAttribute("type") != "email" || password.getAttribute("type") != "password"){
+          setDisplay("Invalid Input Type")
+          return
+        }
 
         try{
             await dosignInWithEmailAndPassword(email.value, password.value)
@@ -22,7 +26,12 @@ function Login(){
 
     const passwordReset = (e) =>{
         e.preventDefault()
-        let email = document.getElementById("email").value
+        let emailElem = document.getElementById("email")
+        if(emailElem.getAttribute("type") != "email"){
+          setDisplay("Invalid Input Type")
+          return
+        }
+        let email = emailElem.value
         if(email){
             try{
                 doPasswordReset(email)
