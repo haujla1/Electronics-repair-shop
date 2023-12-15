@@ -1,98 +1,108 @@
-import React, {useEffect, useState, useContext} from "react";
+import React, { useEffect, useState, useContext } from "react";
 
-import ReactModal from 'react-modal';
+import ReactModal from "react-modal";
 import axios from "axios";
 
+ReactModal.setAppElement("#root");
 
+const PickUp = ({ repair, isOpen, handleClose, update }) => {
+  let [showAddModal, setShowAddModal] = useState(isOpen);
+  const [error, setError] = useState("");
 
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError("");
+    try {
+      let pickupNotes = e.target.pickupNotes.value;
+      let pickupDemoDone = e.target.pickupDemoDone.checked;
 
-
-ReactModal.setAppElement('#root')
-
-const PickUp = ({repair, isOpen, handleClose, update}) => {
-    let [showAddModal, setShowAddModal] = useState(isOpen)
-    const [error, setError] = useState("")
-
-
-    async function handleSubmit(e){
-        e.preventDefault()
-        setError("")
-        try{
-            
-            let pickupNotes = e.target.pickupNotes.value
-            let pickupDemoDone = e.target.pickupDemoDone.checked
-
-            if(typeof pickupNotes != "string" || pickupNotes.trim().length < 1){
-                setError("Must add Pick Up Notes.")
-                return
-            }
-            if(typeof pickupDemoDone != "boolean" || e.target.pickupDemoDone.value != "on"){
-                setError("Error: pickup type must be boolean")
-                return
-            }
-            //make the axios
-            let rep = await axios.put("http://localhost:3000/repairs/afterPickup", {repairID: repair._id, pickupDemoDone: pickupDemoDone, pickupNotes:pickupNotes})
-            // update(rep.data)
-          
-
-            let reportRes =  await axios.post("http://localhost:3000/repairs/pickupReport", {reportData:rep.data},
-            { responseType: 'arraybuffer' });
-            const pdfBlob = new Blob([reportRes.data], { type: 'application/pdf' });
-            const url = URL.createObjectURL(pdfBlob);
-
-            window.open(url, '_blank');
-
-            setError("")
-            handleClose()
-        }catch(e){
-            console.log(e)
-            setError(String(e.response.data.error))
+      if (typeof pickupNotes != "string" || pickupNotes.trim().length < 1) {
+        setError("Must add Pick Up Notes.");
+        return;
+      }
+      if (
+        typeof pickupDemoDone != "boolean" ||
+        e.target.pickupDemoDone.value != "on"
+      ) {
+        setError("Error: pickup type must be boolean");
+        return;
+      }
+      //make the axios
+      let rep = await axios.put(
+        "http://3.95.175.219:3000/repairs/afterPickup",
+        {
+          repairID: repair._id,
+          pickupDemoDone: pickupDemoDone,
+          pickupNotes: pickupNotes,
         }
+      );
+      // update(rep.data)
 
-        return
-       
+      let reportRes = await axios.post(
+        "http://3.95.175.219:3000/repairs/pickupReport",
+        { reportData: rep.data },
+        { responseType: "arraybuffer" }
+      );
+      const pdfBlob = new Blob([reportRes.data], { type: "application/pdf" });
+      const url = URL.createObjectURL(pdfBlob);
+
+      window.open(url, "_blank");
+
+      setError("");
+      handleClose();
+    } catch (e) {
+      console.log(e);
+      setError(String(e.response.data.error));
     }
 
-    const customStyles = { //taken from lecture code
-        content: {
-          top: '50%',
-          left: '50%',
-          right: 'auto',
-          bottom: 'auto',
-          marginRight: '-50%',
-          transform: 'translate(-50%, -50%)',
-          width: '50%',
-          border: '1px solid #28547a',
-          borderRadius: '4px',
-          color: 'black'
-        }
-      };
+    return;
+  }
 
-    return (
-        <ReactModal name='pickupRepair' isOpen={showAddModal} contentLabel="Pickup" style={customStyles}>
-            <form onSubmit={handleSubmit}>
-                    <h3>Pick Up</h3>
-                    <label>
-                        Pick Up Notes:
-                        <br />
-                        <textarea name='pickupNotes' />
-                    </label>
-                    <br />
-                    <label>
-                        Pick Up Demo Done:
-                        <input type='checkbox' name='pickupDemoDone'  />
-                    </label>
-                    <br />
-  
-                <br />
-                <button onClick={handleClose}>Cancel</button>
-                <button type='submit'>Picked Up</button>
-            </form>
+  const customStyles = {
+    //taken from lecture code
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      width: "50%",
+      border: "1px solid #28547a",
+      borderRadius: "4px",
+      color: "black",
+    },
+  };
 
-            <p>{error}</p>
+  return (
+    <ReactModal
+      name="pickupRepair"
+      isOpen={showAddModal}
+      contentLabel="Pickup"
+      style={customStyles}
+    >
+      <form onSubmit={handleSubmit}>
+        <h3>Pick Up</h3>
+        <label>
+          Pick Up Notes:
+          <br />
+          <textarea name="pickupNotes" />
+        </label>
+        <br />
+        <label>
+          Pick Up Demo Done:
+          <input type="checkbox" name="pickupDemoDone" />
+        </label>
+        <br />
 
-        </ReactModal>
-    )
-}
+        <br />
+        <button onClick={handleClose}>Cancel</button>
+        <button type="submit">Picked Up</button>
+      </form>
 
-export default PickUp
+      <p>{error}</p>
+    </ReactModal>
+  );
+};
+
+export default PickUp;

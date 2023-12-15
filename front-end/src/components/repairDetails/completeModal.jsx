@@ -1,94 +1,99 @@
-import React, {useEffect, useState, useContext} from "react";
+import React, { useEffect, useState, useContext } from "react";
 
-import ReactModal from 'react-modal';
+import ReactModal from "react-modal";
 import axios from "axios";
 
+ReactModal.setAppElement("#root");
 
+const Edit = ({ repair, isOpen, handleClose, update }) => {
+  let [showAddModal, setShowAddModal] = useState(isOpen);
+  const [error, setError] = useState("");
 
+  async function handleSubmit(e) {
+    e.preventDefault();
+    setError("");
+    try {
+      let repairTechnicianNotes = e.target.repairTechnicianNotes.value;
+      let wasTheRepairSuccessful = e.target.wasTheRepairSuccessful.value;
 
-
-ReactModal.setAppElement('#root')
-
-const Edit = ({repair, isOpen, handleClose, update}) => {
-    let [showAddModal, setShowAddModal] = useState(isOpen)
-    const [error, setError] = useState("")
-
-
-    async function handleSubmit(e){
-        e.preventDefault()
-        setError("")
-        try{
-            
-            let repairTechnicianNotes = e.target.repairTechnicianNotes.value
-            let wasTheRepairSuccessful = e.target.wasTheRepairSuccessful.checked
-
-            if(typeof repairTechnicianNotes != "string" || repairTechnicianNotes.trim().length < 1){
-                setError("Must add Pick Up Notes.")
-                return
-            }
-            if(typeof wasTheRepairSuccessful != "boolean" || e.target.wasTheRepairSuccessful.value != "on"){
-                setError("Error: pickup type must be boolean")
-                return
-            }
-            //make the axios
-            let rep = await axios.put("http://localhost:3000/repairs/afterRepair", {repairID: repair._id, wasTheRepairSuccessful: wasTheRepairSuccessful, repairNotes:repairTechnicianNotes})
-            update(rep.data)
-
-            setError("")
-            handleClose()
-        }catch(e){
-            console.log(e)
-            setError(String(e.response.data.error))
+      if (
+        typeof repairTechnicianNotes != "string" ||
+        repairTechnicianNotes.trim().length < 1
+      ) {
+        setError("Must add Pick Up Notes.");
+        return;
+      }
+      if (wasTheRepairSuccessful != "on" && wasTheRepairSuccessful != "off") {
+        setError("Error: pickup type must be boolean");
+        return;
+      }
+      //make the axios
+      let rep = await axios.put(
+        "http://3.95.175.219:3000/repairs/afterRepair",
+        {
+          repairID: repair._id,
+          wasTheRepairSuccessful: wasTheRepairSuccessful == "on",
+          repairNotes: repairTechnicianNotes,
         }
+      );
+      update(rep.data);
 
-        return
-       
+      setError("");
+      handleClose();
+    } catch (e) {
+      console.log(e);
+      setError(String(e.response.data.error));
     }
 
-    const customStyles = { //taken from lecture code
-        content: {
-          top: '50%',
-          left: '50%',
-          right: 'auto',
-          bottom: 'auto',
-          marginRight: '-50%',
-          transform: 'translate(-50%, -50%)',
-          width: '50%',
-          border: '1px solid #28547a',
-          borderRadius: '4px',
-          color: 'black'
-        }
-      };
+    return;
+  }
 
-      var tzoffset = (new Date()).getTimezoneOffset() * 60000;
+  const customStyles = {
+    //taken from lecture code
+    content: {
+      top: "50%",
+      left: "50%",
+      right: "auto",
+      bottom: "auto",
+      marginRight: "-50%",
+      transform: "translate(-50%, -50%)",
+      width: "50%",
+      border: "1px solid #28547a",
+      borderRadius: "4px",
+    },
+  };
 
-    return (
-        <ReactModal name='completeRepair' isOpen={showAddModal} contentLabel="Complete" style={customStyles}>
-            <form onSubmit={handleSubmit}>
-                
-                    <h3>Complete Repair</h3>
-                    <label>
-                        Repair Notes:
-                        <br />
-                        <textarea name='repairTechnicianNotes'  />
-                    </label>
-                    <br />
-                    <label>
-                        Repair Success:
-                        <input type='checkbox' name='wasTheRepairSuccessful'  />
-                    </label>
-                    <br />
-                
-                
-                <br />
-                <button onClick={handleClose}>Cancel</button>
-                <button type='submit'>Complete</button>
-            </form>
+  var tzoffset = new Date().getTimezoneOffset() * 60000;
 
-            <p>{error}</p>
+  return (
+    <ReactModal
+      name="completeRepair"
+      isOpen={showAddModal}
+      contentLabel="Complete"
+      style={customStyles}
+    >
+      <form onSubmit={handleSubmit}>
+        <h3>Complete Repair</h3>
+        <label>
+          Repair Notes:
+          <br />
+          <textarea name="repairTechnicianNotes" />
+        </label>
+        <br />
+        <label>
+          Repair Success:
+          <input type="checkbox" name="wasTheRepairSuccessful" />
+        </label>
+        <br />
 
-        </ReactModal>
-    )
-}
+        <br />
+        <button onClick={handleClose}>Cancel</button>
+        <button type="submit">Complete</button>
+      </form>
 
-export default Edit
+      <p>{error}</p>
+    </ReactModal>
+  );
+};
+
+export default Edit;

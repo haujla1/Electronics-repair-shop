@@ -19,5 +19,26 @@
         }
       }
     }
+  },
+  "frontend": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-esmsfrontend-frontend-22611-authRole",
+      "UnauthRoleArn": "arn:aws:iam::548903488023:role/amplify-esmsfrontend-frontend-22611-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::548903488023:role/amplify-esmsfrontend-frontend-22611-authRole",
+      "Region": "us-east-1",
+      "DeploymentBucketName": "amplify-esmsfrontend-frontend-22611-deployment",
+      "UnauthRoleName": "amplify-esmsfrontend-frontend-22611-unauthRole",
+      "StackName": "amplify-esmsfrontend-frontend-22611",
+      "StackId": "arn:aws:cloudformation:us-east-1:548903488023:stack/amplify-esmsfrontend-frontend-22611/e4c790b0-9988-11ee-be0e-121f61a75449",
+      "AmplifyAppId": "d30tsyfj4fbxts"
+    },
+    "categories": {
+      "hosting": {
+        "amplifyhosting": {
+          "appId": "d30tsyfj4fbxts",
+          "type": "manual"
+        }
+      }
+    }
   }
 }
