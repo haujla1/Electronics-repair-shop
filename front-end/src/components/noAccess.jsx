@@ -51,7 +51,7 @@ const noAccess = () => {
         </form>
 
 
-        <p>{error}</p>
+        <p className="error">{error}</p>
         <p>{message}</p>
         <br />
         <SignOut />

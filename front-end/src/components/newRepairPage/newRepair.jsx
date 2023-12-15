@@ -133,7 +133,7 @@ function NewRepair(){
                 <button type='submit'>Create</button>
             </form>
 
-            <p>{error}</p>
+            <p className="error">{error}</p>
             </>
 
     )

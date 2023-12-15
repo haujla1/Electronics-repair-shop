@@ -81,7 +81,7 @@ const PickUp = ({repair, isOpen, handleClose, update}) => {
                 <button type='submit'>Picked Up</button>
             </form>
 
-            <p>{error}</p>
+            <p className="error">{error}</p>
 
         </ReactModal>
     )

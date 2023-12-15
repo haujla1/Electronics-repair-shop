@@ -130,7 +130,7 @@ function SignUp(){
           <br />
 
           <GoogleSignIn />
-          <div>
+          <div className="error">
             {error}
           </div>
 

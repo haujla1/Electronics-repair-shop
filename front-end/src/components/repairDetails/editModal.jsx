@@ -150,7 +150,7 @@ const Edit = ({repair, isOpen, handleClose}) => {
                 <button type='submit'>Save Changes</button>
             </form>
 
-            <p>{error}</p>
+            <p className="error">{error}</p>
 
         </ReactModal>
     )

@@ -10,7 +10,7 @@ function Nav({pagename}){
         <div className="header">
             <h1 style={{display : 'inline-block'}}>{pagename}</h1>
             <br />
-            <h2 style={{display : 'inline-block'}}>Company Name</h2>
+            <h2 style={{display : 'inline-block'}}>Jimmy's Repair</h2>
             <h2 style={{display : 'inline-block'}}>{currentUser.displayName}</h2>
 
             <nav>

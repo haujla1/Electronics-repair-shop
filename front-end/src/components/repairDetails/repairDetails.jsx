@@ -76,7 +76,7 @@ function RepairDetails(){
     if(!repair){
         return(<>
             <Nav pagename="Repair Info"/>
-            <h3>404 Error: Repair Not Found (id:{repairId})</h3>
+            <h3 className="error">404 Error: Repair Not Found (id:{repairId})</h3>
         </>)
     }
 

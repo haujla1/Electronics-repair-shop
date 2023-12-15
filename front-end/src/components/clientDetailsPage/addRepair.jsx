@@ -90,7 +90,7 @@ const AddRepair = ({repairId, isOpen, handleClose, updateRepairs}) => {
                 <button type='submit'>Add Repair</button>
             </form>
 
-            <p>{error}</p>
+            <p className="error">{error}</p>
 
         </ReactModal>
     )
