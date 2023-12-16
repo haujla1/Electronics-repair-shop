@@ -12,7 +12,7 @@ app.use("*", (req, res, next) => {
 });
 app.use(
   cors({
-    origin: "https://frontend.d30tsyfj4fbxts.amplifyapp.com",
+    origin: "https://devs.d3r1tnzaowo1u7.amplifyapp.com",
   })
 );
 
