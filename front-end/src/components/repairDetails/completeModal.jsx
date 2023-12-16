@@ -17,10 +17,22 @@ const Edit = ({repair, isOpen, handleClose, update}) => {
     async function handleSubmit(e){
         e.preventDefault()
         setError("")
+        const {
+            repairTechnicianNotes: repairTechnicianNotesElem,
+            wasTheRepairSuccessful: wasTheRepairSuccessfulElem
+        } = e.target.elements
+        if(
+            repairTechnicianNotesElem.tagName != "TEXTAREA" ||
+            wasTheRepairSuccessfulElem.getAttribute("type") != "checkbox"
+        ){
+            setError("Invalid Input Type")
+            return
+        }
+
         try{
             
-            let repairTechnicianNotes = e.target.repairTechnicianNotes.value
-            let wasTheRepairSuccessful = e.target.wasTheRepairSuccessful.checked
+            let repairTechnicianNotes = repairTechnicianNotesElem.value
+            let wasTheRepairSuccessful = wasTheRepairSuccessfulElem.checked
 
             if(typeof repairTechnicianNotes != "string" || repairTechnicianNotes.trim().length < 1){
                 setError("Must add Pick Up Notes.")
