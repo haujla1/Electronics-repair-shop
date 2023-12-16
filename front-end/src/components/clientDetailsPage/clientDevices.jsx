@@ -2,6 +2,11 @@ import React, {useContext, useEffect, useState} from "react";
 import {Link} from 'react-router-dom';
 import axios from "axios";
 import AddDevice from './addDevice.jsx'
+import DeviceCard from "./deviceCard.jsx";
+
+import {
+    Grid
+  } from '@mui/material';
 
 
 function Devices({clientId}){
@@ -52,23 +57,15 @@ function Devices({clientId}){
                         : (
                             devices.length > 0
                                 ?
-                                    devices.map(device => {
-                                        return (
-                                            <div className="card" key={device._id}>
-                                                <h5>{device.manufacturer} {device.modelName}</h5>
-                                                <dl>
-                                                    <dt>Model Number:</dt>
-                                                    <dd>{device.modelNumber}</dd>
-
-                                                    <dt>Serial Number:</dt>
-                                                    <dd>{device.serialNumber}</dd>
-
-                                                </dl>
-
-                                                <Link to={`/newRepair/${clientId}/${device._id}`}>New Repair</Link>
-                                            </div>
-                                        );
-                                    })
+                                    <Grid container spacing={0}
+                                    style={{display: "flex", "flexFlow": "row wrap"}}
+                                    >
+                                        {devices.map(device => {
+                                            return (
+                                                <Grid marginTop={"auto"} item xs key={device._id}> <DeviceCard device={device} clientId={clientId} /> </Grid>
+                                            );
+                                        })}
+                                    </ Grid>
                                 :
                                     (
                                         <>

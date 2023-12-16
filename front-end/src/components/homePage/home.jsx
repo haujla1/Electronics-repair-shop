@@ -10,6 +10,12 @@ import ReadyForPickup from "./readyForPickup";
 
 import axios from 'axios'
 
+import RepairCard from "../repairCard";
+
+import {
+    Grid
+  } from '@mui/material';
+
 
 
 function Home(){
@@ -71,15 +77,20 @@ function Home(){
         <>
             <div className="activeWorkorders">
                 <h3>Active Workorders</h3>
-                <ul>
-                    {active.map(wo => <li key={wo._id}><Link to={'/repair/'+wo._id}>{wo.clientName + "'s " + wo.deviceName}</Link></li>)}
-                </ul>
+                {active.length != 0 ? 
+                <Grid container >
+                {active.map(wo => <Grid marginTop={"auto"} item xs key={wo._id}> <RepairCard repair={wo} deviceName={wo.clientName + "'s " + wo.deviceName}/> </Grid> )}
+                </Grid>
+                : <h4>No Active Workorders</h4>}
+
             </div>
             <div className="readyForPickupWorkorders">
                 <h3>Ready for Pickup</h3>
-                <ul>
-                    {pickUp.map(wo => <li key={wo._id}><Link to={'/repair/'+wo._id}>{wo.clientName + "'s " + wo.deviceName}</Link></li>)}
-                </ul>
+                {pickUp.length != 0 ? 
+                <Grid container >
+                {pickUp.map(wo => <Grid marginTop={"auto"} item xs key={wo._id}> <RepairCard repair={wo} deviceName={wo.clientName + "'s " + wo.deviceName}/> </Grid> )}
+                </Grid>
+                : <h4>No Ready to Pickup Devices</h4>}
             </div>
         </>
         }
