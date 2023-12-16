@@ -16,7 +16,10 @@ function SearchBar() {
     }
     try {
       let data = (
-        await axios("http://3.95.175.219:3000/clients/phoneNumber/" + phone)
+        await axios(
+          "http://ec2-3-95-175-219.compute-1.amazonaws.com:3000/clients/phoneNumber/" +
+            phone
+        )
       ).data;
       setPhoneNumber(phone);
       setClient(data);

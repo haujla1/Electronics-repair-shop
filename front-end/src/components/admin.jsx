@@ -15,11 +15,13 @@ const adminTools = () => {
     const getUsers = async () => {
       try {
         let approved = await axios(
-          "http://3.95.175.219:3000/users/authorized/" + currentUser.uid
+          "http://ec2-3-95-175-219.compute-1.amazonaws.com:3000/users/authorized/" +
+            currentUser.uid
         );
         setUsers(approved.data.filter((x) => x.role != "Admin"));
         let pending = await axios(
-          "http://3.95.175.219:3000/users/pending/" + currentUser.uid
+          "http://ec2-3-95-175-219.compute-1.amazonaws.com:3000/users/pending/" +
+            currentUser.uid
         );
         setPendingUsers(pending.data);
         setLoading(false);
@@ -53,10 +55,13 @@ const adminTools = () => {
 
       console.log(deleteUserFirebaseId);
 
-      await axios.patch("http://3.95.175.219:3000/users/remove", {
-        adminFirebaseId: currentUser.uid,
-        userFirebaseId: deleteUserFirebaseId,
-      });
+      await axios.patch(
+        "http://ec2-3-95-175-219.compute-1.amazonaws.com:3000/users/remove",
+        {
+          adminFirebaseId: currentUser.uid,
+          userFirebaseId: deleteUserFirebaseId,
+        }
+      );
     } catch (e) {
       console.log(e);
     }
@@ -68,10 +73,13 @@ const adminTools = () => {
     let newUser;
     try {
       newUser = pendingUsers.filter((x) => x.email == email)[0];
-      await axios.patch("http://3.95.175.219:3000/users/approve", {
-        adminFirebaseId: currentUser.uid,
-        userFirebaseId: newUser.firebaseId,
-      });
+      await axios.patch(
+        "http://ec2-3-95-175-219.compute-1.amazonaws.com:3000/users/approve",
+        {
+          adminFirebaseId: currentUser.uid,
+          userFirebaseId: newUser.firebaseId,
+        }
+      );
     } catch (e) {
       console.log(e);
     }

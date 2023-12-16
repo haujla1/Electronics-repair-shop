@@ -17,7 +17,10 @@ export const AuthProvider = ({ children }) => {
       if (user) {
         try {
           let userData = await axios(
-            "http://3.95.175.219:3000/users/" + user.uid + "/" + user.email
+            "http://ec2-3-95-175-219.compute-1.amazonaws.com:3000/users/" +
+              user.uid +
+              "/" +
+              user.email
           );
           if (userData.data.status == "Approved") {
             setRole(userData.data.role);

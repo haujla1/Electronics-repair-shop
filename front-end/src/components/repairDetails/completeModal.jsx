@@ -29,7 +29,7 @@ const Edit = ({ repair, isOpen, handleClose, update }) => {
       }
       //make the axios
       let rep = await axios.put(
-        "http://3.95.175.219:3000/repairs/afterRepair",
+        "http://ec2-3-95-175-219.compute-1.amazonaws.com:3000/repairs/afterRepair",
         {
           repairID: repair._id,
           wasTheRepairSuccessful: wasTheRepairSuccessful == "on",

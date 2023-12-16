@@ -42,12 +42,19 @@ function RepairDetails() {
   useEffect(() => {
     async function getRepair() {
       try {
-        let data = (await axios("http://3.95.175.219:3000/repairs/" + repairId))
-          .data;
+        let data = (
+          await axios(
+            "http://ec2-3-95-175-219.compute-1.amazonaws.com:3000/repairs/" +
+              repairId
+          )
+        ).data;
 
         //get the client for the name and for the device name
         let client = (
-          await axios.get("http://3.95.175.219:3000/clients/" + data.clientID)
+          await axios.get(
+            "http://ec2-3-95-175-219.compute-1.amazonaws.com:3000/clients/" +
+              data.clientID
+          )
         ).data;
         data["clientName"] = client.name;
         let device = client.Devices.filter((x) => x._id == data.deviceID)[0];

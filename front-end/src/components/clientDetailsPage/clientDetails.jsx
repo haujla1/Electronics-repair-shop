@@ -13,8 +13,12 @@ function ClientDetails() {
   useEffect(() => {
     async function getClient() {
       try {
-        let data = (await axios("http://3.95.175.219:3000/clients/" + clientId))
-          .data;
+        let data = (
+          await axios(
+            "http://ec2-3-95-175-219.compute-1.amazonaws.com:3000/clients/" +
+              clientId
+          )
+        ).data;
         setClient(data);
       } catch (e) {
         console.log(e);

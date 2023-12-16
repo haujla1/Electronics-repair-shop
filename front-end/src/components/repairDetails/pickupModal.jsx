@@ -29,7 +29,7 @@ const PickUp = ({ repair, isOpen, handleClose, update }) => {
       }
       //make the axios
       let rep = await axios.put(
-        "http://3.95.175.219:3000/repairs/afterPickup",
+        "http://ec2-3-95-175-219.compute-1.amazonaws.com:3000/repairs/afterPickup",
         {
           repairID: repair._id,
           pickupDemoDone: pickupDemoDone,
@@ -39,7 +39,7 @@ const PickUp = ({ repair, isOpen, handleClose, update }) => {
       // update(rep.data)
 
       let reportRes = await axios.post(
-        "http://3.95.175.219:3000/repairs/pickupReport",
+        "http://ec2-3-95-175-219.compute-1.amazonaws.com:3000/repairs/pickupReport",
         { reportData: rep.data },
         { responseType: "arraybuffer" }
       );

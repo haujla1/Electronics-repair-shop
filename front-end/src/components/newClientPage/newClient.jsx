@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Nav from "../navBar";
 import axios from "axios";
-import constants from "../../../../back-end/appConstants.js";
+import constants from "../../../appConstants.js";
 // For some reason, this import below causes the entire website to crash. Not sure why...
 // import * as validation from "../../../../back-end/util/validationUtil.js"
 
@@ -21,7 +21,10 @@ function NewClient() {
   const addClient = async (form) => {
     console.log(form);
     try {
-      let { data } = await axios.post("http://3.95.175.219:3000/clients", form);
+      let { data } = await axios.post(
+        "http://ec2-3-95-175-219.compute-1.amazonaws.com:3000/clients",
+        form
+      );
       return data;
     } catch (e) {
       console.log(e);

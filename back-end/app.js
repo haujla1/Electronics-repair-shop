@@ -12,7 +12,7 @@ app.use("*", (req, res, next) => {
 });
 app.use(
   cors({
-    origin: "https://devs.d3r1tnzaowo1u7.amplifyapp.com",
+    origin: "http://ec2-54-166-200-140.compute-1.amazonaws.com",
   })
 );
 

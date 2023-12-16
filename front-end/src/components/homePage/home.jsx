@@ -22,11 +22,13 @@ function Home() {
       setError("");
       try {
         let actives = await (
-          await axios.get("http://3.95.175.219:3000/repairs/activeRepairs")
+          await axios.get(
+            "http://ec2-3-95-175-219.compute-1.amazonaws.com:3000/repairs/activeRepairs"
+          )
         ).data;
         let pickups = await (
           await axios.get(
-            "http://3.95.175.219:3000/repairs/readyForPickupRepairs"
+            "http://ec2-3-95-175-219.compute-1.amazonaws.com:3000/repairs/readyForPickupRepairs"
           )
         ).data;
 
@@ -38,7 +40,8 @@ function Home() {
             }
             let client = (
               await axios.get(
-                "http://3.95.175.219:3000/clients/" + actives[i].clientID
+                "http://ec2-3-95-175-219.compute-1.amazonaws.com:3000/clients/" +
+                  actives[i].clientID
               )
             ).data;
             actives[i]["clientName"] = client.name;
@@ -55,7 +58,8 @@ function Home() {
           for (let i = 0; i < pickups.length; i++) {
             let client = (
               await axios.get(
-                "http://3.95.175.219:3000/clients/" + pickups[i].clientID
+                "http://ec2-3-95-175-219.compute-1.amazonaws.com:3000/clients/" +
+                  pickups[i].clientID
               )
             ).data;
             pickups[i]["clientName"] = client.name;

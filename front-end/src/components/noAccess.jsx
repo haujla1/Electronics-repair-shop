@@ -24,12 +24,15 @@ const noAccess = () => {
     }
 
     try {
-      let data = await axios.post("http://3.95.175.219:3000/users/request", {
-        name: currentUser.displayName,
-        email: currentUser.email,
-        employeeId: employeeId,
-        firebaseId: currentUser.uid,
-      });
+      let data = await axios.post(
+        "http://ec2-3-95-175-219.compute-1.amazonaws.com:3000/users/request",
+        {
+          name: currentUser.displayName,
+          email: currentUser.email,
+          employeeId: employeeId,
+          firebaseId: currentUser.uid,
+        }
+      );
       setError("");
     } catch (e) {
       console.log(e);

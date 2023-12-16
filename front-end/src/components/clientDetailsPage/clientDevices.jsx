@@ -12,7 +12,7 @@ function Devices({ clientId }) {
     async function getDevices(clientId) {
       try {
         let { data } = await axios.get(
-          `http://3.95.175.219:3000/clients/${clientId}`
+          `http://ec2-3-95-175-219.compute-1.amazonaws.com:3000/clients/${clientId}`
         );
         console.log(data.Devices);
         setDevices(data.Devices);
