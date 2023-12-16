@@ -2,6 +2,7 @@ import React, {useContext, useEffect, useState} from "react";
 import {Link} from 'react-router-dom';
 import Nav from "../navBar";
 import axios from "axios";
+import constants from "../../../../back-end/appConstants.js"; 
 
 function NewClient(){
     const [error, setError] = useState('');
