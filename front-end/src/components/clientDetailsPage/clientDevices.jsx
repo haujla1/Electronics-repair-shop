@@ -72,7 +72,7 @@ function Devices({clientId}){
                                 :
                                     (
                                         <>
-                                            <h3>No Devices Found</h3>
+                                            <h4>No Devices Found</h4>
                                         </>
                                     )
                         )
