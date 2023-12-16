@@ -95,14 +95,14 @@ const adminTools = () =>{
         <>
             <Nav pagename="Admin Tools"/>
             <div>
-                <h2>Accepted Users</h2>
+                <h3>Accepted Users</h3>
                 <ul>
                     {users.map(x=><li key={x.name}>{x.name}-{x.email}-{x.employeeId}  <button style={{backgroundColor: 'rgb(191, 34, 34)', color: "rgb(255, 255, 255)"}} value={x.email} onClick={(y) => removeUser(y)}>Remove</button></li>)}
                 </ul>
             </div>
             <br />
             <div>
-                <h2>Pending Users</h2>
+                <h3>Pending Users</h3>
                 <ul>
                     {pendingUsers.map(x=><li key={x.name}>{x.name}-{x.email}-{x.employeeId} <button style={{backgroundColor: 'rgb(191, 34, 34)', color: "rgb(255, 255, 255)"}} value={x.email} onClick={(y) => removeUser(y)}>Remove</button> <button style={{backgroundColor: 'rgb(10, 209, 97)'}} value={x.email} onClick={(y) => allowUser(y)}>Accept</button></li>)}
                 </ul>

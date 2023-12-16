@@ -18,6 +18,9 @@ function NewRepair(){
         async function getClient(){
             try{
                 let data = (await axios("http://localhost:3000/clients/"+clientId)).data
+                let device = data.Devices.filter(x=>x._id == deviceId)[0]
+                data.deviceName = device.manufacturer + " " + device.modelName
+
                 setClient(data)
             }catch(e){
                 setError(String(e))
@@ -129,8 +132,8 @@ function NewRepair(){
         <>
             <Nav pagename="New Repair"/>
             
-            <p>Client: <Link to={"/clientDetails/"+clientId}>{clientId}</Link></p>
-            <p>Device: {deviceId}</p>
+            <p>Client: <Link to={"/clientDetails/"+clientId}>{client.name}</Link></p>
+            <p>Device: {client.deviceName}</p>
 
 
             <form onSubmit={handleSubmit}>
@@ -179,7 +182,7 @@ function NewRepair(){
                 <button type='submit'>Create</button>
             </form>
 
-            <p>{error}</p>
+            <p className="error">{error}</p>
             </>
 
     )

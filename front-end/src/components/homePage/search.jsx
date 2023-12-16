@@ -36,7 +36,7 @@ function SearchBar(){
             <form className='form' onSubmit={handleSearch}>
                   <div className='form-group'>
                     <label>
-                      Enter Client's Phone Number:
+                      Search Client by Phone Number:
                       <br />
                       <input
                         name='phone'
@@ -46,22 +46,18 @@ function SearchBar(){
                         required
                         autoFocus={true}
                       />
-                    </label>
-                    <span class="helpText">Phone number must be 10 digits long (e.g. 1234567890)</span>
+                      <span class="helpText">Phone number must be 10 digits long (e.g. 1234567890)</span>
+                    </label>                  
+                    <button style={{display: 'inline-block'}} type='submit'>
+                      Search
+                    </button>
                   </div>
-                  <button type='submit'>
-                    Search
-                  </button>
             </form>
 
-            {error ? (<p>{error}. {error === 'Client could not be found' ? <>Would you like to <Link to="/newClient">create a new client</Link>? </>: <></>}</p>) : (<></>)}
+            {error ? (<p className="error">{error}. {error === 'Client could not be found' ? <>Would you like to <Link to="/newClient">create a new client</Link>? </>: <></>}</p>) : (<></>)}
 
-            {client? <Link to={"/clientDetails/" + client._id}>{client.name}</Link>: <></>}
-            <br />
-
-
-            <Link to="/newClient">New Client</Link>
-            <br />
+            {client? <p className="clientFound"> Client Found: <Link to={"/clientDetails/" + client._id}>{client.name}</Link></p>: <></>}
+            <p>Or <Link to="/newClient">Create New Client</Link></p>
             {/* <Link to="/clientDetails/123123">Example Client Page Link</Link> */}
         </>
     )

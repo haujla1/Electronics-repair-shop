@@ -102,7 +102,7 @@ const AddDevice = ({clientId, isOpen, handleClose, updateDevices}) => {
                 <button type='submit'>Add Device</button>
             </form>
 
-            <p>{error}</p>
+            <p className="error">{error}</p>
 
         </ReactModal>
     )
