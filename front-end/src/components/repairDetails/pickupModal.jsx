@@ -1,5 +1,5 @@
 import React, {useEffect, useState, useContext} from "react";
-
+import { useNavigate } from 'react-router-dom';
 import ReactModal from 'react-modal';
 import axios from "axios";
 
@@ -12,7 +12,7 @@ ReactModal.setAppElement('#root')
 const PickUp = ({repair, isOpen, handleClose, update}) => {
     let [showAddModal, setShowAddModal] = useState(isOpen)
     const [error, setError] = useState("")
-
+    const navigate = useNavigate()
 
     async function handleSubmit(e){
         e.preventDefault()
@@ -44,6 +44,7 @@ const PickUp = ({repair, isOpen, handleClose, update}) => {
 
             setError("")
             handleClose()
+            navigate("../../") //go back to home page
         }catch(e){
             console.log(e)
             setError(String(e.response.data.error))

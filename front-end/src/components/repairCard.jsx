@@ -75,7 +75,7 @@ import {
                 gutterBottom
                 component='div'
               >
-                <dl><dt>Compelted Date:</dt> <dd>{new Date(repair.repairCompletionDate).toLocaleDateString()}</dd></dl>
+                <dl><dt>Completed Date:</dt> <dd>{new Date(repair.repairCompletionDate).toLocaleDateString()}</dd></dl>
                 </Typography>:<></>
                 }
 

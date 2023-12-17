@@ -110,7 +110,7 @@ function RepairDetails(){
                 <dt>Client Email:</dt><dd> <a href={"mailto:" + repair["clientPreferredEmail"]}>{repair["clientPreferredEmail"]}</a></dd>
                 <dt>Work Order Opened:</dt> <dd>{new Date(repair["repairOrderCreationDate"]).toLocaleDateString()}</dd>
                 <dt>Issue:</dt> <dd> {repair["issue"]}</dd>
-                <dt>Issue Verified:</dt> <dd> {String(repair["wasIssueVerified"])}</dd>
+                <dt>Issue Verified:</dt> <dd> {repair["wasIssueVerified"]?"Yes":"No"}</dd>
                 <dt>Verification Reason:</dt> <dd> {repair["stepsTakenToReplicateIssue"]}</dd>
                 <dt>Repairs:</dt> <dd> {repair["workToBeDone"]}</dd>
                 <dt>Device Condition:</dt> <dd> {repair["conditionOfDevice"]}</dd>
@@ -122,7 +122,7 @@ function RepairDetails(){
                 <dl>
                 <dt>Repairs Completed:</dt> <dd> {new Date(repair["repairCompletionDate"]).toLocaleDateString()}</dd>
                 <dt>Repair Notes:</dt> <dd> {repair["repairTechnicianNotes"]}</dd>
-                <dt>Repair Success:</dt> <dd> {String(repair["wasTheRepairSuccessful"])}</dd>
+                <dt>Repair Success:</dt> <dd> {repair["wasTheRepairSuccessful"]?"Yes":"No"}</dd>
                 </dl>
                 </>:<></>}
 
@@ -132,7 +132,7 @@ function RepairDetails(){
                 <dl>
                 <dt>Picked Up:</dt> <dd> {new Date(repair["pickupDate"]).toLocaleDateString()}</dd>
                 <dt>Pick Up Notes:</dt> <dd> {repair["pickupNotes"]}</dd>
-                <dt>Pick Up Demo:</dt> <dd> {String(repair["pickupDemoDone"])}</dd>
+                <dt>Pick Up Demo:</dt> <dd> {repair["pickupDemoDone"]?"Yes":"No"}</dd>
                 </dl>
                 </>:<></>}
 
