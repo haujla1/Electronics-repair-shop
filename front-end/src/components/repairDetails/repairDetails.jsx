@@ -96,11 +96,13 @@ function RepairDetails(){
             </>}
 
             <h3>Repair Info</h3>
+            <br />
             {/* <button onClick={openEdit}>Edit</button> */}
             {/* {showEdit && <Edit isOpen={showEdit} handleClose={closeEdit} repair={repair}/>} */}
 
-            <dl>
+            
                 <h3>General Info</h3>
+            <dl>
                 <dt>Repair ID:</dt> <dd>{repair["_id"]}</dd>
                 <dt>Device ID:</dt><dd> {repair["deviceID"]}</dd>
                 <dt>Device Name:</dt><dd> {repair["deviceName"]}</dd>
@@ -113,24 +115,29 @@ function RepairDetails(){
                 <dt>Repairs:</dt> <dd> {repair["workToBeDone"]}</dd>
                 <dt>Device Condition:</dt> <dd> {repair["conditionOfDevice"]}</dd>
                 <dt>Repair Status:</dt> <dd> {repair["repairStatus"]}</dd>
+            </dl>
                 
                 {repair["repairCompletionDate"]?<>
                 <h3>Repair Completed</h3>
+                <dl>
                 <dt>Repairs Completed:</dt> <dd> {new Date(repair["repairCompletionDate"]).toLocaleString()}</dd>
                 <dt>Repair Notes:</dt> <dd> {repair["repairTechnicianNotes"]}</dd>
                 <dt>Repair Success:</dt> <dd> {String(repair["wasTheRepairSuccessful"])}</dd>
+                </dl>
                 </>:<></>}
 
 
                 {repair["pickupDate"]?<>
                 <h3>Pick Up</h3>
+                <dl>
                 <dt>Picked Up:</dt> <dd> {new Date(repair["pickupDate"]).toLocaleString()}</dd>
                 <dt>Pick Up Notes:</dt> <dd> {repair["pickupNotes"]}</dd>
                 <dt>Pick Up Demo:</dt> <dd> {String(repair["pickupDemoDone"])}</dd>
+                </dl>
                 </>:<></>}
 
                 
-            </dl>
+            
 
         </>
         

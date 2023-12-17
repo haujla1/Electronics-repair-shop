@@ -17,7 +17,7 @@ import {
   function DeviceCard({device, clientId}){
 
     return(
-        <Card
+        <Card className="card deviceCard"
           variant='outlined'
           sx={{
             height: 'auto',
@@ -43,23 +43,23 @@ import {
 
                 <Typography className="modelNumber"
                   gutterBottom
-                  component='p'
+                  component='div'
                 >
-                  Model Number: {device.modelNumber}
+                  <dl><dt>Model Number:</dt> <dd>{device.modelNumber}</dd></dl>
                 </Typography>
 
                 <Typography className="serialNumber"
                   gutterBottom
-                  component='p'
+                  component='div'
                 >
-                  Serial Number: {device.serialNumber}
+                 <dl><dt>Serial Number:</dt> <dd>{device.serialNumber}</dd></dl>
                 </Typography>
 
-                <Typography className="serialNumber"
+                <Typography className="id"
                   gutterBottom
-                  component='p'
+                  component='div'
                 >
-                  Device ID: {device._id}
+                  <dl><dt>Device ID:</dt> <dd>{device._id}</dd></dl>
                 </Typography>
               </CardContent>
               <Link className="newRepairLink" to={`/newRepair/${clientId}/${device._id}`}>New Repair</Link>

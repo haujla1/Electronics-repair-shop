@@ -23,13 +23,11 @@
 
 .header h1{
   color: white;
-  padding: auto;
   margin: 0px;
 }
 
 .header h2{
   color: rgb(224, 224, 224);
-  padding: auto;
   margin-top: 0px;
   margin-bottom: 0px;
 }
@@ -104,4 +102,35 @@ input{
 h5{
   font-size: larger;
   color: #29642b;
+}
+
+.card dd{
+  display: inline;
+  margin-left: 1px;
+}
+
+.card dt{
+  display: inline;
+  margin-right: 1px;
+}
+
+.card:hover{
+  background-color: #e5f4e6;
+  transition: .15s;
+}
+
+.card a:hover{
+  color: #09d410;
+  text-decoration: underline;
+}
+
+.id dd{
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 300;
+  font-size: small;
+}
+
+.newRepairLink{
+  align-self: flex-end;
+  font-size: larger;
 }

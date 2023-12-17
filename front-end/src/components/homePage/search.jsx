@@ -36,7 +36,7 @@ function SearchBar(){
                       <input
                         name='phone'
                         id='phone'
-                        type='phone'
+                        type='text'
                         placeholder='Phone Number'
                         required
                         autoFocus={true}

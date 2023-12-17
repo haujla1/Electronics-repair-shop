@@ -16,12 +16,13 @@ import {
   function RepairCard({repair, deviceName}){
 
     return(
-        <Card
+        <Card className="card reoairCard"
           variant='outlined'
           sx={{
             height: 'auto',
             width: 250,
             border: '1px solid #29642b',
+            maxHeight: 600
           }}
         >
             
@@ -43,55 +44,56 @@ import {
 
                 <Typography className="issue"
                   gutterBottom
-                  component='p'
+                  component='div'
                 >
-                  Issue: {repair.issue}
+                  <dl><dt>Issue:</dt> <dd>{repair.issue.length > 50 ? repair.issue.slice(0, 50) + "...": repair.issue}</dd></dl>
                 </Typography>
 
                 <Typography className="id"
                   gutterBottom
-                  component='p'
+                  component='div'
                 >
-                  Device: {repair.deviceID}
+                  <dl><dt>Device:</dt> <dd>{repair.deviceID}</dd></dl>
                 </Typography>
 
                 <Typography 
                   gutterBottom
-                  component='p'
+                  component='div'
                 >
-                  Work To Do: {repair.workToBeDone}
+                  <dl><dt>Work To Do:</dt> <dd>{repair.workToBeDone.length > 100 ? repair.workToBeDone.slice(0, 100) + "...": repair.workToBeDone}</dd></dl>
                 </Typography>
 
                 <Typography 
                   gutterBottom
-                  component='p'
+                  component='div'
                 >
-                  Created Date: {new Date(repair.repairOrderCreationDate).toLocaleString()}
+                  <dl><dt>Created Date:</dt> <dd>{new Date(repair.repairOrderCreationDate).toLocaleString()}</dd></dl>
                 </Typography>
 
                 {repair.repairCompletionDate ?
                 <Typography 
                 gutterBottom
-                component='p'
+                component='div'
               >
-                Complted Date: {new Date(repair.repairCompletionDate).toLocaleString()}
+                <dl><dt>Complted Date:</dt> <dd>{new Date(repair.repairCompletionDate).toLocaleString()}</dd></dl>
                 </Typography>:<></>
                 }
 
                 {repair.pickupDate ?
                 <Typography 
                 gutterBottom
-                component='p'
+                component='div'
               >
-                Completed Date: {new Date(repair.pickupDate).toLocaleString()}
+                <dl><dt>Completed Date:</dt> <dd>{new Date(repair.pickupDate).toLocaleString()}</dd></dl>
                 </Typography>:<></>
                 }
 
                 <Typography 
                 gutterBottom
-                component='p'
+                component='div'
+                className="id"
               >
-                Repair ID: {repair._id}
+                <dl><dt>Repair ID:</dt> <dd>{repair._id}</dd></dl>
                 </Typography>
 
                 
