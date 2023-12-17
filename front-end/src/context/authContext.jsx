@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
         setRole("");
       }
 
-      console.log("onAuthStateChanged", user);
+      // console.log("onAuthStateChanged", user);
       setLoadingUser(false);
     });
 

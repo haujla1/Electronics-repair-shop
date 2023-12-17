@@ -19,7 +19,7 @@ function Repairs({clientId}){
             try {
                 let { data } = await axios.get(`http://localhost:3000/clients/${clientId}`);
                 
-                console.log(data.Repairs);
+                // console.log(data.Repairs);
                 setRepairs(data.Repairs);
                 setLoading(false);
             } catch (e) {
@@ -32,7 +32,7 @@ function Repairs({clientId}){
 
     return (
         <>
-            <h3>Repairs</h3>
+            <h3>Repair History</h3>
 
             <div>
                 {

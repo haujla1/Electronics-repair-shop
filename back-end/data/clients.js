@@ -17,12 +17,16 @@ export const createClient = async (
   address,
   age
 ) => {
+  if(!firstName || !lastName || !phoneNumber || !email || !address || !age) throw ("Missing required fields")
+
   firstName = validateString(firstName, "First Name");
   lastName = validateString(lastName, "Last Name");
   phoneNumber = validatePhoneNumber(phoneNumber);
   email = validateEmail(email, "Email");
   address = validateString(address, "Address");
   age = validateAge(age, "Age");
+
+  if(!firstName || !lastName || !phoneNumber || !email || !address || !age) throw "ivalid fields"
 
   let clientCollection = await clients();
   let already = await clientCollection.findOne({

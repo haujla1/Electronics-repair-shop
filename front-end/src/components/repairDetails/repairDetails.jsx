@@ -53,7 +53,7 @@ function RepairDetails(){
                 let device = client.Devices.filter(x=>x._id == data.deviceID)[0]
                 data["deviceName"] = device.manufacturer + " " + device.modelName
 
-                console.log(data)
+                // console.log(data)
                 setRepair(data)
 
             }catch(e){
@@ -85,18 +85,18 @@ function RepairDetails(){
         <>
             <Nav pagename="Repair Info"/>
             <br />
-            {!repair["repairCompletionDate"] ? <button style={{backgroundColor: 'rgb(34, 191, 40)'}} onClick={openComplete}>Complete Repair</button>: <></>}
+            {/* {!repair["repairCompletionDate"] ? <button style={{backgroundColor: 'rgb(34, 191, 40)'}} onClick={openComplete}>Complete Repair</button>: <></>}
             {showComplete && <>
             <Complete isOpen={showComplete} repair={repair} handleClose={closeComplete} update={setRepair}/>
-            </>}
+            </>} */}
 
-            {repair["repairCompletionDate"] && !repair["pickupDemoDone"] ? <button onClick={openPickup}>Picked Up</button>: <></>}
+            {/* {repair["repairCompletionDate"] && !repair["pickupDemoDone"] ? <button onClick={openPickup}>Process Pickup</button>: <></>}
             {showPickup && <>
             <PickUp isOpen={showPickup} repair={repair} handleClose={closePickup} update={setRepair}/>
-            </>}
+            </>} */}
 
-            <h3>Repair Info</h3>
-            <br />
+            {/* <h3>Repair Info</h3> */}
+            {/* <br /> */}
             {/* <button onClick={openEdit}>Edit</button> */}
             {/* {showEdit && <Edit isOpen={showEdit} handleClose={closeEdit} repair={repair}/>} */}
 
@@ -135,6 +135,16 @@ function RepairDetails(){
                 <dt>Pick Up Demo:</dt> <dd> {repair["pickupDemoDone"]?"Yes":"No"}</dd>
                 </dl>
                 </>:<></>}
+                {!repair["repairCompletionDate"] ? <button style={{backgroundColor: 'rgb(34, 191, 40)'}} onClick={openComplete}>Complete Repair</button>: <></>}
+            {showComplete && <>
+            <Complete isOpen={showComplete} repair={repair} handleClose={closeComplete} update={setRepair}/>
+            </>}
+
+                {repair["repairCompletionDate"] && !repair["pickupDate"] ? <button style={{backgroundColor: 'rgb(34, 191, 40)'}} onClick={openPickup}>Process Pickup</button>: <></>}
+            {showPickup && <>
+            <PickUp isOpen={showPickup} repair={repair} handleClose={closePickup} update={setRepair}/>
+            </>}
+
 
                 
             

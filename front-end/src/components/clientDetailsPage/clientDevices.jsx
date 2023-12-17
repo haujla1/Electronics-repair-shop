@@ -18,7 +18,7 @@ function Devices({clientId}){
         async function getDevices(clientId) {
             try {
                 let { data } = await axios.get(`http://localhost:3000/clients/${clientId}`);
-                console.log(data.Devices);
+                // console.log(data.Devices);
                 setDevices(data.Devices);
                 setLoading(false);
             } catch (e) {

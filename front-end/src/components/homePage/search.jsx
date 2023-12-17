@@ -15,6 +15,10 @@ function SearchBar(){
           setError("Invalid Phone Number")
           return
         }
+        if(!/^\d+$/.test(phone)){
+          setError("Phone number must contain only numbers");
+          return;
+      }
         try{
             let data = (await axios("http://localhost:3000/clients/phoneNumber/"+phone)).data
             setPhoneNumber(phone)

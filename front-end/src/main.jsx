@@ -7,7 +7,7 @@ import { BrowserRouter } from 'react-router-dom';
 import fbconfig from './firebase/firebaseConfig.js'
 import {initializeApp} from 'firebase/app'
 
-console.log(fbconfig)
+// console.log(fbconfig)
 
 const app = initializeApp(fbconfig)
 // const firebaseConfig = {

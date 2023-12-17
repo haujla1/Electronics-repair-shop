@@ -47,6 +47,9 @@ function NewClient(){
                 throw `First Name cannot be longer than ${constants.stringLimits.first_last_names} characters`;
             firstName = firstName.trim();
             if (firstName.length === 0) throw 'First Name cannot be empty';
+            if(/\d/.test(firstName)){
+                throw("First name must not contain numbers");
+            }
             document.getElementById('firstName').nextElementSibling.textContent = '';
         } catch (e) {
             errors.push(e);
@@ -59,6 +62,9 @@ function NewClient(){
                 throw `Last Name cannot be longer than ${constants.stringLimits.first_last_names} characters`;
             lastName = lastName.trim();
             if (lastName.length === 0) throw 'Last Name cannot be empty';
+            if(/\d/.test(lastName)){
+                throw("First name must not contain numbers");
+            }
             document.getElementById('lastName').nextElementSibling.textContent = '';
         } catch (e) {
             errors.push(e);
@@ -81,6 +87,7 @@ function NewClient(){
         }
 
         try {
+            if(typeof email != "string" || email.trim().length < 1) throw "Email must be a string"
             email = email.trim();
             if (email.length === 0) throw 'Email cannot be empty';
             document.getElementById('email').nextElementSibling.textContent = '';

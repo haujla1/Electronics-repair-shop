@@ -269,8 +269,17 @@ export const updateWorkorderAfterRepair = async (
       await sendEmail(
         repair.clientPreferredEmail,
         "Repair Order Completed",
-        `Your repair with ID: ${repairID} is completed.`,
-        `<p>Your repair with ID: ${repairID} is completed.</p>`
+        `Hi ${client.name}, 
+
+        We are reaching out to you to inform you that your repair with ID: ${repairID} is completed. Please feel free 
+        to come and pick up your device at your earliest convenience.
+        
+        This is an automated message, please do not reply to this email.`,
+        `<p>Hi ${client.name},</p>
+        <p> We are reaching out to you to inform you that your repair with ID: ${repairID} is completed. Please feel free 
+        to come and pick up your device at your earliest convenience.</p>
+        <br>
+        <p>This is an automated message, please do not reply to this email.</p>`
       );
     } catch (error) {
       console.error("Failed to send email:", error);
@@ -279,6 +288,14 @@ export const updateWorkorderAfterRepair = async (
 
   try {
     await redisClient.del(cacheKey);
+  } catch (error) {
+    throw ("Redis delete error:", error.nessage);
+  }
+
+  let cachekey2 = `client:${repair.clientID}`;
+
+  try {
+    await redisClient.del(cachekey2);
   } catch (error) {
     throw ("Redis delete error:", error.nessage);
   }
@@ -342,6 +359,15 @@ export const updateWorkorderAfterPickup = async (
     throw ("Redis delete error:", error.nessage);
   }
 
+  
+  let cachekey2 = `client:${repair.clientID}`;
+
+  try {
+    await redisClient.del(cachekey2);
+  } catch (error) {
+    throw ("Redis delete error:", error.nessage);
+  }
+
   let finalRepair = await getWorkorderById(repairID);
   let client = await getClientById(finalRepair.clientID);
   let device = client.Devices.find(
@@ -372,7 +398,6 @@ export const makePickupReport = async (reportData) =>
     if (typeof reportData !== "object" || Object.keys(reportData).length === 0)
       throw "Report data must be a non-empty object";
 
-   // will do the validations later 
 
    try
    {
@@ -405,8 +430,6 @@ export const getActiveRepairs = async () => {
       { $replaceRoot: { newRoot: "$Repairs" } },
     ])
     .toArray();
-
-  //if(activeRepairs.length === 0) throw "No active repairs";
 
   return activeRepairs;
 };

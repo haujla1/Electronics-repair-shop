@@ -87,7 +87,7 @@ const PickUp = ({repair, isOpen, handleClose, update}) => {
   
                 <br />
                 <button onClick={handleClose}>Cancel</button>
-                <button type='submit'>Picked Up</button>
+                <button type='submit'>Process Pickup</button>
             </form>
 
             <p className="error">{error}</p>

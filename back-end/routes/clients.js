@@ -95,6 +95,7 @@ clientRouter.get('/:id', async (req, res) => {
 clientRouter.get('/phoneNumber/:phoneNumber', async (req, res) => {
     try {
         if (typeof req.params.phoneNumber === 'undefined') throw 'You must provide a phone number';
+        if(typeof req.params.phoneNumber !== 'string') throw 'Phone number must be a string';
         req.params.phoneNumber = validatePhoneNumber(req.params.phoneNumber);
         req.params.phoneNumber = xss(req.params.phoneNumber);
     } catch (e) {
