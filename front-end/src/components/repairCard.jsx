@@ -16,7 +16,7 @@ import {
   function RepairCard({repair, deviceName}){
 
     return(
-        <Card className="card reoairCard"
+        <Card className="card repairCard"
           variant='outlined'
           sx={{
             height: 'auto',
@@ -38,7 +38,7 @@ import {
                 variant='h6'
                 component='h3'
                 >
-                {deviceName ? deviceName : repair.repairStatus}
+                {deviceName ? deviceName : repair.pickupDate? "Picked Up": repair.repairCompletionDate? "Repair Complete": "In Progress"}
                 </Typography>
                 </CardActionArea>
 
@@ -67,7 +67,7 @@ import {
                   gutterBottom
                   component='div'
                 >
-                  <dl><dt>Created Date:</dt> <dd>{new Date(repair.repairOrderCreationDate).toLocaleString()}</dd></dl>
+                  <dl><dt>Created Date:</dt> <dd>{new Date(repair.repairOrderCreationDate).toLocaleDateString()}</dd></dl>
                 </Typography>
 
                 {repair.repairCompletionDate ?
@@ -75,7 +75,7 @@ import {
                 gutterBottom
                 component='div'
               >
-                <dl><dt>Complted Date:</dt> <dd>{new Date(repair.repairCompletionDate).toLocaleString()}</dd></dl>
+                <dl><dt>Compelted Date:</dt> <dd>{new Date(repair.repairCompletionDate).toLocaleDateString()}</dd></dl>
                 </Typography>:<></>
                 }
 
@@ -84,7 +84,7 @@ import {
                 gutterBottom
                 component='div'
               >
-                <dl><dt>Completed Date:</dt> <dd>{new Date(repair.pickupDate).toLocaleString()}</dd></dl>
+                <dl><dt>Picked Up Date:</dt> <dd>{new Date(repair.pickupDate).toLocaleDateString()}</dd></dl>
                 </Typography>:<></>
                 }
 

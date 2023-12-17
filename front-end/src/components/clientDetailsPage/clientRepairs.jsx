@@ -18,6 +18,7 @@ function Repairs({clientId}){
         async function getRepairs(clientId) {
             try {
                 let { data } = await axios.get(`http://localhost:3000/clients/${clientId}`);
+                
                 console.log(data.Repairs);
                 setRepairs(data.Repairs);
                 setLoading(false);
@@ -42,7 +43,7 @@ function Repairs({clientId}){
                             </div>
                         )
                         : (
-                            repairs.length > 0
+                            repairs && repairs.length > 0
                                 ?
                                     <Grid container>
                                     {

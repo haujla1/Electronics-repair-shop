@@ -106,9 +106,9 @@ function RepairDetails(){
                 <dt>Repair ID:</dt> <dd>{repair["_id"]}</dd>
                 <dt>Device ID:</dt><dd> {repair["deviceID"]}</dd>
                 <dt>Device Name:</dt><dd> {repair["deviceName"]}</dd>
-                <dt>Client:</dt><dd> <Link to={'/clientDetails/' + repair["clientID"]}>{repair["clientName"]}</Link></dd>
+                <dt>Client:</dt><dd> <Link to={'/clientDetails/' + repair["clientID"]}>{repair["clientName"]?repair["clientName"]:repair["clientID"]}</Link></dd>
                 <dt>Client Email:</dt><dd> <a href={"mailto:" + repair["clientPreferredEmail"]}>{repair["clientPreferredEmail"]}</a></dd>
-                <dt>Work Order Opened:</dt> <dd>{new Date(repair["repairOrderCreationDate"]).toLocaleString()}</dd>
+                <dt>Work Order Opened:</dt> <dd>{new Date(repair["repairOrderCreationDate"]).toLocaleDateString()}</dd>
                 <dt>Issue:</dt> <dd> {repair["issue"]}</dd>
                 <dt>Issue Verified:</dt> <dd> {String(repair["wasIssueVerified"])}</dd>
                 <dt>Verification Reason:</dt> <dd> {repair["stepsTakenToReplicateIssue"]}</dd>
@@ -120,7 +120,7 @@ function RepairDetails(){
                 {repair["repairCompletionDate"]?<>
                 <h3>Repair Completed</h3>
                 <dl>
-                <dt>Repairs Completed:</dt> <dd> {new Date(repair["repairCompletionDate"]).toLocaleString()}</dd>
+                <dt>Repairs Completed:</dt> <dd> {new Date(repair["repairCompletionDate"]).toLocaleDateString()}</dd>
                 <dt>Repair Notes:</dt> <dd> {repair["repairTechnicianNotes"]}</dd>
                 <dt>Repair Success:</dt> <dd> {String(repair["wasTheRepairSuccessful"])}</dd>
                 </dl>
@@ -130,7 +130,7 @@ function RepairDetails(){
                 {repair["pickupDate"]?<>
                 <h3>Pick Up</h3>
                 <dl>
-                <dt>Picked Up:</dt> <dd> {new Date(repair["pickupDate"]).toLocaleString()}</dd>
+                <dt>Picked Up:</dt> <dd> {new Date(repair["pickupDate"]).toLocaleDateString()}</dd>
                 <dt>Pick Up Notes:</dt> <dd> {repair["pickupNotes"]}</dd>
                 <dt>Pick Up Demo:</dt> <dd> {String(repair["pickupDemoDone"])}</dd>
                 </dl>
