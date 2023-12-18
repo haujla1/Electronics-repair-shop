@@ -48,7 +48,7 @@ const Edit = ({repair, isOpen, handleClose, update}) => {
 
             setError("")
             handleClose()
-            navigate("../../") //go back to home page
+            navigate("/") //go back to home page
         }catch(e){
             console.log(e)
             setError(String(e.response.data.error))
@@ -80,13 +80,13 @@ const Edit = ({repair, isOpen, handleClose, update}) => {
             <form onSubmit={handleSubmit}>
                 
                     <h3>Complete Repair</h3>
-                    <label>
+                    <label style={{color: "#000"}}>
                         Repair Notes:
                         <br />
                         <textarea name='repairTechnicianNotes'  />
                     </label>
                     <br />
-                    <label>
+                    <label style={{color: "#000"}}>
                         Repair Success:
                         <input type='checkbox' name='wasTheRepairSuccessful'  />
                     </label>

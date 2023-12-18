@@ -56,7 +56,7 @@ const PickUp = ({repair, isOpen, handleClose, update}) => {
 
             setError("")
             handleClose()
-            navigate("../../") //go back to home page
+            navigate("/") //go back to home page
         }catch(e){
             console.log(e)
             setError(String(e.response.data.error))
@@ -85,13 +85,13 @@ const PickUp = ({repair, isOpen, handleClose, update}) => {
         <ReactModal name='pickupRepair' isOpen={showAddModal} contentLabel="Pickup" style={customStyles}>
             <form onSubmit={handleSubmit}>
                     <h3>Pick Up</h3>
-                    <label>
+                    <label style={{color: "#000"}}>
                         Pick Up Notes:
                         <br />
                         <textarea name='pickupNotes' />
                     </label>
                     <br />
-                    <label>
+                    <label style={{color: "#000"}}>
                         Pick Up Demo Done:
                         <input type='checkbox' name='pickupDemoDone'  />
                     </label>

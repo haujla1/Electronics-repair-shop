@@ -1,5 +1,5 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Link, useParams} from 'react-router-dom';
+import {Link, useParams, useNavigate} from 'react-router-dom';
 import Nav from "../navBar";
 import axios from "axios"
 
@@ -13,6 +13,7 @@ function NewRepair(){
     let [pdf, setPdf] = useState(null)
 
     const [error, setError] = useState("")
+    const navigate = useNavigate()
 
     useEffect(()=>{
         async function getClient(){
@@ -87,7 +88,7 @@ function NewRepair(){
             window.open(url, '_blank');
 
             // setPdf(url);
-            //redirect???
+            navigate("/"); // go back to home page
             // make a new call to localhost:3000/repiars/checkInReport and give it the data from the above axios call
         }catch(e){
             console.log(e)

@@ -1,11 +1,12 @@
 import React, {useContext, useEffect, useState} from "react";
-import {Link} from 'react-router-dom';
+import {Link, useNavigate} from 'react-router-dom';
 import Nav from "../navBar";
 import axios from "axios";
 import constants from "../../../../back-end/appConstants.js"; 
 
 function NewClient(){
     const [error, setError] = useState('');
+    const navigate = useNavigate();
 
     const addClient = async (form) => {
         // console.log(form);
@@ -40,11 +41,6 @@ function NewClient(){
             ageElem.getAttribute('type') !== 'number'
         ) {
             setError('Invalid Input Type');
-            let errorSpans = document.getElementsByClassName('error');
-            errorSpans.forEach(errorSpan => {
-                console.log(errorSpan);
-                errorSpan.textContent = '';
-            });
             return;
         }
 
@@ -62,7 +58,7 @@ function NewClient(){
             phoneNumber: phoneNumber,
             email: email,
             address: address,
-            age: age
+            age: parseInt(age, 10)
         };
         // console.log(form);
 
@@ -76,6 +72,7 @@ function NewClient(){
         document.getElementById('add-client').reset();
         setError('');
         alert('Client Added');
+        navigate("/"); // redirect to home page
         return;
     }
 

@@ -71,27 +71,27 @@ const AddDevice = ({clientId, isOpen, handleClose, updateDevices}) => {
         <ReactModal name='editRepair' isOpen={showAddModal} contentLabel="Edit" style={customStyles}>
             <form onSubmit={handleSubmit}>
                 <h3>New Device Info</h3>
-                <label>
+                <label style={{color: '#000'}}>
                     Device Type:
                     <input required type='text' name='deviceType' />
                 </label>
                 <br />
-                <label>
+                <label style={{color: '#000'}}>
                     Manufacturer:
                     <input required type='text' name='manufacturer' />
                 </label>
                 <br />
-                <label>
+                <label style={{color: '#000'}}>
                     Model Name:
                     <input required type='text' name='modelName' />
                 </label>
                 <br />
-                <label>
+                <label style={{color: '#000'}}>
                     Model Number:
                     <input required type='text' name='modelNumber' />
                 </label>
                 <br />
-                <label>
+                <label style={{color: '#000'}}>
                     Serial Number:
                     <input required type='text' name='serialNumber' />
                 </label>
