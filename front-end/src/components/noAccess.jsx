@@ -16,7 +16,13 @@ const noAccess = () => {
         }
         e.preventDefault()
         console.log(e.target.elements)
-        const employeeId = e.target.elements.employeeId.value
+        let employeeIdElem = e.target.elements.employeeId
+        if(employeeIdElem.getAttribute("type") != "text"){
+            setError("Invalid Input Type")
+            setMessage("")
+            return
+        }
+        const employeeId = employeeIdElem.value
         if(!employeeId){
             setError("Must supply Employee Id")
             setMessage("")

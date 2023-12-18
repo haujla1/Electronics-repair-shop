@@ -17,10 +17,22 @@ const PickUp = ({repair, isOpen, handleClose, update}) => {
     async function handleSubmit(e){
         e.preventDefault()
         setError("")
+        const {
+            pickupNotes: pickupNotesElem,
+            pickupDemoDone: pickupDemoDoneElem
+        } = e.target.elements
+        if(
+            pickupNotesElem.tagName != "TEXTAREA" ||
+            pickupDemoDoneElem.getAttribute("type") != "checkbox"
+        ){
+            setError("Invalid Input Type")
+            return
+        }
+
         try{
             
-            let pickupNotes = e.target.pickupNotes.value
-            let pickupDemoDone = e.target.pickupDemoDone.checked
+            let pickupNotes = pickupNotesElem.value
+            let pickupDemoDone = pickupDemoDoneElem.checked
 
             if(typeof pickupNotes != "string" || pickupNotes.trim().length < 1){
                 setError("Must add Pick Up Notes.")

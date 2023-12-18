@@ -35,6 +35,33 @@ function NewRepair(){
     async function handleSubmit(e){
         e.preventDefault()
         setError("")
+        //protect against changes from inspect element
+        try{
+            const {
+                clientPreferredEmail,
+                clientPreferredPhoneNumber,
+                issue,
+                wasIssueVerified,
+                stepsTakenToReplicateIssue,
+                workToBeDone,
+                conditionOfDevice
+            } = e.target.elements
+            if(
+                clientPreferredEmail.getAttribute("type") != "email" ||
+                clientPreferredPhoneNumber.getAttribute("type") != "text" ||
+                issue.tagName != "TEXTAREA" ||
+                wasIssueVerified.getAttribute("type") != "checkbox" ||
+                stepsTakenToReplicateIssue.tagName != "TEXTAREA" ||
+                workToBeDone.tagName != "TEXTAREA" ||
+                conditionOfDevice.tagName != "TEXTAREA"
+            ){
+                throw "Invalid Input Type"
+            }
+        }catch(err){
+            setError(err)
+            return
+        }
+
         try{
             //make the axios
             let workOrder = {}
@@ -113,7 +140,7 @@ function NewRepair(){
                 <label>
                     Preferred Email:
                     <br />
-                    <input type='text' name='clientPreferredEmail' defaultValue={client.email} /> 
+                    <input type='email' name='clientPreferredEmail' defaultValue={client.email} /> 
                 </label>
                 <br />
                 <label>

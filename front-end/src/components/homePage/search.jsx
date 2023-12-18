@@ -10,8 +10,13 @@ function SearchBar(){
 
     async function handleSearch(e){
         e.preventDefault()
-        let phone = document.getElementById("phone").value
-        if(typeof phone != "string" || phone.trim().length != 10){
+        let phoneElem = document.getElementById("phone")
+        if(phoneElem.getAttribute("type") != "text"){
+          setError("Invalid Input Type")
+          return
+        }
+        let phone = phoneElem.value
+        if(!/^\d+$/.test(phone) || typeof phone != "string" || phone.trim().length != 10){
           setError("Invalid Phone Number")
           return
         }
@@ -45,10 +50,11 @@ function SearchBar(){
                         required
                         autoFocus={true}
                       />
-                    </label>
+                      <span class="helpText">Phone number must be 10 digits long (e.g. 1234567890)</span>
+                    </label>                  
                     <button style={{display: 'inline-block'}} type='submit'>
-                    Search
-                  </button>
+                      Search
+                    </button>
                   </div>
             </form>
 
