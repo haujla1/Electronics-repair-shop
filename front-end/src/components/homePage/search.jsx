@@ -50,7 +50,6 @@ function SearchBar(){
                         required
                         autoFocus={true}
                       />
-                      <span class="helpText">Phone number must be 10 digits long (e.g. 1234567890)</span>
                     </label>                  
                     <button style={{display: 'inline-block'}} type='submit'>
                       Search
