@@ -16,11 +16,24 @@ const AddDevice = ({ clientId, isOpen, handleClose, updateDevices }) => {
       //make the axios
       let req = { clientId: clientId };
 
-      req.deviceType = e.target.deviceType.value;
-      req.manufacturer = e.target.manufacturer.value;
-      req.modelName = e.target.modelName.value;
-      req.modelNumber = e.target.modelNumber.value;
-      req.serialNumber = e.target.serialNumber.value;
+      let { deviceType, manufacturer, modelName, modelNumber, serialNumber } =
+        e.target.elements;
+      if (
+        deviceType.getAttribute("type") != "text" ||
+        manufacturer.getAttribute("type") != "text" ||
+        modelName.getAttribute("type") != "text" ||
+        modelNumber.getAttribute("type") != "text" ||
+        serialNumber.getAttribute("type") != "text"
+      ) {
+        setError("Invalid Input Type");
+        return;
+      }
+
+      req.deviceType = deviceType.value;
+      req.manufacturer = manufacturer.value;
+      req.modelName = modelName.value;
+      req.modelNumber = modelNumber.value;
+      req.serialNumber = serialNumber.value;
 
       let backendApiUrl = import.meta.env.VITE_BACKEND_API;
       let data = (
@@ -32,7 +45,7 @@ const AddDevice = ({ clientId, isOpen, handleClose, updateDevices }) => {
 
       handleClose();
     } catch (e) {
-      setError(String(e.response.data.message));
+      setError(String(e.response.data.error));
     }
 
     return;
@@ -50,6 +63,7 @@ const AddDevice = ({ clientId, isOpen, handleClose, updateDevices }) => {
       width: "50%",
       border: "1px solid #28547a",
       borderRadius: "4px",
+      color: "black",
     },
   };
 
@@ -62,27 +76,27 @@ const AddDevice = ({ clientId, isOpen, handleClose, updateDevices }) => {
     >
       <form onSubmit={handleSubmit}>
         <h3>New Device Info</h3>
-        <label>
+        <label style={{ color: "#000" }}>
           Device Type:
           <input required type="text" name="deviceType" />
         </label>
         <br />
-        <label>
+        <label style={{ color: "#000" }}>
           Manufacturer:
           <input required type="text" name="manufacturer" />
         </label>
         <br />
-        <label>
+        <label style={{ color: "#000" }}>
           Model Name:
           <input required type="text" name="modelName" />
         </label>
         <br />
-        <label>
+        <label style={{ color: "#000" }}>
           Model Number:
           <input required type="text" name="modelNumber" />
         </label>
         <br />
-        <label>
+        <label style={{ color: "#000" }}>
           Serial Number:
           <input required type="text" name="serialNumber" />
         </label>

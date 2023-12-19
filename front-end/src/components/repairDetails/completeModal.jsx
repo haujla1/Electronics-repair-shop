@@ -13,9 +13,21 @@ const Edit = ({ repair, isOpen, handleClose, update }) => {
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
+    const {
+      repairTechnicianNotes: repairTechnicianNotesElem,
+      wasTheRepairSuccessful: wasTheRepairSuccessfulElem,
+    } = e.target.elements;
+    if (
+      repairTechnicianNotesElem.tagName != "TEXTAREA" ||
+      wasTheRepairSuccessfulElem.getAttribute("type") != "checkbox"
+    ) {
+      setError("Invalid Input Type");
+      return;
+    }
+
     try {
-      let repairTechnicianNotes = e.target.repairTechnicianNotes.value;
-      let wasTheRepairSuccessful = e.target.wasTheRepairSuccessful.checked;
+      let repairTechnicianNotes = repairTechnicianNotesElem.value;
+      let wasTheRepairSuccessful = wasTheRepairSuccessfulElem.checked;
 
       if (
         typeof repairTechnicianNotes != "string" ||
@@ -37,11 +49,12 @@ const Edit = ({ repair, isOpen, handleClose, update }) => {
         wasTheRepairSuccessful: wasTheRepairSuccessful,
         repairNotes: repairTechnicianNotes,
       });
+
       update(rep.data);
 
       setError("");
       handleClose();
-      navigate("../../");
+      navigate("/"); //go back to home page
     } catch (e) {
       console.log(e);
       setError(String(e.response.data.error));
@@ -51,6 +64,7 @@ const Edit = ({ repair, isOpen, handleClose, update }) => {
   }
 
   const customStyles = {
+    //taken from lecture code
     content: {
       top: "50%",
       left: "50%",
@@ -76,13 +90,13 @@ const Edit = ({ repair, isOpen, handleClose, update }) => {
     >
       <form onSubmit={handleSubmit}>
         <h3>Complete Repair</h3>
-        <label>
+        <label style={{ color: "#000" }}>
           Repair Notes:
           <br />
           <textarea name="repairTechnicianNotes" />
         </label>
         <br />
-        <label>
+        <label style={{ color: "#000" }}>
           Repair Success:
           <input type="checkbox" name="wasTheRepairSuccessful" />
         </label>

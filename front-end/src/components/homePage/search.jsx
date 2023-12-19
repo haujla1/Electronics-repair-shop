@@ -9,8 +9,17 @@ function SearchBar() {
 
   async function handleSearch(e) {
     e.preventDefault();
-    let phone = document.getElementById("phone").value;
-    if (typeof phone != "string" || phone.trim().length != 10) {
+    let phoneElem = document.getElementById("phone");
+    if (phoneElem.getAttribute("type") != "text") {
+      setError("Invalid Input Type");
+      return;
+    }
+    let phone = phoneElem.value;
+    if (
+      !/^\d+$/.test(phone) ||
+      typeof phone != "string" ||
+      phone.trim().length != 10
+    ) {
       setError("Invalid Phone Number");
       return;
     }

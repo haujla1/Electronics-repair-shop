@@ -19,6 +19,7 @@
   left: 0;
   border: solid;
   box-sizing: border-box;
+  z-index: 1;
 }
 
 .header h1{
@@ -89,6 +90,7 @@ input{
   background-color: #cdf6cf;
   border-radius: 5px;
   font-size: large;
+  color: #000;
 }
 
 .clientFound a{

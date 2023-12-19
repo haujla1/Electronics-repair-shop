@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import Nav from "../navBar";
 import axios from "axios";
 
@@ -10,6 +10,7 @@ function NewRepair() {
   let [pdf, setPdf] = useState(null);
 
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function getClient() {
@@ -31,6 +32,33 @@ function NewRepair() {
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
+    //protect against changes from inspect element
+    try {
+      const {
+        clientPreferredEmail,
+        clientPreferredPhoneNumber,
+        issue,
+        wasIssueVerified,
+        stepsTakenToReplicateIssue,
+        workToBeDone,
+        conditionOfDevice,
+      } = e.target.elements;
+      if (
+        clientPreferredEmail.getAttribute("type") != "email" ||
+        clientPreferredPhoneNumber.getAttribute("type") != "text" ||
+        issue.tagName != "TEXTAREA" ||
+        wasIssueVerified.getAttribute("type") != "checkbox" ||
+        stepsTakenToReplicateIssue.tagName != "TEXTAREA" ||
+        workToBeDone.tagName != "TEXTAREA" ||
+        conditionOfDevice.tagName != "TEXTAREA"
+      ) {
+        throw "Invalid Input Type";
+      }
+    } catch (err) {
+      setError(err);
+      return;
+    }
+
     try {
       //make the axios
       let workOrder = {};
@@ -67,7 +95,7 @@ function NewRepair() {
       window.open(url, "_blank");
 
       // setPdf(url);
-      //redirect???
+      navigate("/"); // go back to home page
       // make a new call to localhost:3000/repiars/checkInReport and give it the data from the above axios call
     } catch (e) {
       console.log(e);
@@ -122,7 +150,7 @@ function NewRepair() {
           Preferred Email:
           <br />
           <input
-            type="text"
+            type="email"
             name="clientPreferredEmail"
             defaultValue={client.email}
           />

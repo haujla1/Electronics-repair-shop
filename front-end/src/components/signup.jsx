@@ -17,6 +17,15 @@ function SignUp() {
   async function handleSignUp(e) {
     e.preventDefault();
     const { name, email, password, repeatPassword } = e.target.elements;
+    if (
+      name.getAttribute("type") != "text" ||
+      email.getAttribute("type") != "email" ||
+      password.getAttribute("type") != "password" ||
+      repeatPassword.getAttribute("type") != "password"
+    ) {
+      setError("Invalid Input Type");
+      return false;
+    }
     if (password.value != repeatPassword.value) {
       setError("Passwords do not match.");
       return false;

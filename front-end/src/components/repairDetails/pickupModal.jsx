@@ -13,9 +13,19 @@ const PickUp = ({ repair, isOpen, handleClose, update }) => {
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
+    const { pickupNotes: pickupNotesElem, pickupDemoDone: pickupDemoDoneElem } =
+      e.target.elements;
+    if (
+      pickupNotesElem.tagName != "TEXTAREA" ||
+      pickupDemoDoneElem.getAttribute("type") != "checkbox"
+    ) {
+      setError("Invalid Input Type");
+      return;
+    }
+
     try {
-      let pickupNotes = e.target.pickupNotes.value;
-      let pickupDemoDone = e.target.pickupDemoDone.checked;
+      let pickupNotes = pickupNotesElem.value;
+      let pickupDemoDone = pickupDemoDoneElem.checked;
 
       if (typeof pickupNotes != "string" || pickupNotes.trim().length < 1) {
         setError("Must add Pick Up Notes.");
@@ -49,7 +59,7 @@ const PickUp = ({ repair, isOpen, handleClose, update }) => {
 
       setError("");
       handleClose();
-      navigate("../../"); //go back to home page
+      navigate("/"); //go back to home page
     } catch (e) {
       console.log(e);
       setError(String(e.response.data.error));
@@ -83,13 +93,13 @@ const PickUp = ({ repair, isOpen, handleClose, update }) => {
     >
       <form onSubmit={handleSubmit}>
         <h3>Pick Up</h3>
-        <label>
+        <label style={{ color: "#000" }}>
           Pick Up Notes:
           <br />
           <textarea name="pickupNotes" />
         </label>
         <br />
-        <label>
+        <label style={{ color: "#000" }}>
           Pick Up Demo Done:
           <input type="checkbox" name="pickupDemoDone" />
         </label>

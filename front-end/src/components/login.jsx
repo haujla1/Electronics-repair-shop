@@ -6,6 +6,7 @@ import {
   doPasswordReset,
 } from "../firebase/firebaseFunctions";
 import GoogleSignIn from "./googleSignIn";
+import emailValidator from "email-validator";
 
 function Login() {
   const { currentUser, role } = useContext(AuthContext);
@@ -14,6 +15,13 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     let { email, password } = e.target.elements;
+    if (
+      email.getAttribute("type") != "email" ||
+      password.getAttribute("type") != "password"
+    ) {
+      setDisplay("Invalid Input Type");
+      return;
+    }
 
     try {
       await dosignInWithEmailAndPassword(email.value, password.value);
@@ -24,9 +32,17 @@ function Login() {
 
   const passwordReset = (e) => {
     e.preventDefault();
-    let email = document.getElementById("email").value;
+    let emailElem = document.getElementById("email");
+    if (emailElem.getAttribute("type") != "email") {
+      setDisplay("Invalid Input Type");
+      return;
+    }
+    let email = emailElem.value;
     if (email) {
       try {
+        if (!emailValidator.validate(email)) {
+          throw "Please enter valid email.";
+        }
         doPasswordReset(email);
         setDisplay("Reset Password Email Sent!");
       } catch (err) {
