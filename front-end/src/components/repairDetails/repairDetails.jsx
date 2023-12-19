@@ -6,7 +6,8 @@ import axios from "axios";
 import Edit from "./editModal.jsx";
 import Complete from "./completeModal.jsx";
 import PickUp from "./pickupModal.jsx";
-
+import "./repairDetails.css";
+import { Typography, Paper, Grid, Button, Box, Divider } from "@mui/material";
 function RepairDetails() {
   let { repairId } = useParams();
   let [repair, setRepair] = useState(null);
@@ -85,129 +86,134 @@ function RepairDetails() {
   return (
     <>
       <Nav pagename="Repair Info" />
-      <br />
-      {/* {!repair["repairCompletionDate"] ? <button style={{backgroundColor: 'rgb(34, 191, 40)'}} onClick={openComplete}>Complete Repair</button>: <></>}
-            {showComplete && <>
-            <Complete isOpen={showComplete} repair={repair} handleClose={closeComplete} update={setRepair}/>
-            </>} */}
+      <Paper style={{ padding: "20px", margin: "20px" }}>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant="h5">General Info</Typography>
+            <Divider />
+            <Box paddingY={2}>
+              <Typography>
+                <strong>Repair ID:</strong> {repair["_id"]}
+              </Typography>
+              <Typography>
+                <strong>Device Name:</strong> {repair["deviceName"]}
+              </Typography>
+              <Typography>
+                <strong>Client: </strong>
+                <Link to={"/clientDetails/" + repair["clientID"]}>
+                  {repair["clientName"]
+                    ? repair["clientName"]
+                    : repair["clientID"]}
+                </Link>
+              </Typography>
+              <Typography>
+                <strong>Issue:</strong> {repair["issue"]}
+              </Typography>
+              <Typography>
+                <strong>Issue Verified:</strong>{" "}
+                {repair["wasIssueVerified"] ? "Yes" : "No"}
+              </Typography>
+              <Typography>
+                <strong>Verification Reason:</strong>{" "}
+                {repair["stepsTakenToReplicateIssue"]}
+              </Typography>
+              <Typography>
+                <strong>Repairs:</strong> {repair["workToBeDone"]}
+              </Typography>
+              <Typography>
+                <strong>Device Condition:</strong> {repair["conditionOfDevice"]}
+              </Typography>
+              <Typography>
+                <strong>Repair Status:</strong> {repair["repairStatus"]}
+              </Typography>
+            </Box>
+          </Grid>
 
-      {/* {repair["repairCompletionDate"] && !repair["pickupDemoDone"] ? <button onClick={openPickup}>Process Pickup</button>: <></>}
-            {showPickup && <>
-            <PickUp isOpen={showPickup} repair={repair} handleClose={closePickup} update={setRepair}/>
-            </>} */}
+          {repair["repairCompletionDate"] && (
+            <Grid item xs={12}>
+              <Typography variant="h5">Repair Completed</Typography>
+              <Divider />
+              <Box paddingY={2}>
+                <Typography>
+                  <strong>Repairs Completed:</strong>{" "}
+                  {new Date(
+                    repair["repairCompletionDate"]
+                  ).toLocaleDateString()}
+                </Typography>
+                <Typography>
+                  <strong>Repair Notes:</strong>{" "}
+                  {repair["repairTechnicianNotes"]}
+                </Typography>
+                <Typography>
+                  <strong>Repair Success:</strong>{" "}
+                  {repair["wasTheRepairSuccessful"] ? "Yes" : "No"}
+                </Typography>
+              </Box>
+            </Grid>
+          )}
 
-      {/* <h3>Repair Info</h3> */}
-      {/* <br /> */}
-      {/* <button onClick={openEdit}>Edit</button> */}
-      {/* {showEdit && <Edit isOpen={showEdit} handleClose={closeEdit} repair={repair}/>} */}
+          {repair["pickupDate"] && (
+            <Grid item xs={12}>
+              <Typography variant="h5">Pick Up</Typography>
+              <Divider />
+              <Box paddingY={2}>
+                <Typography>
+                  <strong>Picked Up:</strong>{" "}
+                  {new Date(repair["pickupDate"]).toLocaleDateString()}
+                </Typography>
+                <Typography>
+                  <strong>Pick Up Notes:</strong> {repair["pickupNotes"]}
+                </Typography>
+                <Typography>
+                  <strong>Pick Up Demo:</strong>{" "}
+                  {repair["pickupDemoDone"] ? "Yes" : "No"}
+                </Typography>
+              </Box>
+            </Grid>
+          )}
 
-      <h3>General Info</h3>
-      <dl>
-        <dt>Repair ID:</dt> <dd>{repair["_id"]}</dd>
-        <dt>Device ID:</dt>
-        <dd> {repair["deviceID"]}</dd>
-        <dt>Device Name:</dt>
-        <dd> {repair["deviceName"]}</dd>
-        <dt>Client:</dt>
-        <dd>
-          {" "}
-          <Link to={"/clientDetails/" + repair["clientID"]}>
-            {repair["clientName"] ? repair["clientName"] : repair["clientID"]}
-          </Link>
-        </dd>
-        <dt>Client Email:</dt>
-        <dd>
-          {" "}
-          <a href={"mailto:" + repair["clientPreferredEmail"]}>
-            {repair["clientPreferredEmail"]}
-          </a>
-        </dd>
-        <dt>Work Order Opened:</dt>{" "}
-        <dd>
-          {new Date(repair["repairOrderCreationDate"]).toLocaleDateString()}
-        </dd>
-        <dt>Issue:</dt> <dd> {repair["issue"]}</dd>
-        <dt>Issue Verified:</dt>{" "}
-        <dd> {repair["wasIssueVerified"] ? "Yes" : "No"}</dd>
-        <dt>Verification Reason:</dt>{" "}
-        <dd> {repair["stepsTakenToReplicateIssue"]}</dd>
-        <dt>Repairs:</dt> <dd> {repair["workToBeDone"]}</dd>
-        <dt>Device Condition:</dt> <dd> {repair["conditionOfDevice"]}</dd>
-        <dt>Repair Status:</dt> <dd> {repair["repairStatus"]}</dd>
-      </dl>
+          <Grid item xs={12}>
+            <Box display="flex" justifyContent="space-between">
+              {!repair["repairCompletionDate"] && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={openComplete}
+                >
+                  Complete Repair
+                </Button>
+              )}
 
-      {repair["repairCompletionDate"] ? (
-        <>
-          <h3>Repair Completed</h3>
-          <dl>
-            <dt>Repairs Completed:</dt>{" "}
-            <dd>
-              {" "}
-              {new Date(repair["repairCompletionDate"]).toLocaleDateString()}
-            </dd>
-            <dt>Repair Notes:</dt> <dd> {repair["repairTechnicianNotes"]}</dd>
-            <dt>Repair Success:</dt>{" "}
-            <dd> {repair["wasTheRepairSuccessful"] ? "Yes" : "No"}</dd>
-          </dl>
-        </>
-      ) : (
-        <></>
-      )}
+              {repair["repairCompletionDate"] && !repair["pickupDate"] && (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={openPickup}
+                >
+                  Process Pickup
+                </Button>
+              )}
+            </Box>
+          </Grid>
+        </Grid>
+      </Paper>
 
-      {repair["pickupDate"] ? (
-        <>
-          <h3>Pick Up</h3>
-          <dl>
-            <dt>Picked Up:</dt>{" "}
-            <dd> {new Date(repair["pickupDate"]).toLocaleDateString()}</dd>
-            <dt>Pick Up Notes:</dt> <dd> {repair["pickupNotes"]}</dd>
-            <dt>Pick Up Demo:</dt>{" "}
-            <dd> {repair["pickupDemoDone"] ? "Yes" : "No"}</dd>
-          </dl>
-        </>
-      ) : (
-        <></>
-      )}
-      {!repair["repairCompletionDate"] ? (
-        <button
-          style={{ backgroundColor: "rgb(34, 191, 40)" }}
-          onClick={openComplete}
-        >
-          Complete Repair
-        </button>
-      ) : (
-        <></>
-      )}
       {showComplete && (
-        <>
-          <Complete
-            isOpen={showComplete}
-            repair={repair}
-            handleClose={closeComplete}
-            update={setRepair}
-          />
-        </>
+        <Complete
+          isOpen={showComplete}
+          repair={repair}
+          handleClose={closeComplete}
+          update={setRepair}
+        />
       )}
 
-      {repair["repairCompletionDate"] && !repair["pickupDate"] ? (
-        <button
-          style={{ backgroundColor: "rgb(34, 191, 40)" }}
-          onClick={openPickup}
-        >
-          Process Pickup
-        </button>
-      ) : (
-        <></>
-      )}
       {showPickup && (
-        <>
-          <PickUp
-            isOpen={showPickup}
-            repair={repair}
-            handleClose={closePickup}
-            update={setRepair}
-          />
-        </>
+        <PickUp
+          isOpen={showPickup}
+          repair={repair}
+          handleClose={closePickup}
+          update={setRepair}
+        />
       )}
     </>
   );

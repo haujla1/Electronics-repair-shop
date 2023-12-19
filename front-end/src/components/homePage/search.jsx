@@ -1,97 +1,75 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
+import { Box, TextField, Button, Typography, Paper } from "@mui/material";
+import SearchIcon from "@mui/icons-material/Search";
 
 function SearchBar() {
-  let [phoneNumber, setPhoneNumber] = useState("");
-  let [client, setClient] = useState("");
-  let [error, setError] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [client, setClient] = useState(null);
+  const [error, setError] = useState("");
 
-  async function handleSearch(e) {
-    e.preventDefault();
-    let phoneElem = document.getElementById("phone");
-    if (phoneElem.getAttribute("type") != "text") {
-      setError("Invalid Input Type");
-      return;
-    }
-    let phone = phoneElem.value;
-    if (
-      !/^\d+$/.test(phone) ||
-      typeof phone != "string" ||
-      phone.trim().length != 10
-    ) {
-      setError("Invalid Phone Number");
-      return;
-    }
-    if (!/^\d+$/.test(phone)) {
-      setError("Phone number must contain only numbers");
-      return;
-    }
+  const handleSearch = async (event) => {
+    event.preventDefault();
+    const phone = event.target.phone.value;
+    const backendApiUrl = import.meta.env.VITE_BACKEND_API;
+
     try {
-      let backendApiUrl = import.meta.env.VITE_BACKEND_API;
-      let data = (await axios(`${backendApiUrl}/clients/phoneNumber/${phone}`))
-        .data;
+      if (!/^\d{10}$/.test(phone)) {
+        throw new Error("Phone number must contain 10 digits.");
+      }
+
+      const { data } = await axios.get(
+        `${backendApiUrl}/clients/phoneNumber/${phone}`
+      );
       setPhoneNumber(phone);
       setClient(data);
       setError("");
     } catch (e) {
-      setError("Client could not be found");
+      setClient(null);
+      setError(e.response?.data?.error || "Client could not be found");
     }
-  }
+  };
 
   return (
-    <>
-      <h3>Search Clients</h3>
-      <form className="form" onSubmit={handleSearch}>
-        <div className="form-group">
-          <label>
-            Search Client by Phone Number:
-            <br />
-            <input
-              name="phone"
-              id="phone"
-              type="text"
-              placeholder="Phone Number"
-              required
-              autoFocus={true}
-            />
-          </label>
-          <button style={{ display: "inline-block" }} type="submit">
+    <Box sx={{ my: 4, mx: 2 }}>
+      <Paper elevation={3} sx={{ p: 2 }}>
+        <Typography variant="h5" gutterBottom>
+          Search Clients
+        </Typography>
+        <Box
+          component="form"
+          onSubmit={handleSearch}
+          sx={{ display: "flex", alignItems: "center", gap: 2 }}
+        >
+          <TextField
+            name="phone"
+            label="Phone Number"
+            variant="outlined"
+            fullWidth
+            error={!!error}
+            helperText={error}
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            type="submit"
+            startIcon={<SearchIcon />}
+          >
             Search
-          </button>
-        </div>
-      </form>
-
-      {error ? (
-        <p className="error">
-          {error}.{" "}
-          {error === "Client could not be found" ? (
-            <>
-              Would you like to <Link to="/newClient">create a new client</Link>
-              ?{" "}
-            </>
-          ) : (
-            <></>
-          )}
-        </p>
-      ) : (
-        <></>
-      )}
-
-      {client ? (
-        <p className="clientFound">
-          {" "}
-          Client Found:{" "}
-          <Link to={"/clientDetails/" + client._id}>{client.name}</Link>
-        </p>
-      ) : (
-        <></>
-      )}
-      <p>
-        Or <Link to="/newClient">Create New Client</Link>
-      </p>
-      {/* <Link to="/clientDetails/123123">Example Client Page Link</Link> */}
-    </>
+          </Button>
+        </Box>
+        {client && (
+          <Typography sx={{ mt: 2 }}>
+            Client Found:{" "}
+            <Link to={`/clientDetails/${client._id}`}>{client.name}</Link>
+          </Typography>
+        )}
+        <Typography sx={{ mt: 2 }}>
+          Or <Link to="/newClient">Create New Client</Link>
+        </Typography>
+      </Paper>
+    </Box>
   );
 }
 

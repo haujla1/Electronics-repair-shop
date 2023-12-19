@@ -1,113 +1,112 @@
-import React, { useEffect, useState, useContext } from "react";
-
-import ReactModal from "react-modal";
+import React, { useState } from "react";
+import { Modal, Box, TextField, Button, Typography } from "@mui/material";
 import axios from "axios";
 
-ReactModal.setAppElement("#root");
-
 const AddDevice = ({ clientId, isOpen, handleClose, updateDevices }) => {
-  let [showAddModal, setShowAddModal] = useState(isOpen);
   const [error, setError] = useState("");
 
-  async function handleSubmit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    const { deviceType, manufacturer, modelName, modelNumber, serialNumber } =
+      e.target.elements;
+
     try {
-      //make the axios
-      let req = { clientId: clientId };
+      const req = {
+        clientId: clientId,
+        deviceType: deviceType.value,
+        manufacturer: manufacturer.value,
+        modelName: modelName.value,
+        modelNumber: modelNumber.value,
+        serialNumber: serialNumber.value,
+      };
 
-      let { deviceType, manufacturer, modelName, modelNumber, serialNumber } =
-        e.target.elements;
-      if (
-        deviceType.getAttribute("type") != "text" ||
-        manufacturer.getAttribute("type") != "text" ||
-        modelName.getAttribute("type") != "text" ||
-        modelNumber.getAttribute("type") != "text" ||
-        serialNumber.getAttribute("type") != "text"
-      ) {
-        setError("Invalid Input Type");
-        return;
-      }
-
-      req.deviceType = deviceType.value;
-      req.manufacturer = manufacturer.value;
-      req.modelName = modelName.value;
-      req.modelNumber = modelNumber.value;
-      req.serialNumber = serialNumber.value;
-
-      let backendApiUrl = import.meta.env.VITE_BACKEND_API;
-      let data = (
-        await axios.post(`${backendApiUrl}/clients/${clientId}/device`, req)
-      ).data;
-
-      updateDevices(data);
-      console.log(data);
-
+      const backendApiUrl = import.meta.env.VITE_BACKEND_API;
+      const response = await axios.post(
+        `${backendApiUrl}/clients/${clientId}/device`,
+        req
+      );
+      updateDevices(response.data);
       handleClose();
     } catch (e) {
-      setError(String(e.response.data.error));
+      setError(e.response?.data?.error || "An unexpected error occurred.");
     }
-
-    return;
-  }
+  };
 
   const customStyles = {
-    //taken from lecture code
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      width: "50%",
-      border: "1px solid #28547a",
-      borderRadius: "4px",
-      color: "black",
-    },
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "50%",
+    bgcolor: "background.paper",
+    boxShadow: 24,
+    p: 4,
+    borderRadius: 2,
+    outline: "none",
   };
 
   return (
-    <ReactModal
-      name="editRepair"
-      isOpen={showAddModal}
-      contentLabel="Edit"
-      style={customStyles}
-    >
-      <form onSubmit={handleSubmit}>
-        <h3>New Device Info</h3>
-        <label style={{ color: "#000" }}>
-          Device Type:
-          <input required type="text" name="deviceType" />
-        </label>
-        <br />
-        <label style={{ color: "#000" }}>
-          Manufacturer:
-          <input required type="text" name="manufacturer" />
-        </label>
-        <br />
-        <label style={{ color: "#000" }}>
-          Model Name:
-          <input required type="text" name="modelName" />
-        </label>
-        <br />
-        <label style={{ color: "#000" }}>
-          Model Number:
-          <input required type="text" name="modelNumber" />
-        </label>
-        <br />
-        <label style={{ color: "#000" }}>
-          Serial Number:
-          <input required type="text" name="serialNumber" />
-        </label>
-        <br />
+    <Modal open={isOpen} onClose={handleClose}>
+      <Box sx={customStyles}>
+        <Typography variant="h6" gutterBottom component="div">
+          New Device Info
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            label="Device Type"
+            name="deviceType"
+            autoFocus
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            label="Manufacturer"
+            name="manufacturer"
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            label="Model Name"
+            name="modelName"
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            label="Model Number"
+            name="modelNumber"
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            label="Serial Number"
+            name="serialNumber"
+          />
 
-        <button onClick={handleClose}>Cancel</button>
-        <button type="submit">Add Device</button>
-      </form>
+          {error && (
+            <Typography variant="body2" color="error" gutterBottom>
+              {error}
+            </Typography>
+          )}
 
-      <p className="error">{error}</p>
-    </ReactModal>
+          <Box sx={{ display: "flex", justifyContent: "flex-end", mt: 2 }}>
+            <Button onClick={handleClose} sx={{ mr: 2 }}>
+              Cancel
+            </Button>
+            <Button type="submit" variant="contained">
+              Add Device
+            </Button>
+          </Box>
+        </Box>
+      </Box>
+    </Modal>
   );
 };
 

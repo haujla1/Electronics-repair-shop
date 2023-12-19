@@ -19,6 +19,7 @@ a {
   color: #4CAF50;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #207522;
 }
@@ -47,9 +48,11 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #ffffff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -60,16 +63,20 @@ button:focus-visible {
     color: #213547;
     background-color: #ffffff;
   }
+
   a:hover {
     color: #124e13;
   }
+
   button {
     background-color: #343434;
     color: white;
   }
+
   button:hover {
     border-color: #ffffff;
   }
+
   button:focus,
   button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;

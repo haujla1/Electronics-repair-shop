@@ -1,98 +1,92 @@
-import React, { useEffect, useState, useContext } from "react";
-
-import ReactModal from "react-modal";
+import React, { useState } from "react";
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  TextField,
+  DialogActions,
+  Button,
+  Box,
+} from "@mui/material";
 import axios from "axios";
 
-ReactModal.setAppElement("#root");
-
 const AddRepair = ({ repairId, isOpen, handleClose, updateRepairs }) => {
-  let [showAddModal, setShowAddModal] = useState(isOpen);
   const [error, setError] = useState("");
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
     try {
-      //make the axios
-      let req = { repairId: repairId };
-
-      req.repairType = e.target.repairType.value;
-      req.manufacturer = e.target.manufacturer.value;
-      req.modelName = e.target.modelName.value;
-      req.modelNumber = e.target.modelNumber.value;
-      req.serialNumber = e.target.serialNumber.value;
+      let req = {
+        repairId: repairId,
+        repairType: e.target.repairType.value,
+        manufacturer: e.target.manufacturer.value,
+        modelName: e.target.modelName.value,
+        modelNumber: e.target.modelNumber.value,
+        serialNumber: e.target.serialNumber.value,
+      };
 
       let backendApiUrl = import.meta.env.VITE_BACKEND_API;
       let data = (await axios.post(`${backendApiUrl}/repairs/${repairId}`, req))
         .data;
-
       updateRepairs(data);
-
       handleClose();
     } catch (e) {
       setError(String(e.response.data.message));
     }
-
-    return;
   }
 
-  const customStyles = {
-    //taken from lecture code
-    content: {
-      top: "50%",
-      left: "50%",
-      right: "auto",
-      bottom: "auto",
-      marginRight: "-50%",
-      transform: "translate(-50%, -50%)",
-      width: "50%",
-      border: "1px solid #28547a",
-      borderRadius: "4px",
-      color: "black",
-    },
-  };
-
   return (
-    <ReactModal
-      name="editRepair"
-      isOpen={showAddModal}
-      contentLabel="Edit"
-      style={customStyles}
-    >
+    <Dialog open={isOpen} onClose={handleClose}>
+      <DialogTitle>New Repair Info</DialogTitle>
       <form onSubmit={handleSubmit}>
-        <h3>New Repair Info</h3>
-        <label>
-          Repair Type:
-          <input required type="text" name="repairType" />
-        </label>
-        <br />
-        <label>
-          Manufacturer:
-          <input required type="text" name="manufacturer" />
-        </label>
-        <br />
-        <label>
-          Model Name:
-          <input required type="text" name="modelName" />
-        </label>
-        <br />
-        <label>
-          Model Number:
-          <input required type="text" name="modelNumber" />
-        </label>
-        <br />
-        <label>
-          Serial Number:
-          <input required type="text" name="serialNumber" />
-        </label>
-        <br />
-
-        <button onClick={handleClose}>Cancel</button>
-        <button type="submit">Add Repair</button>
+        <DialogContent>
+          <Box display="flex" flexDirection="column" m={1} p={1}>
+            <TextField
+              required
+              label="Repair Type"
+              name="repairType"
+              margin="normal"
+            />
+            <TextField
+              required
+              label="Manufacturer"
+              name="manufacturer"
+              margin="normal"
+            />
+            <TextField
+              required
+              label="Model Name"
+              name="modelName"
+              margin="normal"
+            />
+            <TextField
+              required
+              label="Model Number"
+              name="modelNumber"
+              margin="normal"
+            />
+            <TextField
+              required
+              label="Serial Number"
+              name="serialNumber"
+              margin="normal"
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button color="primary" type="submit">
+            Add Repair
+          </Button>
+        </DialogActions>
       </form>
-
-      <p className="error">{error}</p>
-    </ReactModal>
+      {error && (
+        <p style={{ color: "red", padding: "0 24px", marginBottom: "20px" }}>
+          {error}
+        </p>
+      )}
+    </Dialog>
   );
 };
 
