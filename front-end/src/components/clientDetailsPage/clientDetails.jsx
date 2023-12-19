@@ -58,9 +58,6 @@ function ClientDetails(){
 
                 <dt>Address</dt>
                 <dd>{client.address}</dd>
-
-                <dt>Age</dt>
-                <dd>{client.age}</dd>
             </dl>
             
 

@@ -3,6 +3,7 @@ import { Route, Link, Routes, Navigate} from 'react-router-dom';
 import { AuthContext } from "../context/authContext";
 import { dosignInWithEmailAndPassword, doPasswordReset } from "../firebase/firebaseFunctions";
 import GoogleSignIn from "./googleSignIn";
+import emailValidator from "email-validator";
 
 
 function Login(){
@@ -34,6 +35,9 @@ function Login(){
         let email = emailElem.value
         if(email){
             try{
+              if(!emailValidator.validate(email)){
+                throw "Please enter valid email."
+              }
                 doPasswordReset(email)
                 setDisplay("Reset Password Email Sent!")
             }catch(err){
