@@ -28,7 +28,7 @@ function RepairCard({ repair, deviceName }) {
             {deviceName}
           </Typography>
           <Typography variant="body2" color="text.secondary">
-            Issue: {repair.issue}
+            <strong>Issue: {repair.issue}</strong>
           </Typography>
           <Typography variant="body2" color="text.secondary">
             Device ID: {repair.deviceID}

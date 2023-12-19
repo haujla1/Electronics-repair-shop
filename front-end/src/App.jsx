@@ -17,6 +17,8 @@ import NewClient from "./components/newClientPage/newClient";
 import ClientDetails from "./components/clientDetailsPage/clientDetails";
 import NewRepair from "./components/newRepairPage/newRepair";
 import RepairDetails from "./components/repairDetails/repairDetails";
+import NotFoundPage from "./components/notFoundPage";
+import BadRequestPage from "./components/badRequestPage";
 
 function App() {
   return (
@@ -70,6 +72,8 @@ function App() {
             for manager route eventually
             <Route path="/adminTools" element={<Admin />} />
           </Route>
+          <Route path="/400" element={<BadRequestPage />} />
+          <Route path="/404" element={<NotFoundPage />} />
         </Routes>
       </div>
     </AuthProvider>

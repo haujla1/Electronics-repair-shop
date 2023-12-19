@@ -2,14 +2,20 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import Nav from "../navBar";
 import axios from "axios";
-
+import {
+  TextField,
+  Button,
+  Grid,
+  Paper,
+  Typography,
+  Checkbox,
+  FormControlLabel,
+} from "@mui/material";
 function NewRepair() {
   let { clientId, deviceId } = useParams();
   let [client, setClient] = useState(null);
   let [loading, setLoading] = useState(true);
-  let [pdf, setPdf] = useState(null);
-
-  const [error, setError] = useState("");
+  let [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -32,7 +38,6 @@ function NewRepair() {
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
-    //protect against changes from inspect element
     try {
       const {
         clientPreferredEmail,
@@ -60,7 +65,6 @@ function NewRepair() {
     }
 
     try {
-      //make the axios
       let workOrder = {};
       workOrder.clientPreferredEmail = e.target.clientPreferredEmail.value;
       workOrder.clientPreferredPhoneNumber =
@@ -139,67 +143,90 @@ function NewRepair() {
   return (
     <>
       <Nav pagename="New Repair" />
+      <Paper style={{ padding: "20px", margin: "20px" }}>
+        <Typography variant="h5">New Repair for {client?.name}</Typography>
+        <Typography variant="subtitle1">
+          Device: {client?.deviceName}
+        </Typography>
+        <br />
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                label="Preferred Email"
+                type="email"
+                name="clientPreferredEmail"
+                defaultValue={client?.email}
+                fullWidth
+              />
+            </Grid>
 
-      <p>
-        Client: <Link to={"/clientDetails/" + clientId}>{client.name}</Link>
-      </p>
-      <p>Device: {client.deviceName}</p>
+            <Grid item xs={12}>
+              <TextField
+                label="Preferred Phone Number"
+                type="text"
+                name="clientPreferredPhoneNumber"
+                defaultValue={client?.phoneNumber}
+                fullWidth
+              />
+            </Grid>
 
-      <form onSubmit={handleSubmit}>
-        <label>
-          Preferred Email:
-          <br />
-          <input
-            type="email"
-            name="clientPreferredEmail"
-            defaultValue={client.email}
-          />
-        </label>
-        <br />
-        <label>
-          Preferred Phone:
-          <br />
-          <input
-            type="text"
-            name="clientPreferredPhoneNumber"
-            defaultValue={client.phoneNumber}
-          />
-        </label>
-        <br />
-        <label>
-          Issue:
-          <br />
-          <textarea name="issue" />
-        </label>
-        <br />
-        <label>
-          Issue Verified:
-          <input type="checkbox" name="wasIssueVerified" />
-        </label>
-        <br />
-        <label>
-          Verification Reason:
-          <br />
-          <textarea name="stepsTakenToReplicateIssue" />
-        </label>
-        <br />
-        <label>
-          Repairs:
-          <br />
-          <textarea name="workToBeDone" />
-        </label>
-        <br />
-        <label>
-          Device Condition:
-          <br />
-          <textarea name="conditionOfDevice" />
-        </label>
+            <Grid item xs={12}>
+              <TextField
+                label="Issue"
+                name="issue"
+                multiline
+                rows={4}
+                fullWidth
+              />
+            </Grid>
 
-        <br />
-        <button type="submit">Create</button>
-      </form>
+            <Grid item xs={12}>
+              <FormControlLabel
+                control={<Checkbox name="wasIssueVerified" />}
+                label="Issue Verified"
+              />
+            </Grid>
 
-      <p className="error">{error}</p>
+            <Grid item xs={12}>
+              <TextField
+                label="Verification Reason"
+                name="stepsTakenToReplicateIssue"
+                multiline
+                rows={4}
+                fullWidth
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                label="Repairs"
+                name="workToBeDone"
+                multiline
+                rows={4}
+                fullWidth
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <TextField
+                label="Device Condition"
+                name="conditionOfDevice"
+                multiline
+                rows={4}
+                fullWidth
+              />
+            </Grid>
+
+            <Grid item xs={12}>
+              <Button variant="contained" color="primary" type="submit">
+                Create
+              </Button>
+            </Grid>
+          </Grid>
+        </form>
+        {error && <Typography color="error">{error}</Typography>}
+      </Paper>
     </>
   );
 }

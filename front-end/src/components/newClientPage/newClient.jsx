@@ -3,13 +3,20 @@ import { Link, useNavigate } from "react-router-dom";
 import Nav from "../navBar";
 import axios from "axios";
 import constants from "../../../appConstants.js";
-
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Grid,
+  Alert,
+} from "@mui/material";
 function NewClient() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const addClient = async (form) => {
-    // console.log(form);
     try {
       let backendApiUrl = import.meta.env.VITE_BACKEND_API;
       let { data } = await axios.post(`${backendApiUrl}/clients`, form);
@@ -63,83 +70,106 @@ function NewClient() {
     // console.log(form);
 
     let data = await addClient(form);
-    console.log(data);
     if (data.error) {
       setError(data.error);
-      return;
+    } else {
+      alert("Client Added");
+      navigate("/");
+      setError("");
     }
 
     document.getElementById("add-client").reset();
-    setError("");
-    alert("Client Added");
-    navigate("/"); // redirect to home page
     return;
   };
 
   return (
     <>
       <Nav pagename="Add Client" />
-      <div>
-        <form id="add-client" onSubmit={handleSubmit}>
-          <div>
-            <label>
-              First Name:
-              <br />
-              <input type="text" id="firstName" required autoFocus={true} />
-            </label>
-          </div>
-
-          <div>
-            <label>
-              Last Name:
-              <br />
-              <input type="text" id="lastName" required />
-            </label>
-          </div>
-
-          <div>
-            <label>
-              Phone Number:
-              <br />
-              <input type="text" id="phoneNumber" required />
-            </label>
-          </div>
-
-          <div>
-            <label>
-              Email:
-              <br />
-              <input type="email" id="email" required />
-            </label>
-          </div>
-
-          <div>
-            <label>
-              Address:
-              <br />
-              <input type="text" id="address" required />
-            </label>
-          </div>
-
-          <div>
-            <label>
-              Age:
-              <br />
-              <input
-                type="number"
-                id="age"
+      <Container maxWidth="sm" sx={{ mt: 4 }}>
+        <Typography variant="h4" gutterBottom>
+          Add a New Client
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <TextField
                 required
-                min={constants.min_age}
-                max={constants.max_age}
+                fullWidth
+                id="firstName"
+                label="First Name"
+                name="firstName"
+                autoFocus
               />
-            </label>
-          </div>
-
-          <button type="submit">Add Client</button>
-          <br />
-          <p>{error}</p>
-        </form>
-      </div>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <TextField
+                required
+                fullWidth
+                id="lastName"
+                label="Last Name"
+                name="lastName"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id="phoneNumber"
+                label="Phone Number"
+                name="phoneNumber"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id="email"
+                label="Email Address"
+                name="email"
+                type="email"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id="address"
+                label="Address"
+                name="address"
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <TextField
+                required
+                fullWidth
+                id="age"
+                label="Age"
+                name="age"
+                type="number"
+                InputProps={{
+                  inputProps: {
+                    min: constants.min_age,
+                    max: constants.max_age,
+                  },
+                }}
+              />
+            </Grid>
+          </Grid>
+          {error && (
+            <Alert severity="error" sx={{ mt: 2 }}>
+              {error}
+            </Alert>
+          )}
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+          >
+            Add Client
+          </Button>
+        </Box>
+      </Container>
     </>
   );
 }

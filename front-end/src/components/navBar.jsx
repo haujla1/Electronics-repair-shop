@@ -14,10 +14,12 @@ function Nav({ pagename }) {
         <img
           src={esms_logo}
           style={{
-            width: "140px",
-            height: "140px",
+            width: "150px",
+            height: "145px",
             display: "inline-block",
-            marginLeft: "-18px",
+            marginLeft: "-10px",
+            marginTop: "10px",
+            marginBottom: "2px",
           }}
           alt="logo"
           className="logo"
@@ -27,7 +29,7 @@ function Nav({ pagename }) {
         <h1>{pagename}</h1>
         <div
           className="sub-info"
-          style={{ marginTop: "10px", display: "inline-flex" }}
+          style={{ marginTop: "px", display: "inline-flex" }}
         >
           <h2>Hi</h2>
         </div>
@@ -41,18 +43,32 @@ function Nav({ pagename }) {
 
       <nav>
         <ul>
-          <li>
-            {role == "Admin" ? (
-              <Link to="/adminTools" style={{ display: "inline-block" }}>
-                Admin Tools
-              </Link>
-            ) : (
-              <></>
+          <ul style={{ display: "flex", alignItems: "center" }}>
+            {role === "Admin" && (
+              <li>
+                <Link
+                  to="/adminTools"
+                  style={{
+                    marginRight: "20px",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  Admin Tools
+                </Link>
+              </li>
             )}
-          </li>
-          <Link to="/" title="Home">
-            <HomeIcon />
-          </Link>
+            <li>
+              <Link
+                to="/"
+                title="Home"
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                <HomeIcon />
+              </Link>
+            </li>
+          </ul>
+
           <li>
             <SignOut />
           </li>
