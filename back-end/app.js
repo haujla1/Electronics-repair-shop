@@ -12,7 +12,7 @@ app.use("*", (req, res, next) => {
   next();
   console.log();
 });
-app.use(cors());
+app.use(cors(process.env.CORS_ORIGIN));
 
 configRoutes(app);
 
