@@ -73,7 +73,7 @@ function App() {
             <Route path="/adminTools" element={<Admin />} />
           </Route>
           <Route path="/400" element={<BadRequestPage />} />
-          <Route path="/404" element={<NotFoundPage />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </div>
     </AuthProvider>

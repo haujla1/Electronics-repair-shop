@@ -4,7 +4,9 @@ import { Link } from "react-router-dom";
 const BadRequest = () => (
   <div>
     <h1>400 - Bad Request!</h1>
-    <Link to="/">Go To HomePage</Link>
+    <br />
+    <br />
+    <Link to="/"> Go To HomePage</Link>
   </div>
 );
 
