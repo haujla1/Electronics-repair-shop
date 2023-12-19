@@ -1,18 +1,19 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Route, Link, Routes } from "react-router-dom";
+import {
+  Grid,
+  Card,
+  CardContent,
+  Typography,
+  CircularProgress,
+  Alert,
+  Box,
+} from "@mui/material";
 import { AuthContext } from "../../context/authContext";
-import SignOut from "../signOut";
 import Nav from "../navBar";
-
 import SearchBar from "./search";
-import ActiveWorkorders from "./activeWorkorders";
-import ReadyForPickup from "./readyForPickup";
-
-import axios from "axios";
-
 import RepairCard from "../repairCard";
-
-import { Grid } from "@mui/material";
+import axios from "axios";
+import "../../App.css";
 
 function Home() {
   const { currentUser, role } = useContext(AuthContext);
@@ -81,60 +82,58 @@ function Home() {
   //only if the current user is the admin
   return (
     <>
-      <Nav pagename="Home" />
+      <Nav pagename="Electronics Service Management System" />
       <SearchBar />
 
       {loading ? (
-        <h3>Loading Workorders</h3>
+        <div className="center-loading">
+          <CircularProgress />
+        </div>
       ) : error ? (
-        <>
-          <h3>Error Fetching Work Orders</h3>
-          <p>{error}</p>
-        </>
+        <Alert severity="error">{error}</Alert>
       ) : (
         <>
-          <div className="activeWorkorders">
-            <h3>Active Workorders</h3>
-            {active.length != 0 ? (
-              <Grid container>
-                {active.map((wo) => (
-                  <Grid marginTop={"auto"} item xs key={wo._id}>
-                    {" "}
-                    <RepairCard
-                      repair={wo}
-                      deviceName={wo.clientName + "'s " + wo.deviceName}
-                    />{" "}
-                  </Grid>
-                ))}
-              </Grid>
+          <Box className="section-title-bar">
+            <Typography variant="h4" className="section-title">
+              Active Workorders
+            </Typography>
+          </Box>
+          <Grid container spacing={2}>
+            {active.length ? (
+              active.map((wo) => (
+                <Grid item xs={12} sm={6} md={4} key={wo._id}>
+                  <RepairCard
+                    repair={wo}
+                    deviceName={`${wo.clientName}'s ${wo.deviceName}`}
+                  />
+                </Grid>
+              ))
             ) : (
-              <h4>No Active Workorders</h4>
+              <Typography>No Active Workorders</Typography>
             )}
-          </div>
-          <div className="readyForPickupWorkorders">
-            <h3>Ready for Pickup</h3>
-            {pickUp.length != 0 ? (
-              <Grid container>
-                {pickUp.map((wo) => (
-                  <Grid marginTop={"auto"} item xs key={wo._id}>
-                    {" "}
-                    <RepairCard
-                      repair={wo}
-                      deviceName={wo.clientName + "'s " + wo.deviceName}
-                    />{" "}
-                  </Grid>
-                ))}
-              </Grid>
+          </Grid>
+
+          <Box className="section-title-bar">
+            <Typography variant="h4" className="section-title">
+              Ready for Pickup
+            </Typography>
+          </Box>
+          <Grid container spacing={2}>
+            {pickUp.length ? (
+              pickUp.map((wo) => (
+                <Grid item xs={12} sm={6} md={4} key={wo._id}>
+                  <RepairCard
+                    repair={wo}
+                    deviceName={`${wo.clientName}'s ${wo.deviceName}`}
+                  />
+                </Grid>
+              ))
             ) : (
-              <h4>No Ready to Pickup Devices</h4>
+              <Typography>No Ready to Pickup Devices</Typography>
             )}
-          </div>
+          </Grid>
         </>
       )}
-
-      {/* <ActiveWorkorders />
-            <Link to='/repair/655823ffd08fbef35544267f'>Example Repair Info Link</Link>
-        <ReadyForPickup /> */}
     </>
   );
 }

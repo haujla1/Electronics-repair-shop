@@ -1,66 +1,57 @@
-import React, { useContext, useEffect, useState } from "react";
-import axios from "axios";
-import AddDevice from "./addDevice.jsx";
+import React from "react";
 import { Link } from "react-router-dom";
-
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  Grid,
-  Typography,
-} from "@mui/material";
+import { Card, CardContent, Typography, Button, Box } from "@mui/material";
 
 function DeviceCard({ device, clientId }) {
   return (
     <Card
-      className="card deviceCard"
-      variant="outlined"
       sx={{
-        height: "auto",
-        width: 250,
-        border: "1px solid #29642b",
+        maxWidth: 345,
+        m: 2,
+        boxShadow: 3,
+        "&:hover": {
+          boxShadow: 5,
+        },
+        borderRadius: 2,
+        borderColor: "primary.main",
       }}
     >
       <CardContent>
-        <Typography
-          className="deviceName"
-          sx={{
-            borderBottom: "1px solid #29642b",
-            fontWeight: "bold",
-          }}
-          gutterBottom
-          variant="h6"
-          component="h3"
-        >
-          {device.manufacturer} {device.modelName}
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <Typography
+            gutterBottom
+            variant="h5"
+            component="div"
+            color="primary"
+            sx={{ fontWeight: "medium" }}
+          >
+            {device.manufacturer} {device.modelName}
+          </Typography>
+        </Box>
+
+        <Typography variant="body2" color="text.secondary" component="div">
+          <strong>Model Number:</strong> {device.modelNumber}
         </Typography>
 
-        <Typography className="modelNumber" gutterBottom component="div">
-          <dl>
-            <dt>Model Number:</dt> <dd>{device.modelNumber}</dd>
-          </dl>
+        <Typography variant="body2" color="text.secondary" component="div">
+          <strong>Serial Number:</strong> {device.serialNumber}
         </Typography>
 
-        <Typography className="serialNumber" gutterBottom component="div">
-          <dl>
-            <dt>Serial Number:</dt> <dd>{device.serialNumber}</dd>
-          </dl>
-        </Typography>
-
-        <Typography className="id" gutterBottom component="div">
-          <dl>
-            <dt>Device ID:</dt> <dd>{device._id}</dd>
-          </dl>
+        <Typography variant="body2" color="text.secondary" component="div">
+          <strong>Device ID:</strong> {device._id}
         </Typography>
       </CardContent>
-      <Link
-        className="newRepairLink"
-        to={`/newRepair/${clientId}/${device._id}`}
-      >
-        New Repair
-      </Link>
+      <Box sx={{ p: 2, textAlign: "center" }}>
+        <Button
+          variant="contained"
+          color="primary"
+          component={Link}
+          to={`/newRepair/${clientId}/${device._id}`}
+          sx={{ textTransform: "none" }}
+        >
+          New Repair
+        </Button>
+      </Box>
     </Card>
   );
 }

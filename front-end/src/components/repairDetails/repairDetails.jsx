@@ -6,6 +6,7 @@ import axios from "axios";
 import Edit from "./editModal.jsx";
 import Complete from "./completeModal.jsx";
 import PickUp from "./pickupModal.jsx";
+import "./repairDetails.css";
 
 function RepairDetails() {
   let { repairId } = useParams();
@@ -100,115 +101,117 @@ function RepairDetails() {
       {/* <br /> */}
       {/* <button onClick={openEdit}>Edit</button> */}
       {/* {showEdit && <Edit isOpen={showEdit} handleClose={closeEdit} repair={repair}/>} */}
-
-      <h3>General Info</h3>
-      <dl>
-        <dt>Repair ID:</dt> <dd>{repair["_id"]}</dd>
-        <dt>Device ID:</dt>
-        <dd> {repair["deviceID"]}</dd>
-        <dt>Device Name:</dt>
-        <dd> {repair["deviceName"]}</dd>
-        <dt>Client:</dt>
-        <dd>
-          {" "}
-          <Link to={"/clientDetails/" + repair["clientID"]}>
-            {repair["clientName"] ? repair["clientName"] : repair["clientID"]}
-          </Link>
-        </dd>
-        <dt>Client Email:</dt>
-        <dd>
-          {" "}
-          <a href={"mailto:" + repair["clientPreferredEmail"]}>
-            {repair["clientPreferredEmail"]}
-          </a>
-        </dd>
-        <dt>Work Order Opened:</dt>{" "}
-        <dd>
-          {new Date(repair["repairOrderCreationDate"]).toLocaleDateString()}
-        </dd>
-        <dt>Issue:</dt> <dd> {repair["issue"]}</dd>
-        <dt>Issue Verified:</dt>{" "}
-        <dd> {repair["wasIssueVerified"] ? "Yes" : "No"}</dd>
-        <dt>Verification Reason:</dt>{" "}
-        <dd> {repair["stepsTakenToReplicateIssue"]}</dd>
-        <dt>Repairs:</dt> <dd> {repair["workToBeDone"]}</dd>
-        <dt>Device Condition:</dt> <dd> {repair["conditionOfDevice"]}</dd>
-        <dt>Repair Status:</dt> <dd> {repair["repairStatus"]}</dd>
-      </dl>
-
-      {repair["repairCompletionDate"] ? (
-        <>
-          <h3>Repair Completed</h3>
+      <div className="repair-details-container">
+        <section className="general-info">
+          <h3>General Info</h3>
           <dl>
-            <dt>Repairs Completed:</dt>{" "}
+            <dt>Repair ID:</dt> <dd>{repair["_id"]}</dd>
+            <dt>Device ID:</dt>
+            <dd> {repair["deviceID"]}</dd>
+            <dt>Device Name:</dt>
+            <dd> {repair["deviceName"]}</dd>
+            <dt>Client:</dt>
             <dd>
               {" "}
-              {new Date(repair["repairCompletionDate"]).toLocaleDateString()}
+              <Link to={"/clientDetails/" + repair["clientID"]}>
+                {repair["clientName"]
+                  ? repair["clientName"]
+                  : repair["clientID"]}
+              </Link>
             </dd>
-            <dt>Repair Notes:</dt> <dd> {repair["repairTechnicianNotes"]}</dd>
-            <dt>Repair Success:</dt>{" "}
-            <dd> {repair["wasTheRepairSuccessful"] ? "Yes" : "No"}</dd>
+            <dt>Client Email:</dt>
+            <dd>
+              {" "}
+              <a href={"mailto:" + repair["clientPreferredEmail"]}>
+                {repair["clientPreferredEmail"]}
+              </a>
+            </dd>
+            <dt>Work Order Opened:</dt>{" "}
+            <dd>
+              {new Date(repair["repairOrderCreationDate"]).toLocaleDateString()}
+            </dd>
+            <dt>Issue:</dt> <dd> {repair["issue"]}</dd>
+            <dt>Issue Verified:</dt>{" "}
+            <dd> {repair["wasIssueVerified"] ? "Yes" : "No"}</dd>
+            <dt>Verification Reason:</dt>{" "}
+            <dd> {repair["stepsTakenToReplicateIssue"]}</dd>
+            <dt>Repairs:</dt> <dd> {repair["workToBeDone"]}</dd>
+            <dt>Device Condition:</dt> <dd> {repair["conditionOfDevice"]}</dd>
+            <dt>Repair Status:</dt> <dd> {repair["repairStatus"]}</dd>
           </dl>
-        </>
-      ) : (
-        <></>
-      )}
+        </section>
 
-      {repair["pickupDate"] ? (
-        <>
-          <h3>Pick Up</h3>
-          <dl>
-            <dt>Picked Up:</dt>{" "}
-            <dd> {new Date(repair["pickupDate"]).toLocaleDateString()}</dd>
-            <dt>Pick Up Notes:</dt> <dd> {repair["pickupNotes"]}</dd>
-            <dt>Pick Up Demo:</dt>{" "}
-            <dd> {repair["pickupDemoDone"] ? "Yes" : "No"}</dd>
-          </dl>
-        </>
-      ) : (
-        <></>
-      )}
-      {!repair["repairCompletionDate"] ? (
-        <button
-          style={{ backgroundColor: "rgb(34, 191, 40)" }}
-          onClick={openComplete}
-        >
-          Complete Repair
-        </button>
-      ) : (
-        <></>
-      )}
-      {showComplete && (
-        <>
+        {repair["repairCompletionDate"] ? (
+          <>
+            <section className="repair-completed">
+              <h3>Repair Completed</h3>
+              <dl>
+                <dt>Repairs Completed:</dt>{" "}
+                <dd>
+                  {" "}
+                  {new Date(
+                    repair["repairCompletionDate"]
+                  ).toLocaleDateString()}
+                </dd>
+                <dt>Repair Notes:</dt>{" "}
+                <dd> {repair["repairTechnicianNotes"]}</dd>
+                <dt>Repair Success:</dt>{" "}
+                <dd> {repair["wasTheRepairSuccessful"] ? "Yes" : "No"}</dd>
+              </dl>
+            </section>
+          </>
+        ) : (
+          <></>
+        )}
+
+        {repair["pickupDate"] ? (
+          <>
+            <section className="pickup-info">
+              <h3>Pick Up</h3>
+              <dl>
+                <dt>Picked Up:</dt>{" "}
+                <dd> {new Date(repair["pickupDate"]).toLocaleDateString()}</dd>
+                <dt>Pick Up Notes:</dt> <dd> {repair["pickupNotes"]}</dd>
+                <dt>Pick Up Demo:</dt>{" "}
+                <dd> {repair["pickupDemoDone"] ? "Yes" : "No"}</dd>
+              </dl>
+            </section>
+          </>
+        ) : (
+          <></>
+        )}
+        <div className="actions">
+          {!repair["repairCompletionDate"] && (
+            <button className="complete-repair-btn" onClick={openComplete}>
+              Complete Repair
+            </button>
+          )}
+
+          {repair["repairCompletionDate"] && !repair["pickupDate"] && (
+            <button className="process-pickup-btn" onClick={openPickup}>
+              Process Pickup
+            </button>
+          )}
+        </div>
+
+        {showComplete && (
           <Complete
             isOpen={showComplete}
             repair={repair}
             handleClose={closeComplete}
             update={setRepair}
           />
-        </>
-      )}
+        )}
 
-      {repair["repairCompletionDate"] && !repair["pickupDate"] ? (
-        <button
-          style={{ backgroundColor: "rgb(34, 191, 40)" }}
-          onClick={openPickup}
-        >
-          Process Pickup
-        </button>
-      ) : (
-        <></>
-      )}
-      {showPickup && (
-        <>
+        {showPickup && (
           <PickUp
             isOpen={showPickup}
             repair={repair}
             handleClose={closePickup}
             update={setRepair}
           />
-        </>
-      )}
+        )}
+      </div>
     </>
   );
 }
