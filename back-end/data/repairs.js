@@ -14,16 +14,13 @@ import constants from "../appConstants.js";
 import { sendEmail } from "../nodemailer/sendMailService.js";
 import { redisClient } from "../redis.js";
 
-
-function formatDate(date) 
-{
-  const options = 
-  {
-      year: 'numeric', 
-      month: '2-digit', 
-      day: '2-digit'
+function formatDate(date) {
+  const options = {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
   };
-  return date.toLocaleDateString('en-US', options);
+  return date.toLocaleDateString("en-US", options);
 }
 
 export const getDeviceById = async (clientId, deviceId) => {
@@ -144,41 +141,34 @@ export const createRepair = async (clientId, deviceID, workOrder) => {
     reportData.modelNumber = device.modelNumber;
     reportData.serialNumber = device.serialNumber;
 
-      return reportData;
-  
+    return reportData;
   }
 };
 
-export const makeCheckInReport = async (reportData) => 
-{
+export const makeCheckInReport = async (reportData) => {
+  if (!reportData) throw "You must provide report data";
+  if (typeof reportData !== "object" || Object.keys(reportData).length === 0)
+    throw "Report data must be a non-empty object";
 
-    if (!reportData) throw "You must provide report data";
-    if (typeof reportData !== "object" || Object.keys(reportData).length === 0)
-      throw "Report data must be a non-empty object";
-
-   // will do the validations later 
-
-   try
-   {
+  // will do the validations later
+  const jsReportUrl = process.env.JSREPORT_URL;
+  try {
     const response = await axios.post(
-          "http://localhost:5488/api/report",
-          {
-            template: { name: "check-in" },
-            data: reportData,
-          },
-          {
-            responseType: "arraybuffer", 
-          }
-        );      
-        return response.data;
-   }
-   catch (error) 
-   {
-      console.error("Error generating check-in report:", error);
-      throw error;
-    }
+      jsReportUrl,
+      {
+        template: { name: "check-in" },
+        data: reportData,
+      },
+      {
+        responseType: "arraybuffer",
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error generating check-in report:", error);
+    throw error;
+  }
 };
-
 
 export const getWorkorderById = async (repairId) => {
   validateString(repairId, "Repair ID");
@@ -260,30 +250,30 @@ export const updateWorkorderAfterRepair = async (
   }
   const updatedRepair = await getWorkorderById(repairID);
 
-  // if (wasTheRepairSuccessful) 
+  // if (wasTheRepairSuccessful)
   // {
-    try {
-      const client = await getClientById(updatedRepair.clientID);
-      if (!client) throw "No client with that ID";
+  try {
+    const client = await getClientById(updatedRepair.clientID);
+    if (!client) throw "No client with that ID";
 
-      await sendEmail(
-        repair.clientPreferredEmail,
-        "Repair Order Completed",
-        `Hi ${client.name}, 
+    await sendEmail(
+      repair.clientPreferredEmail,
+      "Repair Order Completed",
+      `Hi ${client.name}, 
 
         We are reaching out to you to inform you that your repair with ID: ${repairID} is completed. Please feel free 
         to come and pick up your device at your earliest convenience.
         
         This is an automated message, please do not reply to this email.`,
-        `<p>Hi ${client.name},</p>
+      `<p>Hi ${client.name},</p>
         <p> We are reaching out to you to inform you that your repair with ID: ${repairID} is completed. Please feel free 
         to come and pick up your device at your earliest convenience.</p>
         <br>
         <p>This is an automated message, please do not reply to this email.</p>`
-      );
-    } catch (error) {
-      console.error("Failed to send email:", error);
-    }
+    );
+  } catch (error) {
+    console.error("Failed to send email:", error);
+  }
   // }
 
   try {
@@ -359,7 +349,6 @@ export const updateWorkorderAfterPickup = async (
     throw ("Redis delete error:", error.nessage);
   }
 
-  
   let cachekey2 = `client:${repair.clientID}`;
 
   try {
@@ -386,40 +375,32 @@ export const updateWorkorderAfterPickup = async (
   reportData.modelNumber = device.modelNumber;
   reportData.serialNumber = device.serialNumber;
 
-  
-
   // return await getWorkorderById(repairID);
   return reportData;
 };
 
-export const makePickupReport = async (reportData) => 
-{
+export const makePickupReport = async (reportData) => {
   if (!reportData) throw "You must provide report data";
-    if (typeof reportData !== "object" || Object.keys(reportData).length === 0)
-      throw "Report data must be a non-empty object";
-
-
-   try
-   {
+  if (typeof reportData !== "object" || Object.keys(reportData).length === 0)
+    throw "Report data must be a non-empty object";
+  const jsReportUrl = process.env.JSREPORT_URL;
+  try {
     const response = await axios.post(
-      "http://localhost:5488/api/report",
+      jsReportUrl,
       {
         template: { name: "Pick-up" },
         data: reportData,
       },
       {
-        responseType: "arraybuffer", 
+        responseType: "arraybuffer",
       }
     );
     return response.data;
-   }
-   catch (error) 
-    {
-      console.error("Error generating pickup report:", error);
-      throw error;
-    }
+  } catch (error) {
+    console.error("Error generating pickup report:", error);
+    throw error;
+  }
 };
-
 
 export const getActiveRepairs = async () => {
   let clientCollection = await clients();

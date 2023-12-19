@@ -1,75 +1,75 @@
-import React, {useContext, useEffect, useState} from "react";
-import {Link, useParams} from 'react-router-dom';
+import React, { useContext, useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import Nav from "../navBar";
 import Devices from "./clientDevices";
 import Repairs from "./clientRepairs";
 import axios from "axios";
 
+function ClientDetails() {
+  let { clientId } = useParams();
+  let [client, setClient] = useState(null);
+  let [loading, setLoading] = useState(true);
 
-
-function ClientDetails(){
-    let {clientId} = useParams()
-    let [client, setClient] = useState(null)
-    let [loading, setLoading] = useState(true)
-
-    useEffect(()=>{
-        async function getClient() {
-            try{
-                let data = (await axios("http://localhost:3000/clients/"+clientId)).data
-                setClient(data)
-            }catch(e){
-                console.log(e)
-            }
-            setLoading(false)
-        }
-
-        getClient()
-
-    }, [clientId])
-
-    if(loading){
-        return(<>
-            <Nav pagename="Client Info"/>
-            <h3>Loading</h3>
-        </>)
+  useEffect(() => {
+    async function getClient() {
+      try {
+        let backendApiUrl = import.meta.env.VITE_BACKEND_API;
+        let data = (await axios(`${backendApiUrl}/clients/${clientId}`)).data;
+        setClient(data);
+      } catch (e) {
+        console.log(e);
+      }
+      setLoading(false);
     }
 
-    if(!client){
-        return(<>
-            <Nav pagename="Client Info"/>
-            <h3>404 Error: Client Not Found</h3>
-        </>)
-    }
+    getClient();
+  }, [clientId]);
 
-
+  if (loading) {
     return (
-        <>
-            <Nav pagename="Client Info"/>
-            <h3>Client Info</h3>
-            <dl>
-                <dt>Name</dt>
-                <dd>{client.name}</dd>
+      <>
+        <Nav pagename="Client Info" />
+        <h3>Loading</h3>
+      </>
+    );
+  }
 
-                <dt>Phone Number</dt>
-                <dd>{client.phoneNumber}</dd>
+  if (!client) {
+    return (
+      <>
+        <Nav pagename="Client Info" />
+        <h3>404 Error: Client Not Found</h3>
+      </>
+    );
+  }
 
-                <dt>Email</dt>
-                <dd><a href={"mailto:" + client.email}>{client.email}</a></dd>
+  return (
+    <>
+      <Nav pagename="Client Info" />
+      <h3>Client Info</h3>
+      <dl>
+        <dt>Name</dt>
+        <dd>{client.name}</dd>
 
-                <dt>Address</dt>
-                <dd>{client.address}</dd>
+        <dt>Phone Number</dt>
+        <dd>{client.phoneNumber}</dd>
 
-                <dt>Age</dt>
-                <dd>{client.age}</dd>
-            </dl>
-            
+        <dt>Email</dt>
+        <dd>
+          <a href={"mailto:" + client.email}>{client.email}</a>
+        </dd>
 
-            <Devices clientId={clientId} />
-            <Repairs clientId={clientId} />
-        </>
-        
-    )
+        <dt>Address</dt>
+        <dd>{client.address}</dd>
+
+        <dt>Age</dt>
+        <dd>{client.age}</dd>
+      </dl>
+
+      <Devices clientId={clientId} />
+      <Repairs clientId={clientId} />
+    </>
+  );
 }
 
-
-export default ClientDetails
+export default ClientDetails;

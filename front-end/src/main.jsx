@@ -1,15 +1,15 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
-import { BrowserRouter } from 'react-router-dom';
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
+import "./index.css";
+import { BrowserRouter } from "react-router-dom";
 
-import fbconfig from './firebase/firebaseConfig.js'
-import {initializeApp} from 'firebase/app'
+import fbconfig from "./firebase/firebaseConfig.js";
+import { initializeApp } from "firebase/app";
 
 // console.log(fbconfig)
 
-const app = initializeApp(fbconfig)
+const app = initializeApp(fbconfig);
 // const firebaseConfig = {
 //   apiKey: "AIzaSyC0Vvm0WZwNbGHqKUe0CM94-jAPvY5TlKY",
 //   authDomain: "electronics-repair-shop.firebaseapp.com",
@@ -22,9 +22,8 @@ const app = initializeApp(fbconfig)
 // // Initialize Firebase
 // const app = initializeApp(firebaseConfig);
 
-
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <BrowserRouter>
     <App />
   </BrowserRouter>
-)
+);

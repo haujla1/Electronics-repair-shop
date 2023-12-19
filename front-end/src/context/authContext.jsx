@@ -16,12 +16,12 @@ export const AuthProvider = ({ children }) => {
       //get the role from the backend
       if (user) {
         try {
+          let backendApiUrl = import.meta.env.VITE_BACKEND_API;
+
           let userData = await axios(
-            "http://localhost:3000/users/" +
-              user.uid +
-              "/" +
-              user.email
+            `${backendApiUrl}/users/${user.uid}/${user.email}`
           );
+
           if (userData.data.status == "Approved") {
             setRole(userData.data.role);
           } else {

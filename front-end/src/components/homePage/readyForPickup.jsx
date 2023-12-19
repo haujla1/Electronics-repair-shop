@@ -1,11 +1,7 @@
-import React, {useContext, useEffect, useState} from "react";
- 
+import React, { useContext, useEffect, useState } from "react";
 
-function ReadyForPickup(){
-    return (
-        <h3>Ready for Pickup</h3>
-    )
+function ReadyForPickup() {
+  return <h3>Ready for Pickup</h3>;
 }
 
-
-export default ReadyForPickup
+export default ReadyForPickup;
