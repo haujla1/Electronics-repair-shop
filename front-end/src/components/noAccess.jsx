@@ -65,6 +65,7 @@ const noAccess = () => {
       <p className="error">{error}</p>
       <p>{message}</p>
       <br />
+      <br />
       <SignOut />
     </>
   );
