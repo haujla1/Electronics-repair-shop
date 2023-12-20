@@ -13,6 +13,7 @@ import {
 import constants from "../appConstants.js";
 import { sendEmail } from "../nodemailer/sendMailService.js";
 import { redisClient } from "../redis.js";
+import "dotenv/config";
 
 function formatDate(date) {
   const options = {
