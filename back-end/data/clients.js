@@ -5,7 +5,9 @@ import {
   validatePhoneNumber,
   validateEmail,
   validateAge,
+  validateObjectId,
 } from "../util/validationUtil.js";
+import { redisClient } from "../redis.js";
 
 export const createClient = async (
   firstName,
@@ -15,14 +17,24 @@ export const createClient = async (
   address,
   age
 ) => {
+  if(!firstName || !lastName || !phoneNumber || !email || !address || !age) throw ("Missing required fields")
+
   firstName = validateString(firstName, "First Name");
   lastName = validateString(lastName, "Last Name");
-  validatePhoneNumber(phoneNumber);
+  phoneNumber = validatePhoneNumber(phoneNumber);
   email = validateEmail(email, "Email");
   address = validateString(address, "Address");
   age = validateAge(age, "Age");
 
+  if(!firstName || !lastName || !phoneNumber || !email || !address || !age) throw "invalid fields"
+
   let clientCollection = await clients();
+  let already = await clientCollection.findOne({
+    phoneNumber: phoneNumber.trim(),
+  });
+  // console.log(already);
+  if (already !== null) throw "Client with that phone number already exists";
+
   let newClient = {
     _id: new ObjectId(),
     name: `${firstName} ${lastName}`,
@@ -44,16 +56,27 @@ export const createClient = async (
 };
 
 export const getClientById = async (id) => {
-  if (!id) throw "You must provide an id to search for";
-  if (typeof id !== "string") throw "Id must be a string";
-  id = id.trim();
-  if (id.length === 0) throw "Id cannot be empty";
-  if (!ObjectId.isValid(id)) throw "invalid object ID";
-
+  id = validateObjectId(id, "Client ID");
+  try {
+    const cacheKey = `client:${id}`;
+    const cachedClient = await redisClient.get(cacheKey);
+    if (cachedClient) {
+      return JSON.parse(cachedClient);
+    }
+  } catch (error) {
+    console.error("Redis get error:", error);
+  }
   let clientCollection = await clients();
   let client = await clientCollection.findOne({ _id: new ObjectId(id) });
   if (client) {
     client._id = client._id.toString();
+    try {
+      const cacheKey = `client:${id}`;
+      await redisClient.set(cacheKey, JSON.stringify(client));
+      await redisClient.expire(cacheKey, 3600);
+    } catch (error) {
+      throw ("Redis set error:", error.message);
+    }
     return client;
   } else {
     if (client === null) throw "No client with that id";
@@ -61,14 +84,32 @@ export const getClientById = async (id) => {
 };
 
 export const getClientByPhoneNumber = async (phoneNumber) => {
-  validatePhoneNumber(phoneNumber);
+  phoneNumber = validatePhoneNumber(phoneNumber);
+  const cacheKey = `client:phone:${phoneNumber.trim()}`;
+  try {
+    const cachedClient = await redisClient.get(cacheKey);
+    if (cachedClient) {
+      return JSON.parse(cachedClient);
+    }
+  } catch (error) {
+    console.error("Redis get error:", error);
+  }
 
   let clientCollection = await clients();
   let client = await clientCollection.findOne({
     phoneNumber: phoneNumber.trim(),
   });
-  if (client === null) throw "No client found with the provided phone number";
-  return client;
+  if (client) {
+    try {
+      await redisClient.set(cacheKey, JSON.stringify(client));
+      await redisClient.expire(cacheKey, 3600);
+    } catch (error) {
+      throw ("Redis set error:", error.message);
+    }
+    return client;
+  } else {
+    throw "No client found with the provided phone number";
+  }
 };
 
 export const addDeviceToClient = async (
@@ -93,14 +134,14 @@ export const addDeviceToClient = async (
   if (client === null) throw "No client with that id";
 
   let newDevice = {
-    _id: new ObjectId().toString(),
+    _id: new ObjectId(),
     deviceType: validatedDeviceType,
     manufacturer: validatedManufacturer,
     modelName: validatedModelName,
     modelNumber: validatedModelNumber,
     serialNumber: validatedSerialNumber,
   };
-
+  newDevice._id = newDevice._id.toString();
   client.Devices.push(newDevice);
   const updatedInfo = await clientCollection.updateOne(
     { _id: new ObjectId(clientId) },
@@ -110,6 +151,12 @@ export const addDeviceToClient = async (
   if (!updatedInfo.acknowledged || updatedInfo.modifiedCount === 0) {
     throw "Could not update client successfully";
   }
-
-  return await getClientById(clientId);
+  const cacheKey = `client:${clientId}`;
+  try {
+    await redisClient.set(cacheKey, JSON.stringify(client));
+    await redisClient.expire(cacheKey, 3600);
+  } catch (error) {
+    console.error("Redis set error:", error);
+  }
+  return newDevice;
 };

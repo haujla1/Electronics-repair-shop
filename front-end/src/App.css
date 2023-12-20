@@ -1,42 +1,179 @@
-#root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
+.signOut {
+  background-color: #343434;
+  color: white;
+  position: absolute;
+  right: 0;
+  bottom: 0px;
+}
+
+.signOut:hover {
+  background-color: #ec0909;
+  transition: .15s;
+}
+
+
+
+.header {
   text-align: center;
+  background-color: #217265;
+  background-size: cover;
+  width: 100%;
+  height: 150px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  border: solid;
+  box-sizing: border-box;
+  z-index: 2;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+.header h1 {
+  color: white;
+  margin: 0px;
+
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.header h2 {
+  color: rgb(224, 224, 224);
+  margin-top: 0px;
+  margin-bottom: 0px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+.header a {
+  color: white;
+  /* background-color: #173918;
+  border: solid; */
+  border-color: rgb(192, 192, 192);
+  border-radius: 5px;
+  /* padding: 2px 6px 2px 6px; */
+  margin-top: 0px;
 }
 
-.card {
-  padding: 2em;
+.header a:hover {
+  border-color: white;
+  color: white;
 }
 
-.read-the-docs {
-  color: #888;
+:not(.header) {
+  margin: 1px;
+}
+
+
+nav li {
+  display: inline;
+  margin-right: 10%;
+  margin-left: 10%;
+}
+
+.App {
+  margin-top: 200px;
+  margin: 0 auto;
+  position: absolute;
+  top: 15%
+}
+
+dt {
+  font-weight: bold;
+}
+
+h3 {
+  font-weight: bolder;
+  text-decoration: underline;
+  font-size: 1.5rem;
+}
+
+textarea {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  width: 80%;
+  height: 50px;
+}
+
+a:hover {
+  color: #173918;
+}
+
+input {
+  background-color: rgba(236, 243, 242, 0.838);
+  border-radius: 5px;
+  font-size: large;
+  color: #000;
+}
+
+.clientFound a {
+  color: #0495bd;
+}
+
+.error {
+  color: red;
+}
+
+h5 {
+  font-size: larger;
+  color: #0e553e;
+}
+
+.card dd {
+  display: inline;
+  margin-left: 1px;
+}
+
+.card dt {
+  display: inline;
+  margin-right: 1px;
+}
+
+.card:hover {
+  background-color: #e5f4e6;
+  transition: .15s;
+}
+
+.card a:hover {
+  color: #09d410;
+  text-decoration: underline;
+}
+
+.id dd {
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: 300;
+  font-size: small;
+}
+
+.newRepairLink {
+  align-self: flex-end;
+  font-size: larger;
+}
+
+.section-title-bar {
+  background: linear-gradient(to right, rgb(2, 117, 90), transparent);
+  width: 100%;
+  padding: 10px 20px;
+}
+
+.section-title {
+  color: white;
+  width: 100%;
+}
+
+.repair-card {
+  background-color: #fff;
+  padding: 16px;
+  margin: 8px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.repair-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.repair-card h4 {
+  margin-top: 0;
+  color: #333;
+}
+
+.repair-card p {
+  margin: 4px 0;
+  color: #666;
 }
