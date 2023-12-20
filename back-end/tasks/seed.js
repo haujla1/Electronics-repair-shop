@@ -202,13 +202,13 @@ async function main() {
 
   let admin, user1, user2, pending;
   try {
-    admin = await createUser("Mr.Admin", "admin@gmail.com", "123123", "Approved", "Admin", "rEtzQQqMiqfeFYExAhmtMGrL3sy2") //password: test123
+    admin = await createUser("Mr.Admin", "admin@gmail.com", "123123", "Approved", "Admin", "rEtzQQqMiqfeFYExAhmtMGrL3sy2") //password: Password123!
 
-    user1 = await createUser("Tech1", "tech@gmail.com", "123123", "Approved", "Technician", "45jyg6qo1qaS9UXcKATCGcMHWqn1") //password: test123
+    user1 = await createUser("Tech1", "tech@gmail.com", "123123", "Approved", "Technician", "45jyg6qo1qaS9UXcKATCGcMHWqn1") //password: Password123!
 
-    user2 = await createUser("Tech2", "tech2@gmail.com", "123123", "Approved", "Technician", "o0hFX7rwuufveUWsOR2tyUxwhS12") //password: test123
+    user2 = await createUser("Tech2", "tech2@gmail.com", "123123", "Approved", "Technician", "o0hFX7rwuufveUWsOR2tyUxwhS12") //password: Password123!
 
-    pending = await createUser("Random Guy", "random@gmail.com", "123123", "Pending", "Technician", "UeeUeIDpC4TPwYaR1Keu6E51jCX2") //password: test123
+    pending = await createUser("Random Guy", "random@gmail.com", "123123", "Pending", "Technician", "UeeUeIDpC4TPwYaR1Keu6E51jCX2") //password: Password123!
     //console.log(device2);
   } catch (e) {
     console.log(e);
