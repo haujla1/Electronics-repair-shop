@@ -10,6 +10,11 @@ function SignUp() {
 
   const [error, setError] = useState("");
 
+  const uppercaseRegex = /[A-Z]+/;
+  const lowercaseRegex = /[a-z]+/;
+  const digitsOnlyRegex = /[0-9]+/;
+  const specialCharRegex = /[^\w\s]+/;
+
   useEffect(() => {
     console.log(currentUser);
   }, [currentUser]);
@@ -24,6 +29,26 @@ function SignUp() {
       repeatPassword.getAttribute("type") != "password"
     ) {
       setError("Invalid Input Type");
+      return false;
+    }
+    if (password.value.trim().length < 8) {
+      setError('Password must be at least 8 characters long.');
+      return false;
+    }
+    if (!uppercaseRegex.test(password.value)) {
+      setError('Password has no uppercase characters.');
+      return false;
+    }
+    if (!lowercaseRegex.test(password.value)) {
+      setError('Password has no lowercase characters.');
+      return false;
+    }
+    if (!digitsOnlyRegex.test(password.value)) {
+      setError('Password has no numbers.');
+      return false;
+    }
+    if (!specialCharRegex.test(password.value)) {
+      setError('Password has no special characters.');
       return false;
     }
     if (password.value != repeatPassword.value) {
