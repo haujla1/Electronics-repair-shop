@@ -12,7 +12,7 @@ import {
 
 async function main() {
   const db = await dbConnection();
-  // await db.dropDatabase();
+  await db.dropDatabase();
   let client1, client2, device1, device2;
   try {
     client1 = await createClient(
@@ -196,4 +196,4 @@ async function main() {
   await closeConnection();
 }
 
-main();
+await main();

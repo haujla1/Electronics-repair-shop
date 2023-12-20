@@ -43,31 +43,33 @@ function Nav({ pagename }) {
 
       <nav>
         <ul>
-          <ul style={{ display: "flex", alignItems: "center" }}>
-            {role === "Admin" && (
+          <li style={{ display: "flex", alignItems: "center" }}>
+            <ul>
+              {role === "Admin" && (
+                <li>
+                  <Link
+                    to="/adminTools"
+                    style={{
+                      marginRight: "20px",
+                      display: "flex",
+                      alignItems: "center",
+                    }}
+                  >
+                    Admin Tools
+                  </Link>
+                </li>
+              )}
               <li>
                 <Link
-                  to="/adminTools"
-                  style={{
-                    marginRight: "20px",
-                    display: "flex",
-                    alignItems: "center",
-                  }}
+                  to="/"
+                  title="Home"
+                  style={{ display: "flex", alignItems: "center" }}
                 >
-                  Admin Tools
+                  <HomeIcon />
                 </Link>
               </li>
-            )}
-            <li>
-              <Link
-                to="/"
-                title="Home"
-                style={{ display: "flex", alignItems: "center" }}
-              >
-                <HomeIcon />
-              </Link>
-            </li>
-          </ul>
+            </ul>
+          </li>
 
           <li>
             <SignOut />
