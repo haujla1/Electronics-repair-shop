@@ -204,7 +204,7 @@ async function main() {
   try {
     admin = await createUser("Mr.Admin", "admin@gmail.com", "123123", "Approved", "Admin", "rEtzQQqMiqfeFYExAhmtMGrL3sy2") //password: Password123!
 
-    user1 = await createUser("Tech1", "tech@gmail.com", "123123", "Approved", "Technician", "45jyg6qo1qaS9UXcKATCGcMHWqn1") //password: Password123!
+    user1 = await createUser("Tech1", "tech1@gmail.com", "123123", "Approved", "Technician", "45jyg6qo1qaS9UXcKATCGcMHWqn1") //password: Password123!
 
     user2 = await createUser("Tech2", "tech2@gmail.com", "123123", "Approved", "Technician", "o0hFX7rwuufveUWsOR2tyUxwhS12") //password: Password123!
 
@@ -218,8 +218,6 @@ async function main() {
   await closeConnection();
   await redisClient.quit()
   return 
-
-
    
 }
 
