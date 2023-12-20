@@ -3,6 +3,8 @@ import { createClient } from "../data/clients.js";
 import { addDeviceToClient } from "../data/clients.js";
 import { getClientById, getClientByPhoneNumber } from "../data/clients.js";
 import { createUser } from "../data/users.js";
+import { redisClient } from "../redis.js";
+import redis from "redis";
 import {
   createRepair,
   updateWorkorderAfterRepair,
@@ -213,8 +215,14 @@ async function main() {
   }
 
   console.log("Seed Done!");
-
   await closeConnection();
+  await redisClient.quit()
+  return 
+
+
+   
 }
 
 await main();
+
+

@@ -13,7 +13,7 @@ _Instructions to run project_
 4. Open a new terminal and `cd` into the `back-end` folder of the project.
 5. Add the backend `.env` file into the `back-end` folder if not already present.
 6. Run the `npm install` command.
-7. Run `node tasks/seed.js` or `npm run seed` in the terminal to seed the database. This step can be skipped if data already exists in the database. Press CTRL+C to close the seed operaation.
+7. Run `node tasks/seed.js` or `npm run seed` in the terminal to seed the database. This step can be skipped if data already exists in the database. Press CTRL+C to close the seed operation.
 8. Run `npm start` to start the server
 9. Open a third terminal and `cd` into `front-end` folder.
 10. Add the frontend `.env` file into the `front-end` folder if not already present.

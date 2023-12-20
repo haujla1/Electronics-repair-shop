@@ -26,7 +26,7 @@ export const createClient = async (
   address = validateString(address, "Address");
   age = validateAge(age, "Age");
 
-  if(!firstName || !lastName || !phoneNumber || !email || !address || !age) throw "ivalid fields"
+  if(!firstName || !lastName || !phoneNumber || !email || !address || !age) throw "invalid fields"
 
   let clientCollection = await clients();
   let already = await clientCollection.findOne({
