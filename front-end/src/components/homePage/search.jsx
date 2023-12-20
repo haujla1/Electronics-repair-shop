@@ -40,7 +40,7 @@ function SearchBar() {
         <Box
           component="form"
           onSubmit={handleSearch}
-          sx={{ display: "flex", alignItems: "center", gap: 2 }}
+          sx={{ display: "flex", alignItems: "center", gap: 2}}
         >
           <TextField
             name="phone"
