@@ -63,7 +63,7 @@ function Login() {
   }
 
   return (
-    <div>
+    <div className="login-container">
       <h1>Login</h1>
       <Link to="/signup">Or Create Account</Link>
       <form className="form" onSubmit={handleLogin}>

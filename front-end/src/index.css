@@ -24,13 +24,16 @@ a:hover {
   color: #207522;
 }
 
-body {
+ body {
   margin: 0;
   display: flex;
   place-items: center;
+  align-items: center;
   min-width: 320px;
   min-height: 100vh;
-}
+ 
+} 
+
 
 h1 {
   font-size: 3.2em;
@@ -82,3 +85,29 @@ button:focus-visible {
     outline: 4px auto -webkit-focus-ring-color;
   }
 }
+
+
+.login-container {
+  border: 1px solid #ccc;
+  padding: 20px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 300px; 
+  margin: auto; 
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.form {
+  width: 100%; 
+  max-width: 300px; 
+}
+.form input, .form button, .form a {
+  width: 100%; 
+  margin-bottom: 10px; 
+}
+
+
+
