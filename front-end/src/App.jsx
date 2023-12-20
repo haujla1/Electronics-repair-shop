@@ -17,8 +17,8 @@ import NewClient from "./components/newClientPage/newClient";
 import ClientDetails from "./components/clientDetailsPage/clientDetails";
 import NewRepair from "./components/newRepairPage/newRepair";
 import RepairDetails from "./components/repairDetails/repairDetails";
-import NotFoundPage from "./components/notFoundPage";
-import BadRequestPage from "./components/badRequestPage";
+import NotFoundPage from "./components/NotFoundPage";
+import BadRequestPage from "./components/BadRequestPage";
 
 function App() {
   return (

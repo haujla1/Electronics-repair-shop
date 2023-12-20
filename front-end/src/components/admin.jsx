@@ -56,8 +56,9 @@ const adminTools = () => {
       }
 
       console.log(deleteUserFirebaseId);
+      let backendApiUrl = import.meta.env.VITE_BACKEND_API;
 
-      await axios.patch("http://localhost:3000/users/remove", {
+      await axios.patch(`${backendApiUrl}/users/remove`, {
         adminFirebaseId: currentUser.uid,
         userFirebaseId: deleteUserFirebaseId,
       });
@@ -72,7 +73,8 @@ const adminTools = () => {
     let newUser;
     try {
       newUser = pendingUsers.filter((x) => x.email == email)[0];
-      await axios.patch("http://localhost:3000/users/approve", {
+      let backendApiUrl = import.meta.env.VITE_BACKEND_API;
+      await axios.patch(`${backendApiUrl}/users/approve`, {
         adminFirebaseId: currentUser.uid,
         userFirebaseId: newUser.firebaseId,
       });
