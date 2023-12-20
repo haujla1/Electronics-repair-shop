@@ -64,13 +64,22 @@ async function main() {
       clientPreferredPhoneNumber: "1112223333",
       issue: "broken screen",
       wasIssueVerified: true,
-      stepsTakenToReplicateIssue: "visible cracks on screen dhdeudheudheudheudheudhd heudhuehdeudhuehdeuhd ehduehduehduehduehdeuhdeudh hedudheudheudh ",
-      workToBeDone: "screen replacement uehduehduedh hdeudheudhe uhduehded uehdeuhdeudheud uedjeudjeudh udjeudjeudheuuhdeudhue udeujdeuhdeudhh ",
-      conditionOfDevice: "other than screen, device in good condition eegdegduegd iegedueghdudehd ueuhduieuhdue deheduehdeu dehduehdeudh hduedhe ",
+      stepsTakenToReplicateIssue: "visible cracks on screen  ",
+      workToBeDone: "screen replacement  ",
+      conditionOfDevice: "other than screen, device in good condition  ",
     };
 
     let workOrder2 = {
       clientPreferredEmail: "alternate2@example.com",
+      clientPreferredPhoneNumber: "4445556666",
+      issue: "battery issue",
+      wasIssueVerified: true,
+      stepsTakenToReplicateIssue: "battery drains quickly",
+      workToBeDone: "battery replacement",
+      conditionOfDevice: "good condition except battery",
+    };
+    let workOrder3 = {
+      clientPreferredEmail: "haujla@stevens.edu",
       clientPreferredPhoneNumber: "4445556666",
       issue: "battery issue",
       wasIssueVerified: true,
@@ -110,6 +119,12 @@ async function main() {
       workOrder2
     );
 
+    let repair6 = await createRepair(
+      client2._id.toString(),
+      device2._id.toString(),
+      workOrder3
+    );
+
     for (let i = 0; i < 10; i++) {
       let repair = await createRepair(
         client2._id.toString(),
@@ -123,6 +138,12 @@ async function main() {
 
     // console.log(repair2);
     // console.log(client2);
+
+    await updateWorkorderAfterRepair(
+      repair6._id.toString(),
+      "battery replaced and tested",
+      true
+    );
 
     await updateWorkorderAfterRepair(
       repair1._id.toString(),
