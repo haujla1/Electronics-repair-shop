@@ -24,4 +24,3 @@ front-end/node_modules/
 *.njsproj
 *.sln
 *.sw?
-*.env

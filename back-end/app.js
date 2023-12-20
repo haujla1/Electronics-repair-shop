@@ -12,7 +12,12 @@ app.use("*", (req, res, next) => {
   next();
   console.log();
 });
-app.use(cors());
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN,
+    optionsSuccessStatus: 200,
+  })
+);
 
 configRoutes(app);
 
